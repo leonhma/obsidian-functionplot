@@ -20,6 +20,6 @@ A plugin for displaying mathematical graphs in obsidian.md.
  g(x) = 0.5*x^3+x^2-44
  ´``
  ```
- *(The metadata header contains all possible options, you don't usually have to apecify all of them)*
+ *(The metadata header contains all possible options, you don't usually have to specify all of them)*
 
-2. This will create a coordinate system with bounds `-10 < x < 10, -10 < y < 10` and plot the functions f and h. If you havent disabled it, you can even drag and zoom the graph.
+2. This will create a coordinate system with bounds `-10 < x < 10, -10 < y < 10` and plot the functions f and g. If you havent disabled it, you can even drag and zoom the graph.
