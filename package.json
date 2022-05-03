@@ -1,0 +1,30 @@
+{
+	"name": "obsidian-functionplot",
+	"version": "0.1.0",
+	"description": "A plugin for displaying mathematical graphs from MathJax functions in obsidian.md.",
+	"repository": "https://github.com/leonhma/obsidian-functionplot",
+	"author": "leonhma",
+	"license": "MIT",
+	"source": "src/index.ts",
+	"main": "main.js",
+	"targets": {
+    	"main": {
+    		"includeNodeModules": {
+				"obsidian": false
+			},
+			"sourceMap": false
+	 	}
+  	},
+	"scripts": {
+		"watch": "parcel watch",
+		"build": "parcel build"
+	},
+	"devDependencies": {
+		"parcel": "^2.5.0"
+	},
+	"dependencies": {
+		"function-plot": "^1.22.8",
+		"obsidian": "^0.14.6",
+		"yaml": "^2.0.1"
+	}
+}
