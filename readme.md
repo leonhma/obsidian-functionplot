@@ -1,11 +1,10 @@
 # obsidian-functionplot
 
-A plugin for displaying mathematical graphs from MathJax functions in obsidian.md.
+A plugin for displaying mathematical graphs in obsidian.md.
 
 ## How to use
 
-1. Write some functions in MathJax (inside the dollar signs).
-2. Below that, type:
+1. Type:
  ```text
  ```functionplot
  ---
@@ -23,4 +22,4 @@ A plugin for displaying mathematical graphs from MathJax functions in obsidian.m
  ```
  *(The metadata header contains all possible options, you don't usually have to apecify all of them)*
 
-3. This will create a coordinate system with bounds `-10 < x < 10, -10 < y < 10` and plot the functions f, g and h. To find these functions, the plugin goes upwards to the first occurence of the function in MathJax code.
+2. This will create a coordinate system with bounds `-10 < x < 10, -10 < y < 10` and plot the functions f and h. If you havent disabled it, you can even drag and zoom the graph.

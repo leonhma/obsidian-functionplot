@@ -20,14 +20,12 @@ export default class ObsidianFunctionPlot extends Plugin_2 {
 		const functions = source.substring(header.length).split('\n')
 			.map(line => line.trim()).filter(line => line.length > 0)
 
-		let fPlotOptions = {"title": config.title, "grid": config.grid, "target": el}
+		let fPlotOptions = {"title": config.title, "grid": config.grid, "target": el, "disableZoom": config.disableZoom}
 
 		// parse functions
-		if (config.disableZoom) { 
-			fPlotOptions['disableZoom'] = true
-			fPlotOptions['xAxis']['domain'] = [config.bounds[0], config.bounds[1]]
-			fPlotOptions['yAxis']['domain'] = [config.bounds[2], config.bounds[3]]
-		}
+		fPlotOptions['xAxis']['domain'] = [config.bounds[0], config.bounds[1]]
+		fPlotOptions['yAxis']['domain'] = [config.bounds[2], config.bounds[3]]
+		
 		if (config.xLabel) { fPlotOptions['xAxis']['xLabel'] = config.xLabel }
 		if (config.yLabel) { fPlotOptions['yAxis']['yLabel'] = config.yLabel }
 
