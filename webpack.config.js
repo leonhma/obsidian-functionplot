@@ -14,12 +14,7 @@ module.exports = {
     	extensions: ['.tsx', '.ts', '.js'],
 	},
 	externals: {
-		'obsidian': {
-			commonjs: 'obsidian',
-			commonjs2: 'obsidian',
-			amd: 'obsidian',
-			root: '_'
-		}
+		'obsidian': 'obsidian'
 	},
   	output: {
     	filename: 'main.js',

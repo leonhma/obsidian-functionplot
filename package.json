@@ -6,6 +6,7 @@
 	"author": "leonhma",
 	"license": "MIT",
 	"scripts": {
+		"watch": "webpack --watch",
 		"build": "webpack"
 	},
 	"devDependencies": {
