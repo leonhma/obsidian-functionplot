@@ -31,5 +31,5 @@ jobs:
     - name: Upload assets to a Release
       uses: AButler/upload-release-assets@v2.0
       with:
-        token: ${{ github.token }}
+        repo-token: ${{ github.token }}
         files: "main.js;manifest.json;styles.js"
