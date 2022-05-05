@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    
     - uses: actions/checkout@v2
       
     - name: Setup Node.js environment
@@ -34,5 +33,3 @@ jobs:
       with:
         token: ${{ github.token }}
         files: "main.js;manifest.json;styles.js"
-
-	
