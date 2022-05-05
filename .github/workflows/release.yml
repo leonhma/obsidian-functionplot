@@ -27,8 +27,8 @@ jobs:
       run: |
         git add -A
         git config --global user.name "${{ github.event.sender.login }}"
-        git commit -m '[chore] Release v${{ github.ref }}'
-        git push origin master
+        git commit -m '[chore] index minAppVersion for release of ${{ github.ref }}'
+        git push origin ${{ github.ref }}
 
     - name: Build
       run: yarn build
