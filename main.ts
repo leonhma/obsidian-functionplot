@@ -3,6 +3,7 @@ import { FunctionPlotOptions } from 'function-plot/dist/types';
 import { MarkdownPostProcessorContext, Plugin } from 'obsidian';
 import { parse } from 'yaml';
 
+
 interface HEADER_OPTIONS { 
 	title: string,
 	disableZoom: boolean,
@@ -61,7 +62,7 @@ export default class ObsidianFunctionPlot extends Plugin {
 		console.debug(fPlotOptions)
 		// render
 		functionPlot(fPlotOptions)
-		// make svg text listen to stylesheet
+		// make text listen to stylesheet
 		el.querySelectorAll('text').forEach(el => el.setAttribute('fill', 'currentColor'))
 	}
 }

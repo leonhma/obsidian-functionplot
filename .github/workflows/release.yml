@@ -21,13 +21,16 @@ jobs:
       run: yarn install
 
     - name: Run version-bump
-      run: yarn version
+      run: node version-bump.mjs
 
     - name: Git Auto Commit
       uses: stefanzweifel/git-auto-commit-action@v4.14.1
+      with:
+        commit_message: "[automated] index minAppVersion for newest release"
 
     - name: Build
       run: yarn build
+
     - name: Upload assets to a Release
       uses: AButler/upload-release-assets@v2.0
       with:
