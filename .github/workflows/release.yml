@@ -15,10 +15,10 @@ jobs:
       with:
         node-version: 14
 
-    - name: Download repo
-      run: |
-        git clone ${{ github.repositoryUrl }} .
-        cd ${{ github.repository.name }}
+    - name: Checkout
+      uses: actions/checkout@v2.4.2
+      with:
+        ref: ${{ github.head_ref}}
 
     - name: Install packages
       run: yarn install
@@ -26,12 +26,10 @@ jobs:
     - name: Run version-bump
       run: node version-bump.mjs
 
-    - name: Push changes to github
-      run: |
-        git add -A
-        git config --global user.name "${{ github.event.sender.login }}"
-        git commit -m '[chore] index minAppVersion for release of ${{ github.ref }}'
-        git push origin ${{ github.ref }}
+    - name: Git Auto Commit
+      uses: stefanzweifel/git-auto-commit-action@v4.14.1
+      with:
+        commit_message: '[chore] index minAppVersion for release of ${{ github.ref }}'
 
     - name: Build
       run: yarn build
