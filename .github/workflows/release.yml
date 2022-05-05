@@ -18,7 +18,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2.4.2
       with:
-        ref: ${{ github.head_ref}}
+        ref: master
 
     - name: Install packages
       run: yarn install
