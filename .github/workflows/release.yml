@@ -27,6 +27,7 @@ jobs:
       uses: stefanzweifel/git-auto-commit-action@v4.14.1
       with:
         commit_message: "[automated] index minAppVersion for newest release"
+        branch: master
 
     - name: Build
       run: yarn build
