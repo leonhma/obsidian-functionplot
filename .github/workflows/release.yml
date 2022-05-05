@@ -23,11 +23,12 @@ jobs:
     - name: Run version-bump
       run: node version-bump.mjs
 
-    - name: Git Auto Commit
-      uses: stefanzweifel/git-auto-commit-action@v4.14.1
-      with:
-        commit_message: "[automated] index minAppVersion for newest release"
-        branch: master
+    - name: Push changes to github
+      run: |
+        git add -A
+        git config --global user.name "${{ github.event.sender.login }}"
+        git commit -m '[chore] Release v${{ github.ref }}'
+        git push origin master
 
     - name: Build
       run: yarn build
