@@ -1,0 +1,31 @@
+name: Bug report
+description: Create a report to help us improve
+title: "[Bug]: "
+labels: [bug]
+assignees:
+  - leonhma
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Tell us briefly what bug happened.
+      placeholder: What happened..
+    validations:
+      required: true
+  - type: textarea
+    id: ideas
+    attributes:
+      label: Any ideas?
+      description: If you have an idea on how we could go about fixing this, put them here.
+      placeholder: Your ideas..
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional info
+      description: Please add any additional info, such as screenshots, logs or code here. For code, use ``` backticks to get it highlighted.
+      placeholder: Additional info..

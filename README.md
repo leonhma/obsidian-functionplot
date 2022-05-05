@@ -8,7 +8,7 @@ A plugin for displaying mathematical graphs in obsidian.md.
  ```text
  ```functionplot
  ---
- title: Graph of f(x)
+ title: Graph
  disableZoom: false
  bounds: -10, 10, -10, 10
  grid: true
@@ -18,8 +18,11 @@ A plugin for displaying mathematical graphs in obsidian.md.
 
  f(x) = x^2
  g(x) = 0.5*x^3+x^2-44
- ´``
+ \```
  ```
- *(The metadata header contains all possible options, you don't usually have to specify all of them)*
+ *(The metadata header in this example contains all possible options, you don't usually have to specify all of them)*
 
 2. This will create a coordinate system with bounds `-10 < x < 10, -10 < y < 10` and plot the functions f and g. If you havent disabled it, you can even drag and zoom the graph.
+
+![Graph image](./images/graph-light.png#gh-light-mode-only)
+![Graph image](./images/graph-dark.png#gh-dark-mode-only)

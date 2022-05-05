@@ -1,0 +1,25 @@
+name: Feature request
+description: Request a new feature
+title: "[FR]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: request
+    attributes:
+      label: What's your feature?
+      description: Describe the feature you want!
+      placeholder: Description of your solution..
+    validations:
+      required: true
+  - type: textarea
+    id: related
+    attributes:
+      label: Any related problems?
+      description: Is your feature request related to a problem? Please describe.
+      placeholder: Related problems..
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context?
+      description: If you want to add screenshots, code, etc., please do so here.
+      placeholder: Additional info..
