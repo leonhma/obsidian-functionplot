@@ -33,7 +33,7 @@ jobs:
 
         git add -A
         git commit -m "[chore] index minAppVersion for release of ${{ github.ref }}"
-        git push origin main
+        git push origin master
 
     - name: Build
       run: yarn build
