@@ -3,9 +3,11 @@ name: release
 on:
   release:
     types: [ published ] 
-    
-jobs:
+
+permissions:
+  contents: write
   
+jobs:
   release:
     runs-on: ubuntu-latest
 
