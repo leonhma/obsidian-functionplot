@@ -6,7 +6,7 @@ on:
 
 permissions:
   contents: write
-  
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -31,10 +31,10 @@ jobs:
     - name: Commit and push changes
       run: |
         git config --global user.name "leonhma"
-        git config --global user.email "leonhard.masche@gmail.com"
+        git config --global user.email "leonhardmasche@gmail.com"
 
         git add -A
-        git commit -m "[chore] index minAppVersion for release of ${{ github.ref }}"
+        git commit -m "[chore] index minAppVersion for latest release"
         git push origin master
 
     - name: Build
