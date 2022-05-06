@@ -26,10 +26,14 @@ jobs:
     - name: Run version-bump
       run: node version-bump.mjs
 
-    - name: Git Auto Commit
-      uses: stefanzweifel/git-auto-commit-action@v4.14.1
-      with:
-        commit_message: '[chore] index minAppVersion for release of ${{ github.ref }}'
+    - name: Commit and push changes
+      run: |
+        git config --global user.name "leonhma"
+        git config --global user.email "leonhard.masche@gmail.com"
+
+        git add -A
+        git commit -m "[chore] index minAppVersion for release of ${{ github.ref }}"
+        git push origin main
 
     - name: Build
       run: yarn build
