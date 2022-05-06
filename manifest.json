@@ -1,7 +1,6 @@
 {
 	"id": "obsidian-functionplot",
 	"name": "Obsidian Functionplot",
-	"version": "0.1.0",
 	"minAppVersion": "0.12.0",
 	"description": "A plugin for displaying mathematical graphs in obsidian.md.",
 	"author": "leonhma",
