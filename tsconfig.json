@@ -1,8 +1,8 @@
 {
+  "files": ["./src/main.ts"],
   "compilerOptions": {
-    "types": ["node"],
-    "baseUrl": ".",
-  },
-  "include": ["**/*.ts"],
-  "exclude": ["node_modules/*"]
+    "outDir": ".",
+    "sourceMap": true,
+    "moduleResolution": "node"
+  }
 }

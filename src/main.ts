@@ -1,7 +1,10 @@
-import functionPlot from 'function-plot';
-import { FunctionPlotOptions } from 'function-plot/dist/types';
-import { MarkdownPostProcessorContext, Plugin } from 'obsidian';
-import { parse } from 'yaml';
+import functionPlot from 'function-plot'
+import { FunctionPlotOptions } from 'function-plot/dist/types'
+import { MarkdownPostProcessorContext, Plugin } from 'obsidian'
+import { parse } from 'yaml'
+
+
+
 
 
 interface HEADER_OPTIONS { 
