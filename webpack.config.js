@@ -1,9 +1,6 @@
-const path = require('path');
-
 module.exports = {
     mode: "production",
     entry: './src/main.ts',
-    devtool: 'inline-source-map',
     module: {
         rules: [
             {
@@ -28,10 +25,11 @@ module.exports = {
         extensions: ['.ts', '.js'],
     },
     externals: {
-        obsidian: 'obsidian'
+        obsidian: 'commonjs obsidian'
     },
     output: {
-        path: path.resolve(__dirname, ''),  // dist
+        path: __dirname,
         filename: 'main.js',
-    },
+        libraryTarget: 'commonjs'
+    }
 };

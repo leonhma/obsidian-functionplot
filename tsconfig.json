@@ -2,7 +2,6 @@
   "files": ["./src/main.ts"],
   "compilerOptions": {
     "outDir": ".",
-    "sourceMap": true,
     "moduleResolution": "node"
   }
 }
