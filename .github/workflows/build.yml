@@ -5,7 +5,7 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.ref.startsWith('refs/heads/')
+    if: startsWith(github.ref, 'refs/heads/')
     steps:
       - uses: actions/checkout@v2
         
