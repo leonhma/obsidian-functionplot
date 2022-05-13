@@ -4,9 +4,6 @@ import { MarkdownPostProcessorContext, Plugin } from 'obsidian'
 import { parse } from 'yaml'
 
 
-
-
-
 interface HEADER_OPTIONS { 
 	title: string,
 	disableZoom: boolean,
@@ -36,13 +33,13 @@ export default class ObsidianFunctionPlot extends Plugin {
 		// sizing
 		// parse yamly for bounds and functions to plot
 		const matches = source.match(/-{3,}[^]*-{3,}/g)
-		let header = {}
+		let config: HEADER_OPTIONS = DEFAULT_HEADER_OPTIONS
 		let funcs = source
 		if (matches) { 
-			header = parse(matches[0].substring(3, matches[0].length - 3))
+			config = Object.assign(config, parse(matches[0].substring(3, matches[0].length - 3)))
 			funcs = source.substring(matches[0].length)
 		}
-		const config: HEADER_OPTIONS = Object.assign({}, DEFAULT_HEADER_OPTIONS, header)
+
 		const functions = funcs.split('\n')
 			.map(line => line.trim()).filter(line => line.length > 0)
 
