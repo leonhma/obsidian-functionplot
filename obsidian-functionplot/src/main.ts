@@ -1,7 +1,6 @@
 import functionPlot from 'function-plot'
 import { FunctionPlotOptions } from 'function-plot/dist/types'
-import { MarkdownPostProcessorContext, Plugin } from 'obsidian'
-import { parse } from 'yaml'
+import { MarkdownPostProcessorContext, Plugin, parseYaml } from 'obsidian'
 
 
 interface HEADER_OPTIONS { 
@@ -36,7 +35,7 @@ export default class ObsidianFunctionPlot extends Plugin {
 		let config: HEADER_OPTIONS = DEFAULT_HEADER_OPTIONS
 		let funcs = source
 		if (matches) { 
-			config = Object.assign(config, parse(matches[0].substring(3, matches[0].length - 3)))
+			config = Object.assign({}, config, parseYaml(matches[0].substring(3, matches[0].length - 3)))
 			funcs = source.substring(matches[0].length)
 		}
 
@@ -59,7 +58,7 @@ export default class ObsidianFunctionPlot extends Plugin {
 			data: functions.map(line => { return { "fn": line.split('=')[1].trim() } })
 		}
 
-		console.debug(fPlotOptions)
+		console.debug(`[functionplot] ${fPlotOptions}`)
 		// render
 		functionPlot(fPlotOptions)
 		// make text listen to stylesheet

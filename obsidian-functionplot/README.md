@@ -8,7 +8,7 @@ A plugin for displaying mathematical graphs in obsidian.md.
 
 1. Type: (without the backslash)
 
- ```text
+ ~~~text
  ```functionplot
  ---
  title: Graph
@@ -21,8 +21,8 @@ A plugin for displaying mathematical graphs in obsidian.md.
 
  f(x) = x^2
  g(x) = 0.5*x^3+x^2-44
- \```
  ```
+ ~~~
 
  *(The metadata header in this example contains all possible options, you don't usually have to specify all of them)*
 
