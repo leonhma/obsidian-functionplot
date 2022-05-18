@@ -3,7 +3,7 @@ import { FunctionPlotOptions } from 'function-plot/dist/types'
 import { MarkdownPostProcessorContext, Plugin, parseYaml } from 'obsidian'
 
 
-interface HEADER_OPTIONS { 
+interface HeaderOptions {
 	title: string,
 	disableZoom: boolean,
 	bounds: [number, number, number, number],
@@ -12,7 +12,7 @@ interface HEADER_OPTIONS {
 	yLabel: string
 }
 
-const DEFAULT_HEADER_OPTIONS: HEADER_OPTIONS = {
+const DEFAULT_HEADER_OPTIONS: HeaderOptions = {
 	title: "",
 	disableZoom: false,
 	bounds: [-10, 10, -10, 10],
@@ -29,19 +29,17 @@ export default class ObsidianFunctionPlot extends Plugin {
 	async functionPlotHandler(source: string, el: HTMLElement, _ctx: MarkdownPostProcessorContext): Promise<void> {
 		// styles
 		el.classList.add('functionplot')
-		// sizing
-		// parse yamly for bounds and functions to plot
-		const matches = source.match(/-{3,}[^]*-{3,}/g)
-		let config: HEADER_OPTIONS = DEFAULT_HEADER_OPTIONS
-		let funcs = source
-		if (matches) { 
-			config = Object.assign({}, config, parseYaml(matches[0].substring(3, matches[0].length - 3)))
-			funcs = source.substring(matches[0].length)
-		}
-
-		const functions = funcs.split('\n')
-			.map(line => line.trim()).filter(line => line.length > 0)
-
+		// parse yaml for bounds and functions to plot
+		const config: HeaderOptions = Object.assign(
+			DEFAULT_HEADER_OPTIONS,
+			// yaml parse of first occurence of ---...--- or empty string
+			parseYaml((source.match(/-{3,}([^]+)-{3,}/) ?? ['', ''])[1])
+		)
+		const functions = source.match(/(^|-)([^-]+)$/)[2]  // 2nd capturing group
+			.split('\n')
+			.map(line => line.trim())
+			.filter(line => line.length > 0)
+		// prepare options for call to FunctionPlot
 		const fPlotOptions: FunctionPlotOptions = {
 			target: el as unknown as string,  // weird workaround
 			title: config.title,
@@ -57,8 +55,6 @@ export default class ObsidianFunctionPlot extends Plugin {
 			},
 			data: functions.map(line => { return { "fn": line.split('=')[1].trim() } })
 		}
-
-		console.debug(`[functionplot] ${fPlotOptions}`)
 		// render
 		functionPlot(fPlotOptions)
 		// make text listen to stylesheet
