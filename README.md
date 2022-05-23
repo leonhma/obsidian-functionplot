@@ -6,7 +6,7 @@ A plugin for displaying mathematical graphs in obsidian.md.
 
 ## How to use
 
-1. Type: (without the backslash)
+1. Type:
 
  ~~~text
  ```functionplot
@@ -58,4 +58,3 @@ This section describes all the header options in yaml format.
 This plugin is based on / uses:
 
 - [function-plot](https://github.com/mauriciopoppe/function-plot): MIT License, Copyright (c) 2015 Mauricio Poppe
-- [yaml](https://github.com/eemeli/yaml): ISC License, Copyright Eemeli Aro <eemeli@gmail.com>
