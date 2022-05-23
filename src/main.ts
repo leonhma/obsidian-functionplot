@@ -31,6 +31,7 @@ export default class ObsidianFunctionPlot extends Plugin {
 		el.classList.add('functionplot')
 		// parse yaml for bounds and functions to plot
 		const config: HeaderOptions = Object.assign(
+			{},
 			DEFAULT_HEADER_OPTIONS,
 			// yaml parse of first occurence of ---...--- or empty string
 			parseYaml((source.match(/-{3,}([^]+)-{3,}/) ?? ['', ''])[1])
