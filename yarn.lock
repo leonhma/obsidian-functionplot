@@ -894,7 +894,7 @@ npm-run-path@^4.0.1:
   dependencies:
     path-key "^3.0.0"
 
-obsidian@^0.11.11:
+obsidian@^0.11.13:
   version "0.11.13"
   resolved "https://registry.yarnpkg.com/obsidian/-/obsidian-0.11.13.tgz#52c2c1cbcca3ef63d51b7eddd07b81feb334569d"
   integrity sha512-dnI78olKXoSLnYSzIjqLviX7GTNFC8sMv/8Upzj4ckVwR1z9Y4VAur30gKKZ4Mn7wHKj/nL/eNhi5V8mlqGlSQ==
