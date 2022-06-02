@@ -7,9 +7,11 @@
 	"license": "MIT",
 	"private": true,
 	"scripts": {
-		"build": "rimraf dist && mkdir dist && cp manifest.json dist/manifest.json && webpack"
+		"build": "rimraf dist && make-dir dist && cpy manifest.json dist && webpack"
 	},
 	"devDependencies": {
+		"cpy-cli": "^4.1.0",
+		"make-dir-cli": "^3.0.0",
 		"rimraf": "^3.0.2",
 		"sass": "^1.51.0",
 		"sass-loader": "^12.6.0",

@@ -26,7 +26,7 @@ jobs:
       run: yarn install
 
     - name: Run version-bump
-      run: node version-bump.mjs
+      run: node version-bump.mjs ${{ github.event.release.tag_name }}
 
     - name: Commit and push changes
       run: |
