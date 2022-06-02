@@ -1,7 +1,7 @@
 {
   "files": ["./src/main.ts"],
   "compilerOptions": {
-    "outDir": ".",
+    "outDir": "./dist/",
     "moduleResolution": "node"
   }
 }

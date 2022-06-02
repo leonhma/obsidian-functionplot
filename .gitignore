@@ -1,4 +1,3 @@
 node_modules/
-main.js
-main.ts.map
 yarn-error.log
+dist/

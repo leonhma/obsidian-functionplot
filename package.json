@@ -7,10 +7,10 @@
 	"license": "MIT",
 	"private": true,
 	"scripts": {
-		"watch": "webpack --watch",
-		"build": "webpack"
+		"build": "rimraf dist && mkdir dist && cp manifest.json dist/manifest.json && webpack"
 	},
 	"devDependencies": {
+		"rimraf": "^3.0.2",
 		"sass": "^1.51.0",
 		"sass-loader": "^12.6.0",
 		"ts-loader": "^9.3.0",

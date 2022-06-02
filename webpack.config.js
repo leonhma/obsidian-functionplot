@@ -1,3 +1,5 @@
+const { join } = require('path');
+
 module.exports = {
     mode: "production",
     entry: './src/main.ts',
@@ -28,7 +30,7 @@ module.exports = {
         obsidian: 'commonjs obsidian'
     },
     output: {
-        path: __dirname,
+        path: join(__dirname, "dist/"),
         filename: 'main.js',
         libraryTarget: 'commonjs'
     }
