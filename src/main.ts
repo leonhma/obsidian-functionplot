@@ -30,16 +30,19 @@ export default class ObsidianFunctionPlot extends Plugin {
 		// styles
 		el.classList.add('functionplot')
 		// parse yaml for bounds and functions to plot
-		const config: HeaderOptions = Object.assign(
-			{},
-			DEFAULT_HEADER_OPTIONS,
-			// yaml parse of first occurence of ---...--- or empty string
-			parseYaml((source.match(/-{3,}([^]+)-{3,}/) ?? ['', ''])[1])
-		)
-		const functions = source.match(/(^|-)([^-]+)$/)[2]  // 2nd capturing group
+		const header = (source.match(/-{3,}([^]+)-{3,}/) || [null, null])[1]
+
+		const functions = (header ? source.substring(header.length) : source)
 			.split('\n')
 			.map(line => line.trim())
 			.filter(line => line.length > 0)
+		
+		const config: HeaderOptions = Object.assign(
+			{},
+			DEFAULT_HEADER_OPTIONS,
+			parseYaml(header || '')
+		)
+
 		// prepare options for call to FunctionPlot
 		const fPlotOptions: FunctionPlotOptions = {
 			target: el as unknown as string,  // weird workaround
