@@ -7,6 +7,8 @@ let package_ = JSON.parse(readFileSync("package.json", "utf8"));
 let manifest = JSON.parse(readFileSync("manifest.json", "utf8"));
 let versions = JSON.parse(readFileSync("versions.json", "utf8"));
 
+const minAppVersion = manifest.minAppVersion;
+
 // index minAppVersion
 versions[version] = minAppVersion;
 
