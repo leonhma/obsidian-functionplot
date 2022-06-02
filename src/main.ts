@@ -31,7 +31,7 @@ export default class ObsidianFunctionPlot extends Plugin {
 		el.classList.add('functionplot')
 		// parse yaml for bounds and functions to plot
 		const header = (source.match(/-{3,}([^]+)-{3,}/) || [null, null])[1]
-
+		console.log(header)
 		const functions = (header ? source.substring(header.length) : source)
 			.split('\n')
 			.map(line => line.trim())
@@ -43,7 +43,7 @@ export default class ObsidianFunctionPlot extends Plugin {
 			parseYaml(header || '')
 		)
 
-		// prepare options for call to FunctionPlot
+		// prepare options for call to FunctionPlotya
 		const fPlotOptions: FunctionPlotOptions = {
 			target: el as unknown as string,  // weird workaround
 			title: config.title,
