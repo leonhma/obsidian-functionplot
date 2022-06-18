@@ -1,8 +1,14 @@
-name: Build
+name: CI
 
 on: [push]
 
 jobs:
+  echo:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "${{ github.ref }}"
+
   build:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/heads/')

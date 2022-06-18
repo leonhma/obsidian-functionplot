@@ -29,7 +29,7 @@ export default class ObsidianFunctionPlot extends Plugin {
 	async functionPlotHandler(source: string, el: HTMLElement, _ctx: MarkdownPostProcessorContext): Promise<void> {
 		try {
 			// styles
-			el.classList.add('functionplot')
+			el.classList.add('obsidian-functionplot-render')
 			// parse yaml for bounds and functions to plot
 
 			const header = (source.match(/-{3}[^]+-{3}/) || [null])[0]
@@ -66,10 +66,8 @@ export default class ObsidianFunctionPlot extends Plugin {
 			el.querySelectorAll('text').forEach(el => el.setAttribute('fill', 'currentColor'))
 		} catch (e) {
 			el.innerHTML = `
-			<div style="border-radius:1em;background:black;opacity:0.5">
-				<p style="opacity:1;font-size:0.7em;padding:1em">
-					${e}\n\n${source}
-				</p>
+			<div class="obsidian-functionplot-error">
+				<p>${e}\n\n${source}</p>
 			</div>`
 		}
 	}

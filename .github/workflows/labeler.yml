@@ -1,0 +1,9 @@
+on: pull_request
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Labeler
+        uses: actions/labeler@v4.0.0

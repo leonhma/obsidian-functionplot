@@ -1,0 +1,14 @@
+readme:
+  - 'README.md'
+
+plugin:
+  - 'src/main.ts'
+
+styles:
+  - 'src/styles.scss'
+
+automation:
+  - '.github/workflows/*'
+
+wontfix:
+  - 'LICENSE'
