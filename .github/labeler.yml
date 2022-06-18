@@ -1,5 +1,6 @@
-readme:
+documentation:
   - 'README.md'
+  - 'images/**/*'
 
 plugin:
   - 'src/main.ts'
