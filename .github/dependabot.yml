@@ -7,7 +7,7 @@ updates:
       interval: daily
     ignore:
       - dependency-name: obsidian
-    reviewers:
+    assignees:
       - leonhma
     commit-message:
       include: scope
