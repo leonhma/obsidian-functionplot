@@ -11,5 +11,5 @@ styles:
 automation:
   - '.github/workflows/*'
 
-wontfix:
+invalid:
   - 'LICENSE'
