@@ -31,13 +31,13 @@ export default class ObsidianFunctionPlot extends Plugin {
 			// styles
 			el.classList.add('functionplot')
 			// parse yaml for bounds and functions to plot
-			
+
 			const header = (source.match(/-{3}[^]+-{3}/) || [null])[0]
 			const functions = (header ? source.substring(header.length) : source)
 				.split('\n')
 				.map(line => line.trim())
 				.filter(line => line.length > 0)
-			
+
 			const config: HeaderOptions = Object.assign(
 				{},
 				DEFAULT_HEADER_OPTIONS,
@@ -58,7 +58,7 @@ export default class ObsidianFunctionPlot extends Plugin {
 					domain: [config.bounds[2], config.bounds[3]],
 					label: config.yLabel
 				},
-				data: functions.map(line => { return { "fn": line.split('=')[1].trim() } })
+				data: functions.map(line => { return { fn: line.split('=')[1].trim(), graphType: 'polyline' } })
 			}
 			// render
 			functionPlot(fPlotOptions)

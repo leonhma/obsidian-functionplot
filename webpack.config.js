@@ -1,4 +1,5 @@
 const { join } = require('path');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     mode: "production",
@@ -23,6 +24,11 @@ module.exports = {
             }
         ],
     },
+    plugins: [
+        new CopyPlugin({
+            patterns: ['manifest.json']
+        })
+    ],
     resolve: {
         extensions: ['.ts', '.js'],
     },
@@ -31,6 +37,7 @@ module.exports = {
     },
     output: {
         path: join(__dirname, "dist/"),
+        clean: true,
         filename: 'main.js',
         libraryTarget: 'commonjs'
     }
