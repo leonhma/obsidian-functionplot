@@ -1,5 +1,6 @@
-readme:
+documentation:
   - 'README.md'
+  - 'images/**/*'
 
 plugin:
   - 'src/main.ts'
@@ -10,5 +11,5 @@ styles:
 automation:
   - '.github/workflows/*'
 
-wontfix:
+invalid:
   - 'LICENSE'
