@@ -41,7 +41,7 @@ export default class ObsidianFunctionPlot extends Plugin {
 			const config: HeaderOptions = Object.assign(
 				{},
 				DEFAULT_HEADER_OPTIONS,
-				parseYaml(header.match(/-{3,}([^]+?)-{3,}/)[1] || '')
+				header ? parseYaml(header.match(/-{3,}([^]+?)-{3,}/)[1] || '') : {}
 			)
 
 			// prepare options for call to FunctionPlotya
