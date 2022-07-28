@@ -8,7 +8,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this bug report!
+        Thanks for taking the time to report a bug!
   - type: textarea
     id: what-happened
     attributes:
@@ -17,6 +17,15 @@ body:
       placeholder: What happened..
     validations:
       required: true
+  - type: checkboxes
+    attributes:
+      label: Please confirm
+      description: "Please confirm the following:"
+      options:
+        - label: I have checked that I am using the latest version of the plugin released.
+          required: true
+        - label: I have searched for similar issues, but found none.
+          required: true
   - type: textarea
     id: ideas
     attributes:

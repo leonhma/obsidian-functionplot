@@ -67,7 +67,9 @@ export default class ObsidianFunctionPlot extends Plugin {
 		} catch (e) {
 			el.innerHTML = `
 			<div class="obsidian-functionplot-error">
+				<h3>Error</h3>
 				<p>${e}\n\n${source}</p>
+				<p>Please check your syntax. If this error keeps happening, please file a bug report on <a href="https://github.com/leonhma/obsidian-functionplot#bugs-and-errors">GitHub</a>.</p>
 			</div>`
 		}
 	}

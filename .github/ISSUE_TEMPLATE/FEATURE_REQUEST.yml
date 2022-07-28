@@ -3,6 +3,10 @@ description: Request a new feature
 title: "[FR]: "
 labels: [enhancement]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to make this plugin better! (Hint: If you are planning on working on this new feature yourself, you can remove the default assignees in the top-right corner and self-assign this issue.)
   - type: textarea
     id: request
     attributes:
