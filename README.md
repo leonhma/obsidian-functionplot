@@ -62,7 +62,7 @@ If you encounter any errors while using this plugin, please follow these steps:
 3. If the issue still persists, please report it on GitHub. (If you managed to solve this problem on your own, but think we should know about it, please file the fitting type of issue.)
     1. Go to the "Issues" tab of the repo.
     2. Search for your error. If you can find it, chime in to the converation and let us know that it happened to you too. It appears this is a known issue and it is currently being worked on.
-    3. If you can't find it, open a new issue. Do this by clicking the "New issue" button in the top right. And selecting "Bug report".
+    3. If you can't find it, open a new issue. Do this by clicking the "New issue" button in the top right. Select "Bug report".
     4. Fill out the issue with as much information as you can. Your issue will be resolved in the near future.
 
 
