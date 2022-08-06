@@ -53,6 +53,10 @@ This section describes all the header options in yaml format.
 `yLabel`: string, default: ""
 > The label of the y-axis.
 
+## Questions
+
+If you have any questions about the usage of the plugin, take a look at the [wiki](https://github.com/leonhma/obsidian-functionplot/wiki) or post a question in the [discussions](https://github.com/leonhma/obsidian-functionplot/discussions).
+
 ## Bugs and Errors
 
 If you encounter any errors while using this plugin, please follow these steps:
@@ -64,7 +68,6 @@ If you encounter any errors while using this plugin, please follow these steps:
     2. Search for your error. If you can find it, chime in to the converation and let us know that it happened to you too. It appears this is a known issue and it is currently being worked on.
     3. If you can't find it, open a new issue. Do this by clicking the "New issue" button in the top right. Select "Bug report".
     4. Fill out the issue with as much information as you can. Your issue will be resolved in the near future.
-
 
 ## Attribution
 
