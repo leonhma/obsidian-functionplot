@@ -19,7 +19,7 @@
 		"webpack-cli": "^4.10.0"
 	},
 	"dependencies": {
-		"function-plot": "^1.22.8",
+		"function-plot": "^1.22.9-0",
 		"obsidian": "^0.11.13"
 	}
 }

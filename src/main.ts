@@ -46,7 +46,7 @@ export default class ObsidianFunctionPlot extends Plugin {
 
 			// prepare options for call to FunctionPlotya
 			const fPlotOptions: FunctionPlotOptions = {
-				target: el as unknown as string,  // weird workaround
+				target: el,
 				title: config.title,
 				grid: config.grid,
 				disableZoom: config.disableZoom,
