@@ -25,14 +25,14 @@ export default class PlotFunctionModal extends Modal {
     return `
 \`\`\`functionplot
 ---
-title: ${result.title}
+title: ${result.title ?? "''"}
 disableZoom: ${result.disableZoom}
 bounds: [${result.bounds}]
 grid: ${result.grid}
-xLabel: ${result.xLabel}
-yLabel: ${result.yLabel}
+xLabel: ${result.xLabel ?? "''"}
+yLabel: ${result.yLabel ?? "''"}
 ---
-${result.functions}
+${result.functions ?? ''}
 \`\`\`
 `
   }

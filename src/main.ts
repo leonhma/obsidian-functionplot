@@ -7,7 +7,7 @@ import {
   Editor,
 } from 'obsidian'
 
-import PlotFunMod from './PlotFunctionModal'
+import PlotFunctionModal from './PlotFunctionModal'
 import { HeaderOptions } from './types'
 
 const DEFAULT_HEADER_OPTIONS: HeaderOptions = {
@@ -26,9 +26,9 @@ export default class ObsidianFunctionPlot extends Plugin {
       name: 'Plot a function',
       //@ts-ignore
       editorCallback: (editor: Editor) => {
-        new PlotFunMod(this.app, (result) => {
+        new PlotFunctionModal(this.app, (result) => {
           const line = editor.getCursor().line
-          editor.setLine(line, PlotFunMod.parseToPlot(result))
+          editor.setLine(line, PlotFunctionModal.parseToPlot(result))
         }).open()
       },
     })
