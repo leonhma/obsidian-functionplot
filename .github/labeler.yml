@@ -3,7 +3,7 @@ documentation:
   - 'images/**/*'
 
 plugin:
-  - 'src/main.ts'
+  - 'src/**/*.ts'
 
 styles:
   - 'src/styles.scss'
