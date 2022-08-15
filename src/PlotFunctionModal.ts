@@ -69,7 +69,7 @@ export default class PlotFunctionModal extends Modal {
     let { contentEl } = this
 
     // Header
-    contentEl.createEl('h1', { title: 'Plot a function.' })
+    contentEl.createEl('h1', { text: 'Plot a function.' })
 
     const flex = contentEl.createDiv({ cls: 'flex' })
     flex.style.display = 'flex'
