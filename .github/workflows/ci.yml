@@ -7,7 +7,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+    if: github.ref_type == "branch"
     steps:
       - uses: actions/checkout@v2
         
@@ -15,7 +15,7 @@ jobs:
         run: yarn install
 
       - name: set development version
-        run: node version-bump.mjs dev-${{ github.sha }}
+        run: node version-bump.mjs "dev-$(git rev-parse --short HEAD)"
 
       - name: build
         run: yarn build
