@@ -3,3 +3,4 @@ yarn-error.log
 dist/
 copy.bat
 package-lock.json
+yarn.lock

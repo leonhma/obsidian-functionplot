@@ -1,6 +1,5 @@
 name: Feature request
 description: Request a new feature
-title: "[FR]: "
 labels: [enhancement]
 body:
   - type: markdown
