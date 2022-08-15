@@ -6,6 +6,10 @@ A plugin for displaying mathematical graphs in obsidian.md.
 
 ## How to use
 
+Since version `1.1.0` you can create plots via a handy GUI. Open the command palette and select `Obsidian Functionplot: Plot a function`. This opens a dialog where you can easily specify the options and functions to plot.
+
+### Manual usage
+
 1. Type:
 
  ~~~text

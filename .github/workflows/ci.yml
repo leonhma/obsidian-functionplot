@@ -1,11 +1,13 @@
 name: CI
 
-on: [push]
+on:
+  push:
+  pull_request:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/heads/')
+    if: ${{ !startsWith(github.ref, 'refs/tags/') }}
     steps:
       - uses: actions/checkout@v2
         
