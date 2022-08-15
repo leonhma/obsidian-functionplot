@@ -1,10 +1,11 @@
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: npm
+    directory: /
     schedule:
-      interval: "daily"
+      interval: daily
+    versioning-strategy: increase-if-necessary
     ignore:
-      - dependency-name: "obsidian"
-    # Disable version updates
-    open-pull-requests-limit: 0
+      - dependency-name: obsidian
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
