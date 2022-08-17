@@ -7,7 +7,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: "github.ref_type == 'branch' && !contains(github.event.head_commit.message, '[skip ci]')"
+    if: github.ref_type == 'branch'
     steps:
       - uses: actions/checkout@v2
         
