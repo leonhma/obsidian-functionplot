@@ -34,7 +34,7 @@ jobs:
         git config --global user.email "leonhardmasche@gmail.com"
 
         git add -A
-        git commit -m "chore(versions): index minAppVersion for latest release"
+        git commit -m "[skip ci] chore(versions): index minAppVersion for latest release"
         git push origin master
 
     - name: Build
