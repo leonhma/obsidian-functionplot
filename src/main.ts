@@ -1,4 +1,4 @@
-import functionPlot from 'function-plot'
+import functionPlot, { Chart } from 'function-plot'
 import { FunctionPlotOptions } from 'function-plot/dist/types'
 import {
   MarkdownPostProcessorContext,
@@ -6,82 +6,17 @@ import {
   parseYaml,
   Editor,
 } from 'obsidian'
-
-import PlotFunctionModal, { parseToPlot } from './PlotFunctionModal'
-import { HeaderOptions } from './types'
-
-const DEFAULT_HEADER_OPTIONS: HeaderOptions = {
-  title: '',
-  disableZoom: false,
-  bounds: [-10, 10, -10, 10],
-  grid: true,
-  xLabel: '',
-  yLabel: '',
-}
-
-export async function plotFunction(
-  source: string,
-  el: HTMLElement
-): Promise<void> {
-  try {
-    // styles
-    el.classList.add('obsidian-functionplot-render')
-    // parse yaml for bounds and functions to plot
-
-    const header = (source.match(/-{3}[^]+-{3}/) || [null])[0]
-    const functions = (header ? source.substring(header.length) : source)
-      .split('\n')
-      .map((line) => line.trim())
-      .filter((line) => line.length > 0)
-
-    const config: HeaderOptions = Object.assign(
-      {},
-      DEFAULT_HEADER_OPTIONS,
-      header ? parseYaml(header.match(/-{3,}([^]+?)-{3,}/)[1] || '') : {}
-    )
-
-    // prepare options for call to FunctionPlotya
-    const fPlotOptions: FunctionPlotOptions = {
-      target: el,
-      title: config.title,
-      grid: config.grid,
-      disableZoom: config.disableZoom,
-      xAxis: {
-        domain: [config.bounds[0], config.bounds[1]],
-        label: config.xLabel,
-      },
-      yAxis: {
-        domain: [config.bounds[2], config.bounds[3]],
-        label: config.yLabel,
-      },
-      data: functions.map((line) => {
-        return { fn: line.split('=')[1].trim(), graphType: 'polyline' }
-      }),
-    }
-    // render
-    functionPlot(fPlotOptions)
-    // make text listen to stylesheet
-    el.querySelectorAll('text').forEach((el) =>
-      el.setAttribute('fill', 'currentColor')
-    )
-  } catch (e) {
-    el.innerHTML = `
-    <div class="obsidian-functionplot-error">
-      <h3>Error</h3>
-      <p>${e}\n\n${source}</p>
-      <p>Please check your syntax. If this error keeps happening, please file a bug report on <a href="https://github.com/leonhma/obsidian-functionplot#bugs-and-errors">GitHub</a>.</p>
-    </div>`
-  }
-}
+import CreatePlotModal from './app/CreatePlotModal'
+import { parseToPlot } from "./utils"
+import { PlotOptions, DEFAULT_PLOT_OPTIONS } from './types'
 
 export default class ObsidianFunctionPlot extends Plugin {
   async onload(): Promise<void> {
     this.addCommand({
       id: 'insert-functionplot',
       name: 'Plot a function',
-      //@ts-ignore
       editorCallback: (editor: Editor) => {
-        new PlotFunctionModal(this.app, (result) => {
+        new CreatePlotModal(this.app, (result) => {
           const line = editor.getCursor().line
           editor.setLine(line, parseToPlot(result))
         }).open()
@@ -99,6 +34,56 @@ export default class ObsidianFunctionPlot extends Plugin {
     el: HTMLElement,
     _ctx: MarkdownPostProcessorContext
   ): Promise<void> {
-    plotFunction(source, el)
+    // parse functionplot options
+    const header: string = (source.match(/-{3}[^]*-{3}/) || [null])[0]
+    const functions = (header ? source.substring(header.length) : source)
+      .split('\n')
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0)
+    const options: PlotOptions = Object.assign(
+      {},
+      DEFAULT_PLOT_OPTIONS,
+      header ? parseYaml(header.match(/-{3,}([^]*?)-{3,}/)[1]) : {},
+      {functions: functions}
+    )
+    await createPlot(options, el)
   }
 }
+
+
+export async function createPlot(
+  options: PlotOptions,
+  target: HTMLElement
+): Promise<Chart> {
+  try {
+    target.classList.add('obsfplt-rendertarget')
+    const fPlotOptions: FunctionPlotOptions = {
+      target: target,
+      title: options.title,
+      grid: options.grid,
+      disableZoom: options.disableZoom,
+      xAxis: {
+        domain: options.bounds.slice(0,2),
+        label: options.xLabel,
+      },
+      yAxis: {
+        domain: options.bounds.slice(2, 4),
+        label: options.yLabel,
+      },
+      data: options.functions.map((line) => {
+        return { fn: line.split('=')[1], graphType: 'polyline' }
+      })
+    }
+    return functionPlot(fPlotOptions)
+  } catch (e) {
+    console.debug(e)
+    target.innerHTML = `
+    <div class="obsfplt-error">
+      <h3>Error</h3>
+      <p>${e}\nOptions passed to createPlot: ${options.toString()}</p>
+      <p>Please check your syntax. If this error keeps happening, please file a bug report on <a href="https://github.com/leonhma/obsidian-functionplot#bugs-and-errors">GitHub</a>.</p>
+    </div>`
+  }
+}
+
+

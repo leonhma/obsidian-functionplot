@@ -20,6 +20,6 @@
   },
   "dependencies": {
     "function-plot": "^1.22.9-0",
-    "obsidian": "^0.11.13"
+    "obsidian": "0.12.2"
   }
 }

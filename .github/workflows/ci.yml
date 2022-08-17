@@ -15,7 +15,7 @@ jobs:
         run: yarn install
 
       - name: set development version
-        run: node version-bump.mjs "dev-$(git rev-parse --short HEAD)"
+        run: node .github/version-bump.mjs "dev-$(git rev-parse --short HEAD)"
 
       - name: build
         run: yarn build
@@ -25,5 +25,16 @@ jobs:
         with:
           name: dist
           path: dist/
+
+  test:
+    runs-on: ubuntu-latest
+    if: github.ref_type == 'branch'
+    steps:
+      - uses: actions/checkout@v2
+        
+      - name: test
+        run: node .github/integrity-check.mjs
+        
+      
 
 
