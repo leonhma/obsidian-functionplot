@@ -1,17 +1,20 @@
 import functionPlot, { Chart } from 'function-plot'
 import { FunctionPlotOptions } from 'function-plot/dist/types'
-import {
-  MarkdownPostProcessorContext,
-  Plugin,
-  parseYaml,
-  Editor,
-} from 'obsidian'
+import { MarkdownPostProcessorContext, Plugin, parseYaml, Editor } from 'obsidian'
 import CreatePlotModal from './app/CreatePlotModal'
+import SettingsTab from './app/SettingsTab'
 import { parseToPlot } from "./utils"
-import { PlotOptions, DEFAULT_PLOT_OPTIONS } from './types'
+import { PlotOptions, DEFAULT_PLOT_OPTIONS, PluginSettings, DEFAULT_PLOT_PLUGIN_SETTINGS } from './types'
 
 export default class ObsidianFunctionPlot extends Plugin {
+  settings: PluginSettings
+
   async onload(): Promise<void> {
+    // load settings
+    await this.loadSettings();
+    // add settings tab
+    this.addSettingTab(new SettingsTab(this.app, this))
+    // register command for PlotModal
     this.addCommand({
       id: 'insert-functionplot',
       name: 'Plot a function',
@@ -22,11 +25,20 @@ export default class ObsidianFunctionPlot extends Plugin {
         }).open()
       },
     })
-
+    // register code block renderer
     this.registerMarkdownCodeBlockProcessor(
       'functionplot',
       this.functionPlotHandler
     )
+  }
+
+  async loadSettings() {
+    // TODO load default settings for font size, color and line width from themes
+    this.settings = Object.assign({}, DEFAULT_PLOT_PLUGIN_SETTINGS, await this.loadData());
+  }
+
+  async saveSettings() {
+    await this.saveData(this.settings);
   }
 
   async functionPlotHandler(
@@ -44,7 +56,7 @@ export default class ObsidianFunctionPlot extends Plugin {
       {},
       DEFAULT_PLOT_OPTIONS,
       header ? parseYaml(header.match(/-{3,}([^]*?)-{3,}/)[1]) : {},
-      {functions: functions}
+      { functions: functions }
     )
     await createPlot(options, el)
   }
@@ -63,7 +75,7 @@ export async function createPlot(
       grid: options.grid,
       disableZoom: options.disableZoom,
       xAxis: {
-        domain: options.bounds.slice(0,2),
+        domain: options.bounds.slice(0, 2),
         label: options.xLabel,
       },
       yAxis: {

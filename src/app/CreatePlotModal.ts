@@ -46,22 +46,17 @@ export default class CreatePlotModal extends Modal {
     this.options = Object.assign({}, DEFAULT_PLOT_OPTIONS)
 
     let { contentEl } = this
+    contentEl.empty();
 
     // Header
     contentEl.createEl('h1', { text: 'Plot a function' })
 
-    const flex = contentEl.createDiv({ cls: 'flex' })
-    flex.style.display = 'flex'
-    flex.style.alignItems = 'center'
+    const flex = contentEl.createDiv({ cls: 'flex', attr: {style: 'display: flex; align-items: center'} })
 
     const settings = flex.createDiv({ cls: 'settings' })
-    const preview = flex.createDiv()
-    preview.style.padding = '1em'
+    const preview = flex.createDiv({ attr: { style: 'padding: 1em' } })
     this.plot = await createPlot(Object.assign({}, this.options, { disableZoom: true }), preview.createDiv())
-    const hint = preview.createEl('p', { text: 'Preview - Zoom is disabled while in preview' })
-    hint.style.margin = '0 3em'
-    hint.style.fontSize = '0.8em'
-    hint.style.color = 'var(--text-faint)'
+    const hint = preview.createEl('p', { text: 'Preview - Zoom is disabled while in preview', attr: {style: 'margin: 0 3em; font-size: 0.8em; color: var(--text-faint)'} })
 
     new Setting(settings).setName('Title').addText((text) => {
       text.onChange(async (value) => {
