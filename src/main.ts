@@ -4,6 +4,7 @@ import { MarkdownPostProcessorContext, Plugin, parseYaml, Editor } from 'obsidia
 import CreatePlotModal from './app/CreatePlotModal'
 import SettingsTab from './app/SettingsTab'
 import { parseToPlot } from "./utils"
+import createStylingPlugin from './plugins/styling'
 import { PlotOptions, DEFAULT_PLOT_OPTIONS, PluginSettings, DEFAULT_PLOT_PLUGIN_SETTINGS } from './types'
 
 export default class ObsidianFunctionPlot extends Plugin {
@@ -19,7 +20,7 @@ export default class ObsidianFunctionPlot extends Plugin {
       id: 'insert-functionplot',
       name: 'Plot a function',
       editorCallback: (editor: Editor) => {
-        new CreatePlotModal(this.app, (result) => {
+        new CreatePlotModal(this.app, this, (result) => {
           const line = editor.getCursor().line
           editor.setLine(line, parseToPlot(result))
         }).open()
@@ -28,7 +29,7 @@ export default class ObsidianFunctionPlot extends Plugin {
     // register code block renderer
     this.registerMarkdownCodeBlockProcessor(
       'functionplot',
-      this.functionPlotHandler
+      this.createFunctionPlotHandler(this)
     )
   }
 
@@ -39,38 +40,43 @@ export default class ObsidianFunctionPlot extends Plugin {
 
   async saveSettings() {
     await this.saveData(this.settings);
+    console.log(`saved settings ${JSON.stringify(this.settings)}`)
   }
 
-  async functionPlotHandler(
-    source: string,
-    el: HTMLElement,
-    _ctx: MarkdownPostProcessorContext
-  ): Promise<void> {
-    // parse functionplot options
-    const header: string = (source.match(/-{3}[^]*-{3}/) || [null])[0]
-    const functions = (header ? source.substring(header.length) : source)
-      .split('\n')
-      .map((line) => line.trim())
-      .filter((line) => line.length > 0)
-    const options: PlotOptions = Object.assign(
-      {},
-      DEFAULT_PLOT_OPTIONS,
-      header ? parseYaml(header.match(/-{3,}([^]*?)-{3,}/)[1]) : {},
-      { functions: functions }
-    )
-    await createPlot(options, el)
+  createFunctionPlotHandler(plugin: ObsidianFunctionPlot) {
+    return async (
+      source: string,
+      el: HTMLElement,
+      _ctx: MarkdownPostProcessorContext
+    ) => {
+      // parse functionplot options
+      const header: string = (source.match(/-{3}[^]*-{3}/) || [null])[0]
+      const functions = (header ? source.substring(header.length) : source)
+        .split('\n')
+        .map((line) => line.trim())
+        .filter((line) => line.length > 0)
+      const options: PlotOptions = Object.assign(
+        {},
+        DEFAULT_PLOT_OPTIONS,
+        header ? parseYaml(header.match(/-{3,}([^]*?)-{3,}/)[1]) : {},
+        { functions: functions }
+      )
+      await createPlot(options, el, plugin)
+    }
   }
+  
 }
 
 
 export async function createPlot(
   options: PlotOptions,
-  target: HTMLElement
+  target: HTMLElement,
+  plugin: ObsidianFunctionPlot
 ): Promise<Chart> {
   try {
-    target.classList.add('obsfplt-rendertarget')
     const fPlotOptions: FunctionPlotOptions = {
       target: target,
+      plugins: [createStylingPlugin(plugin)],
       title: options.title,
       grid: options.grid,
       disableZoom: options.disableZoom,
@@ -86,15 +92,16 @@ export async function createPlot(
         return { fn: line.split('=')[1], graphType: 'polyline' }
       })
     }
-    return functionPlot(fPlotOptions)
+    const plot = functionPlot(fPlotOptions)
+    plot.root.select('.title').style('font-size', `${plugin.settings.titleFontSize}px`).style('fill', plugin.settings.fontColor)
+    plot.root.selectAll('.axis-label').style('font-size', `${plugin.settings.labelFontSize}px`).style('fill', plugin.settings.fontColor)
+    plot.root.selectAll('.origin').style('stroke', plugin.settings.lineColor).style('stroke-width', `${plugin.settings.lineWidth}px`)
+    plot.root.selectAll('line.tick').style('stroke', plugin.settings.gridColor).style('stroke-width', `${plugin.settings.gridWidth}px`)
+    plot.root.selectAll('line.text').style('fill', plugin.settings.fontColor).style('font-size', `${plugin.settings.scaleFontSize}px`)
+    plot.root.selectAll('.domain').style('stroke', plugin.settings.lineColor).style('stroke-width', `${plugin.settings.gridWidth}px`)
+    return plot
   } catch (e) {
     console.debug(e)
-    target.innerHTML = `
-    <div class="obsfplt-error">
-      <h3>Error</h3>
-      <p>${e}\nOptions passed to createPlot: ${options.toString()}</p>
-      <p>Please check your syntax. If this error keeps happening, please file a bug report on <a href="https://github.com/leonhma/obsidian-functionplot#bugs-and-errors">GitHub</a>.</p>
-    </div>`
   }
 }
 

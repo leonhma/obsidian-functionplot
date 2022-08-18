@@ -1,21 +1,24 @@
 import { Chart } from 'function-plot'
 import { FunctionPlotDatum } from 'function-plot/dist/types'
 import { App, Modal, Setting } from 'obsidian'
-import { DEFAULT_PLOT_OPTIONS, PlotOptions } from '../types'
-import { createPlot } from '../main'
+import { DEFAULT_PLOT_OPTIONS, PlotOptions, PluginSettings } from '../types'
+import ObsidianFunctionPlot, { createPlot } from '../main'
 
 
 export default class CreatePlotModal extends Modal {
   options: PlotOptions
+  plugin: ObsidianFunctionPlot
   plot: Chart
 
   onSubmit: (result: PlotOptions) => void
 
   constructor(
     app: App,
+    plugin: ObsidianFunctionPlot,
     onSubmit: (result: PlotOptions) => void
   ) {
     super(app)
+    this.plugin = plugin
     this.onSubmit = onSubmit
   }
 
@@ -37,9 +40,7 @@ export default class CreatePlotModal extends Modal {
     // redirect errors within function-plot to debug
     try {
       this.plot.build()
-    } catch (e) {
-      console.debug(e)
-    }
+    } catch (e) {console.debug(e)}
   }
 
   async onOpen() {
@@ -51,12 +52,12 @@ export default class CreatePlotModal extends Modal {
     // Header
     contentEl.createEl('h1', { text: 'Plot a function' })
 
-    const flex = contentEl.createDiv({ cls: 'flex', attr: {style: 'display: flex; align-items: center'} })
+    const flex = contentEl.createDiv({ attr: {style: 'display: flex; align-items: center'} })
 
-    const settings = flex.createDiv({ cls: 'settings' })
+    const settings = flex.createDiv()
     const preview = flex.createDiv({ attr: { style: 'padding: 1em' } })
-    this.plot = await createPlot(Object.assign({}, this.options, { disableZoom: true }), preview.createDiv())
-    const hint = preview.createEl('p', { text: 'Preview - Zoom is disabled while in preview', attr: {style: 'margin: 0 3em; font-size: 0.8em; color: var(--text-faint)'} })
+    this.plot = await createPlot(Object.assign({}, this.options, { disableZoom: true }), preview.createDiv(), this.plugin)
+    preview.createEl('p', { text: 'Preview - Zoom is disabled while in preview', attr: {style: 'margin: 0 3em; font-size: 0.8em; color: var(--text-faint)'} })
 
     new Setting(settings).setName('Title').addText((text) => {
       text.onChange(async (value) => {
@@ -84,11 +85,15 @@ export default class CreatePlotModal extends Modal {
       .addText((text) => {
         text.setPlaceholder(DEFAULT_PLOT_OPTIONS.bounds.join(', '))
         text.onChange(async (_) => {
-          const bounds = text
+          let bounds = text
             .getValue()
             .split(',')
             .map((c) => parseFloat(c))
-          if (bounds.filter((v) => !isNaN(v)).length === 4) {
+          const n = bounds.filter((v) => !isNaN(v)).length
+          if (n === 0) {
+            bounds = DEFAULT_PLOT_OPTIONS.bounds
+          }
+          if (n >= 4 || n === 0) {
             this.options.bounds = bounds as PlotOptions['bounds']
             await this.reloadPreview()
           }

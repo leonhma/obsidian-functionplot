@@ -1,5 +1,9 @@
+import { Chart } from "function-plot"
+import { EventEmitter } from "events"
+
 export interface PlotOptions {
   title: string
+  id?: string
   xLabel: string
   yLabel: string
   bounds: [number, number, number, number]
@@ -42,8 +46,12 @@ export const DEFAULT_PLOT_PLUGIN_SETTINGS: PluginSettings = {
   lineWidth: 2,
   gridWidth: 1,
 
-  fontColor: '#000000',
+  fontColor: 'white',
   // annotationColor: '#000',
-  lineColor: '#000000',
-  gridColor: '#cccccc'
+  lineColor: 'white',
+  gridColor: 'lightgray'
 }
+
+export type chartType = Chart & EventEmitter
+
+

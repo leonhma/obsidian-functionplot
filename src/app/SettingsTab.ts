@@ -11,15 +11,13 @@ export default class SettingsTab extends PluginSettingTab {
     }
 
     display() {
-        // @ts-ignore
-        let { containerEl: contentEl } = this;
-        console.log(contentEl)
-        contentEl.empty();
+        let { containerEl } = this;
+        containerEl.empty();
 
-        contentEl.createEl('h1', { text: 'Settings' })
-        contentEl.createEl('h3', { text: 'Font Sizes' })
+        containerEl.createEl('h1', { text: 'Settings' })
+        containerEl.createEl('h3', { text: 'Font Sizes' })
 
-        new Setting(contentEl)
+        new Setting(containerEl)
             .setName("Title Font Size")
             .setDesc("Font size used for the title.")
             .addSlider((slider) => {
@@ -28,11 +26,12 @@ export default class SettingsTab extends PluginSettingTab {
                     .setValue(this.plugin.settings.titleFontSize)
                     .onChange(async (value) => {
                         this.plugin.settings.titleFontSize = value;
+                        await this.plugin.saveSettings();
                     })
                     .setDynamicTooltip()
             })
 
-        new Setting(contentEl)
+        new Setting(containerEl)
             .setName("Scale Font Size")
             .setDesc("Font size used for the axis scales.")
             .addSlider((slider) => {
@@ -41,11 +40,12 @@ export default class SettingsTab extends PluginSettingTab {
                     .setValue(this.plugin.settings.scaleFontSize)
                     .onChange(async (value) => {
                         this.plugin.settings.scaleFontSize = value;
+                        await this.plugin.saveSettings();
                     })
                     .setDynamicTooltip()
             })
 
-        new Setting(contentEl)
+        new Setting(containerEl)
             .setName("Label Font Size")
             .setDesc("Font size used for the axis labels.")
             .addSlider((slider) => {
@@ -54,13 +54,14 @@ export default class SettingsTab extends PluginSettingTab {
                     .setValue(this.plugin.settings.labelFontSize)
                     .onChange(async (value) => {
                         this.plugin.settings.labelFontSize = value;
+                        await this.plugin.saveSettings();
                     })
                     .setDynamicTooltip()
             })
 
-        contentEl.createEl('h3', { text: 'Line Widths' })
+        containerEl.createEl('h3', { text: 'Line Widths' })
 
-        new Setting(contentEl)
+        new Setting(containerEl)
             .setName("Line Width")
             .setDesc("Line width used for the outer and 0-lines.")
             .addSlider((slider) => {
@@ -69,11 +70,12 @@ export default class SettingsTab extends PluginSettingTab {
                     .setValue(this.plugin.settings.lineWidth)
                     .onChange(async (value) => {
                         this.plugin.settings.lineWidth = value;
+                        await this.plugin.saveSettings();
                     })
                     .setDynamicTooltip()
             })
 
-        new Setting(contentEl)
+        new Setting(containerEl)
             .setName("Grid Line Width")
             .setDesc("Line width used for the gridlines.")
             .addSlider((slider) => {
@@ -82,51 +84,51 @@ export default class SettingsTab extends PluginSettingTab {
                     .setValue(this.plugin.settings.gridWidth)
                     .onChange(async (value) => {
                         this.plugin.settings.gridWidth = value;
+                        await this.plugin.saveSettings();
                     })
                     .setDynamicTooltip()
             })
 
-        contentEl.createEl('h3', { attr: { style: 'margin-bottom: 0' }, text: 'Colors' })
-        contentEl.createEl('p', {
+        containerEl.createEl('h3', { attr: { style: 'margin-bottom: 0' }, text: 'Colors' })
+        containerEl.createEl('p', {
             attr: {
-                style: 'margin-top: 8px; font-size: 0.8em; color: var(--text-faint)' }, text: 'Use #rrggbb format.' })
+                style: 'margin-top: 8px; font-size: 0.8em; color: var(--text-faint)'
+            }, text: 'Use any of the web formats. (name, hex, rgb, rgba, ...)'
+        })
 
-        new Setting(contentEl)
+        new Setting(containerEl)
             .setName("Font Color")
             .setDesc("Color used for the title and labels. ")
             .addText((text) => {
                 text
                     .setValue(this.plugin.settings.fontColor)
                     .onChange(async (value) => {
-                        if (value.length === 7 && value[0] === '#') {
-                            this.plugin.settings.fontColor = value;
-                        }
+                        this.plugin.settings.fontColor = value;
+                        await this.plugin.saveSettings();
                     })
             })
 
-        new Setting(contentEl)
+        new Setting(containerEl)
             .setName("Line Color")
             .setDesc("Color used for the outer and 0-lines. ")
             .addText((text) => {
                 text
                     .setValue(this.plugin.settings.lineColor)
                     .onChange(async (value) => {
-                        if (value.length === 7 && value[0] === '#') {
-                            this.plugin.settings.lineColor = value;
-                        }
+                        this.plugin.settings.lineColor = value;
+                        await this.plugin.saveSettings();
                     })
             })
 
-        new Setting(contentEl)
+        new Setting(containerEl)
             .setName("Grid Color")
             .setDesc("Color used for the gridlines. ")
             .addText((text) => {
                 text
                     .setValue(this.plugin.settings.gridColor)
                     .onChange(async (value) => {
-                        if (value.length === 7 && value[0] === '#') {
-                            this.plugin.settings.gridColor = value;
-                        }
+                        this.plugin.settings.gridColor = value;
+                        await this.plugin.saveSettings();
                     })
             })
     }
