@@ -1,6 +1,3 @@
-const { join } = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
-
 module.exports = {
     mode: "production",
     entry: './src/main.ts',
@@ -24,11 +21,6 @@ module.exports = {
             }
         ],
     },
-    plugins: [
-        new CopyPlugin({
-            patterns: ['manifest.json']
-        })
-    ],
     resolve: {
         extensions: ['.ts', '.js'],
     },
@@ -36,8 +28,7 @@ module.exports = {
         obsidian: 'commonjs obsidian'
     },
     output: {
-        path: join(__dirname, "dist/"),
-        clean: true,
+        path: __dirname,
         filename: 'main.js',
         libraryTarget: 'commonjs'
     }

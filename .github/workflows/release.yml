@@ -44,4 +44,4 @@ jobs:
       uses: AButler/upload-release-assets@v2.0
       with:
         repo-token: ${{ github.token }}
-        files: "dist/main.js;dist/manifest.json"
+        files: "main.js;manifest.json"

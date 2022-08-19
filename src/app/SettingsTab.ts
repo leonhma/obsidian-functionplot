@@ -141,7 +141,7 @@ export default class SettingsTab extends PluginSettingTab {
                         await this.plugin.saveSettings();
                     })
             })
-    
+
         new Setting(containerEl).addButton((btn) => {
             btn.setButtonText('Reset Settings to Default')
                 .setWarning()
@@ -153,7 +153,12 @@ export default class SettingsTab extends PluginSettingTab {
                     this.plugin.saveSettings()
                     new Notice('Obsidian Functionplot: Settings reset to default.')
                 })
-                
+        }).addButton((btn) => {
+            btn.setButtonText('Save')
+                .setCta()
+                .onClick((_) => {
+                    new Notice('Obsidian Functionplot: Settings saved.')
+                })
         })
     }
 }

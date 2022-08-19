@@ -10,7 +10,6 @@
     "build": "webpack"
   },
   "devDependencies": {
-    "copy-webpack-plugin": "^11.0.0",
     "sass": "^1.54.4",
     "sass-loader": "^13.0.2",
     "ts-loader": "^9.3.1",
