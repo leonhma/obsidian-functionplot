@@ -40,7 +40,6 @@ export default class ObsidianFunctionPlot extends Plugin {
 
   async saveSettings() {
     await this.saveData(this.settings);
-    console.log(`saved settings ${JSON.stringify(this.settings)}`)
   }
 
   createFunctionPlotHandler(plugin: ObsidianFunctionPlot) {
@@ -93,12 +92,7 @@ export async function createPlot(
       })
     }
     const plot = functionPlot(fPlotOptions)
-    plot.root.select('.title').style('font-size', `${plugin.settings.titleFontSize}px`).style('fill', plugin.settings.fontColor)
-    plot.root.selectAll('.axis-label').style('font-size', `${plugin.settings.labelFontSize}px`).style('fill', plugin.settings.fontColor)
-    plot.root.selectAll('.origin').style('stroke', plugin.settings.lineColor).style('stroke-width', `${plugin.settings.lineWidth}px`)
-    plot.root.selectAll('line.tick').style('stroke', plugin.settings.gridColor).style('stroke-width', `${plugin.settings.gridWidth}px`)
-    plot.root.selectAll('line.text').style('fill', plugin.settings.fontColor).style('font-size', `${plugin.settings.scaleFontSize}px`)
-    plot.root.selectAll('.domain').style('stroke', plugin.settings.lineColor).style('stroke-width', `${plugin.settings.gridWidth}px`)
+    
     return plot
   } catch (e) {
     console.debug(e)

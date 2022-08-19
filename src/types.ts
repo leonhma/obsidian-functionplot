@@ -39,17 +39,17 @@ export interface PluginSettings {
 
 export const DEFAULT_PLOT_PLUGIN_SETTINGS: PluginSettings = {
   titleFontSize: 24,
-  scaleFontSize: 14,
+  scaleFontSize: 12,
   labelFontSize: 12,
   // annotationFontSize: 16,
 
   lineWidth: 2,
   gridWidth: 1,
 
-  fontColor: 'white',
+  fontColor: 'var(--text-normal)',
   // annotationColor: '#000',
-  lineColor: 'white',
-  gridColor: 'lightgray'
+  lineColor: 'var(--interactive-hover)',
+  gridColor: 'var(--interactive-normal)'
 }
 
 export type chartType = Chart & EventEmitter

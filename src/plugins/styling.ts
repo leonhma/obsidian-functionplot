@@ -3,15 +3,15 @@ import type { chartType } from "../types"
 
 export default function createStylingPlugin(plugin: ObsidianFunctionPlot) {
     return function stylingPlugin(instance: chartType) {
-        console.log('registering styling plugin')
         if (!instance.listenerCount('after:draw')) {
             instance.on('after:draw', () => {
                 console.log('after:draw')
-                console.log(plugin.settings)
-                instance.root.selectAll('.title')
-                    .attr('font-size', plugin.settings.titleFontSize)
-                    .attr('fill', plugin.settings.fontColor)
-                console.log('applied styles')
+                instance.root.select('.title').style('font-size', `${plugin.settings.titleFontSize}px`).style('fill', plugin.settings.fontColor)
+                instance.root.selectAll('.axis-label').style('font-size', `${plugin.settings.labelFontSize}px`).style('fill', plugin.settings.fontColor)
+                instance.root.selectAll('.origin').style('stroke', plugin.settings.lineColor).style('stroke-width', `${plugin.settings.lineWidth}px`).style('opacity', 1)
+                instance.root.selectAll('.tick line').style('stroke', plugin.settings.gridColor).style('stroke-width', `${plugin.settings.gridWidth}px`).style('opacity', 1)
+                instance.root.selectAll('line.text').style('fill', plugin.settings.fontColor).style('font-size', `${plugin.settings.scaleFontSize}px`)
+                instance.root.selectAll('.domain').style('stroke', plugin.settings.lineColor).style('stroke-width', `${plugin.settings.gridWidth}px`).style('opacity', 1)
             })
         }
 
