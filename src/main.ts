@@ -21,8 +21,11 @@ export default class ObsidianFunctionPlot extends Plugin {
       name: 'Plot a function',
       editorCallback: (editor: Editor) => {
         new CreatePlotModal(this.app, this, (result) => {
-          const line = editor.getCursor().line
-          editor.setLine(line, parseToPlot(result))
+          const cursor = editor.getCursor()
+          const plot = parseToPlot(result)
+          editor.setLine(cursor.line, plot)
+          editor.setCursor(cursor.line + (plot.match(/\n/g) || []).length+1)
+          editor.focus()
         }).open()
       },
     })

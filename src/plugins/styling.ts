@@ -5,7 +5,6 @@ export default function createStylingPlugin(plugin: ObsidianFunctionPlot) {
     return function stylingPlugin(instance: chartType) {
         if (!instance.listenerCount('after:draw')) {
             instance.on('after:draw', () => {
-                console.log('after:draw')
                 const selection = instance.root.merge(instance.root.enter)
 
                 selection.select('.title')

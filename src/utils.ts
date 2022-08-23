@@ -1,8 +1,7 @@
 import { PlotOptions } from "./types";
 
 export function parseToPlot(result: PlotOptions): string {
-    return `
-\`\`\`functionplot
+    return `\`\`\`functionplot
 ---
 title: ${result.title}
 xLabel: ${result.xLabel}
