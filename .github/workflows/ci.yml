@@ -2,12 +2,13 @@ name: CI
 
 on:
   push:
-  pull_request:
+    branches:
+      - "**"
 
 jobs:
   build:
+    name: Build ⚙️
     runs-on: ubuntu-latest
-    if: github.ref_type == 'branch'
     steps:
       - uses: actions/checkout@v2
         
@@ -24,11 +25,11 @@ jobs:
         uses: actions/upload-artifact@v3.1.0
         with:
           name: dist
-          path: dist/
+          path: manifest.json;main.js
 
   test:
     runs-on: ubuntu-latest
-    if: github.ref_type == 'branch'
+    name: Test 🧪
     steps:
       - uses: actions/checkout@v2
         
