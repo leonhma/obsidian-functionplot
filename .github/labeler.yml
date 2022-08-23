@@ -13,3 +13,4 @@ automation:
 
 invalid:
   - 'LICENSE'
+  - 'versions.json'

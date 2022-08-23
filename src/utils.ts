@@ -11,7 +11,7 @@ bounds: [${result.bounds}]
 disableZoom: ${result.disableZoom}
 grid: ${result.grid}
 ---
-${result.functions ?? ''}
+${(result.functions ?? []).join('\n')}
 \`\`\`
 `;
 }

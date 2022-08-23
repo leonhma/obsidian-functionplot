@@ -4,58 +4,23 @@ A plugin for displaying mathematical graphs in obsidian.md.
 
 > *Remember to star this plugin on [Github](https://github.com/leonhma/obsidian-functionplot) if you like it.*
 
+*This file only contains basic instructions to get you to using this plugin quickly. If you want a more detailed documentation, take a look at the [wiki](https://github.com/leonhma/obsidian-functionplot/wiki).*
+
 ## How to use
 
-Since version `1.1.0` you can create plots via a handy GUI. Open the command palette and select `Obsidian Functionplot: Plot a function`. This opens a dialog where you can easily specify the options and functions to plot.
+Since version `1.1.0` you can create plots via a handy GUI with live-preview functionality.
 
-### Manual usage
+1. Open the command pallete and select `Obsidian Functionplot: Plot a Function`
 
-1. Type:
+2. Adjust the plot to your liking.
 
- ~~~text
- ```functionplot
- ---
- title: Graph
- disableZoom: false
- bounds: [-10, 10, -10, 10]
- grid: true
- xLabel: x
- yLabel: y
- ---
+    ![Create plot modal](./images/create-modal/light.png#gh-light-mode-only)
+    ![Create plot modal](./images/create-modal//dark.png#gh-dark-mode-only)
 
- f(x) = x^2
- g(x) = 0.5*x^3+x^2-44
- ```
- ~~~
+3. This will create a coordinate system with bounds `-10 < x < 10, -10 < y < 10` and plot the functions f and g. If you havent disabled it, you can even drag and zoom the graph.
 
- *(The metadata header in this example contains all possible options, you don't usually have to specify all of them)*
-
-2. This will create a coordinate system with bounds `-10 < x < 10, -10 < y < 10` and plot the functions f and g. If you havent disabled it, you can even drag and zoom the graph.
-
-![Graph image](./images/graph-light.png#gh-light-mode-only)
-![Graph image](./images/graph-dark.png#gh-dark-mode-only)
-
-## Options
-
-This section describes all the header options in yaml format.
-
-`title`: string, default: ""
-> The title of the graph.
-
-`disableZoom`: boolean, default: false
-> If true, the user can't zoom the graph.
-
-`bounds`: array, default: [-10, 10, -10, 10]
-> The initial bounds of the graph. If disableZoom is true, this is permanent.
-
-`grid`: boolean, default: true
-> If true, a grid is drawn.
-
-`xLabel`: string, default: ""
-> The label of the x-axis.
-
-`yLabel`: string, default: ""
-> The label of the y-axis.
+    ![Graph image](./images/plot/light.png#gh-light-mode-only)
+    ![Graph image](./images/plot/dark.png#gh-dark-mode-only)
 
 ## Questions
 
@@ -63,15 +28,11 @@ If you have any questions about the usage of the plugin, take a look at the [wik
 
 ## Bugs and Errors
 
-If you encounter any errors while using this plugin, please follow these steps:
+If you encounter any errors while using this plugin, please report them to us. To do so, click [this link](https://github.com/leonhma/obsidian-functionplot/issues/new?assignees=leonhma&labels=bug&template=BUG_REPORT.yml), fill out the form as best as you can and click `Submit new issue`. These issues are publically viewable, so please don't submit any personal information.
 
-1. Make sure you have followed the syntax as described above.
-2. Ensure that you are using the latest version of this plugin. Do this by going to the "Community plugins" tab in the settings, and clicking "Check for updates".
-3. If the issue still persists, please report it on GitHub. (If you managed to solve this problem on your own, but think we should know about it, please file the fitting type of issue.)
-    1. Go to the "Issues" tab of the repo.
-    2. Search for your error. If you can find it, chime in to the converation and let us know that it happened to you too. It appears this is a known issue and it is currently being worked on.
-    3. If you can't find it, open a new issue. Do this by clicking the "New issue" button in the top right. Select "Bug report".
-    4. Fill out the issue with as much information as you can. Your issue will be resolved in the near future.
+## Contributing
+
+Contributions are always welcome! Be it submitting issues, editing the wiki or creating a pull request, contributions by people like you help keep the project evolving. Please adhere to the [contributing guidelines](CONTRIBUTING.md).
 
 ## Attribution
 

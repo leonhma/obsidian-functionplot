@@ -48,8 +48,8 @@ export const DEFAULT_PLOT_PLUGIN_SETTINGS: PluginSettings = {
 
   fontColor: 'var(--text-normal)',
   // annotationColor: '#000',
-  lineColor: 'var(--interactive-hover)',
-  gridColor: 'var(--interactive-normal)'
+  lineColor: 'gray',
+  gridColor: 'var(--interactive-hover)'
 }
 
 export type chartType = Chart & EventEmitter
