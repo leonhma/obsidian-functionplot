@@ -25,7 +25,9 @@ jobs:
         uses: actions/upload-artifact@v3.1.0
         with:
           name: dist
-          path: manifest.json;main.js
+          path: |
+            manifest.json
+            main.js
 
   test:
     runs-on: ubuntu-latest
