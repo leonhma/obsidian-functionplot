@@ -1,7 +1,10 @@
 {
-  "files": ["./src/main.ts"],
+  "files": [
+    "./src/main.ts"
+  ],
   "compilerOptions": {
     "outDir": "./dist/",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "esModuleInterop": true
   }
 }

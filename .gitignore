@@ -1,4 +1,4 @@
 node_modules/
 yarn-error.log
-dist/
-copy.bat
+main.js
+data.json

@@ -2,12 +2,13 @@ name: CI
 
 on:
   push:
-  pull_request:
+    branches:
+      - "**"
 
 jobs:
   build:
+    name: Build ⚙️
     runs-on: ubuntu-latest
-    if: github.ref_type == 'branch'
     steps:
       - uses: actions/checkout@v2
         
@@ -15,7 +16,7 @@ jobs:
         run: yarn install
 
       - name: set development version
-        run: node version-bump.mjs "dev-$(git rev-parse --short HEAD)"
+        run: node .github/version-bump.mjs "dev-$(git rev-parse --short HEAD)"
 
       - name: build
         run: yarn build
@@ -24,6 +25,19 @@ jobs:
         uses: actions/upload-artifact@v3.1.0
         with:
           name: dist
-          path: dist/
+          path: |
+            manifest.json
+            main.js
+
+  test:
+    runs-on: ubuntu-latest
+    name: Test 🧪
+    steps:
+      - uses: actions/checkout@v2
+        
+      - name: test
+        run: node .github/integrity-check.mjs
+        
+      
 
 

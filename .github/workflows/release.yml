@@ -26,7 +26,7 @@ jobs:
       run: yarn install
 
     - name: Run version-bump
-      run: node version-bump.mjs ${{ github.event.release.tag_name }}
+      run: node .github/version-bump.mjs ${{ github.event.release.tag_name }}
 
     - name: Commit and push changes
       run: |
@@ -44,4 +44,4 @@ jobs:
       uses: AButler/upload-release-assets@v2.0
       with:
         repo-token: ${{ github.token }}
-        files: "dist/main.js;dist/manifest.json"
+        files: "main.js;manifest.json"
