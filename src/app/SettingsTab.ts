@@ -1,10 +1,10 @@
 import { App, Notice, PluginSettingTab, Setting, ValueComponent } from "obsidian";
 import ObsidianFunctionPlot from "../main"
-import { DEFAULT_PLOT_PLUGIN_SETTINGS } from "../types";
+import { DEFAULT_PLUGIN_SETTINGS, PluginSettings, rendererOptions, rendererType } from "../types";
 
 export default class SettingsTab extends PluginSettingTab {
     plugin: ObsidianFunctionPlot;
-    settingsInputs: Map<string, ValueComponent<string | number>>
+    settingsInputs: Map<keyof PluginSettings, ValueComponent<string | number>>
 
     constructor(app: App, plugin: ObsidianFunctionPlot) {
         super(app, plugin);
@@ -17,6 +17,31 @@ export default class SettingsTab extends PluginSettingTab {
         containerEl.empty();
 
         containerEl.createEl('h1', { text: 'Settings' })
+
+        /*
+         * Default Plot Options
+        */
+
+        containerEl.createEl('h3', { text: 'Default Plot Options' })
+
+        new Setting(containerEl)
+            .setName('Default Render Type')
+            .setDesc('The default renderer to use.')
+            .addDropdown((com) => {
+                this.settingsInputs.set('defaultRenderer', com)
+                com
+                    .addOptions(rendererOptions)
+                    .setValue(this.plugin.settings.defaultRenderer)
+                    .onChange(async (value: rendererType) => {
+                        this.plugin.settings.defaultRenderer = value
+                        await this.plugin.saveSettings()
+                    })
+            })
+
+        /*
+         * Font Sizes
+        */
+
         containerEl.createEl('h3', { text: 'Font Sizes' })
 
         new Setting(containerEl)
@@ -64,6 +89,10 @@ export default class SettingsTab extends PluginSettingTab {
                     .setDynamicTooltip()
             })
 
+        /*
+         * Line Widths
+        */
+
         containerEl.createEl('h3', { text: 'Line Widths' })
 
         new Setting(containerEl)
@@ -95,6 +124,10 @@ export default class SettingsTab extends PluginSettingTab {
                     })
                     .setDynamicTooltip()
             })
+
+        /*
+         * Colors
+        */
 
         containerEl.createEl('h3', { attr: { style: 'margin-bottom: 0' }, text: 'Colors' })
         containerEl.createEl('p', {
@@ -146,7 +179,7 @@ export default class SettingsTab extends PluginSettingTab {
             btn.setButtonText('Reset Settings to Default')
                 .setWarning()
                 .onClick((_) => {
-                    Object.assign(this.plugin.settings, DEFAULT_PLOT_PLUGIN_SETTINGS)
+                    Object.assign(this.plugin.settings, DEFAULT_PLUGIN_SETTINGS)
                     this.settingsInputs.forEach((input, key) => {
                         input.setValue(this.plugin.settings[key])
                     })

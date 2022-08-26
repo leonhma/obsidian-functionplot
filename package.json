@@ -19,6 +19,7 @@
 	},
 	"dependencies": {
 		"function-plot": "^1.22.9-0",
+		"html-to-image": "^1.10.6",
 		"obsidian": "0.12.2"
 	}
 }

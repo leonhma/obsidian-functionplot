@@ -1,27 +1,32 @@
 import { Chart } from 'function-plot'
 import { FunctionPlotDatum } from 'function-plot/dist/types'
-import { App, Modal, Setting } from 'obsidian'
-import { DEFAULT_PLOT_OPTIONS, PlotOptions, PluginSettings } from '../types'
+import { App, Editor, Modal, Setting } from 'obsidian'
+import { DEFAULT_PLOT_OPTIONS, PlotOptions, PluginSettings, rendererOptions, rendererType } from '../types'
 import ObsidianFunctionPlot, { createPlot } from '../main'
+import { insertParagraphAtCursor, renderAsImage, renderAsInteractive } from '../utils'
 
 
 export default class CreatePlotModal extends Modal {
   options: PlotOptions
   plugin: ObsidianFunctionPlot
+  editor: Editor
   plot: Chart
-
-  onSubmit: (result: PlotOptions) => void
+  renderer: rendererType
 
   constructor(
-    app: App,
     plugin: ObsidianFunctionPlot,
-    onSubmit: (result: PlotOptions) => void
+    editor: Editor
   ) {
-    super(app)
+    super(plugin.app)
     this.plugin = plugin
-    this.onSubmit = onSubmit
+    this.editor = editor
+    this.renderer = this.plugin.settings.defaultRenderer
   }
 
+  /**
+   * Reload the preview using internal functions. Zooming doesn't work here.
+   * @returns A Promise
+   */
   async reloadPreview() {
     if (!this.plot) return
     // update values
@@ -40,7 +45,7 @@ export default class CreatePlotModal extends Modal {
     // redirect errors within function-plot to debug
     try {
       this.plot.build()
-    } catch (e) {console.debug(e)}
+    } catch (e) { console.debug(e) }
   }
 
   async onOpen() {
@@ -52,12 +57,12 @@ export default class CreatePlotModal extends Modal {
     // Header
     contentEl.createEl('h1', { text: 'Plot a function' })
 
-    const flex = contentEl.createDiv({ attr: {style: 'display: flex; align-items: center'} })
+    const flex = contentEl.createDiv({ attr: { style: 'display: flex; align-items: center' } })
 
     const settings = flex.createDiv()
     const preview = flex.createDiv({ attr: { style: 'padding: 1em' } })
     this.plot = await createPlot(Object.assign({}, this.options, { disableZoom: true }), preview.createDiv(), this.plugin)
-    preview.createEl('p', { text: 'Preview - Zoom is disabled while in preview', attr: {style: 'margin: 0 3em; font-size: 0.8em; color: var(--text-faint)'} })
+    preview.createEl('p', { text: 'Preview - Zoom is disabled while in preview', attr: { style: 'margin: 0 3em; font-size: 0.8em; color: var(--text-faint)' } })
 
     new Setting(settings).setName('Title').addText((text) => {
       text.onChange(async (value) => {
@@ -125,23 +130,37 @@ export default class CreatePlotModal extends Modal {
       })
     })
 
-    new Setting(contentEl).addButton((btn) => {
-      btn
-        .setButtonText('Plot')
-        .setCta()
-        .onClick(() => {
-          this.close()
-          this.onSubmit({
-            title: this.options.title,
-            xLabel: this.options.xLabel,
-            yLabel: this.options.yLabel,
-            bounds: this.options.bounds,
-            disableZoom: this.options.disableZoom,
-            grid: this.options.grid,
-            functions: this.options.functions,
+    new Setting(contentEl)
+      .addDropdown((com) => {
+        com
+          .addOptions(rendererOptions)
+          .setValue(this.plugin.settings.defaultRenderer)
+          .onChange((value: rendererType) => {
+            this.renderer = value
           })
-        })
-    })
+      })
+      .addButton((btn) => {
+        btn
+          .setButtonText('Plot')
+          .setCta()
+          .onClick(async () => {
+            await this.handlePlotCreate(this.options)
+          })
+      })
+  }
+
+  async handlePlotCreate(options: PlotOptions) {
+    // render and insert chosen plot using renderer
+    switch (this.renderer) {
+      case 'interactive':
+        await insertParagraphAtCursor(this.editor, await renderAsInteractive(options))
+        break
+      case 'image':
+        await insertParagraphAtCursor(this.editor, await renderAsImage(options, this.plugin))
+        break
+    }
+
+    this.close()
   }
 
   async onClose() {
