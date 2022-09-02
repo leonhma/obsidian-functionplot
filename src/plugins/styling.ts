@@ -1,5 +1,5 @@
 import ObsidianFunctionPlot from "../main"
-import type { chartType } from "../types"
+import { chartType } from "../common/types"
 
 export default function createStylingPlugin(plugin: ObsidianFunctionPlot) {
     return function stylingPlugin(instance: chartType) {

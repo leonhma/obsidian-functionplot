@@ -1,10 +1,10 @@
 {
-  "files": [
-    "./src/main.ts"
-  ],
   "compilerOptions": {
+    "types": ["node"],
     "outDir": "./dist/",
+    "sourceMap": true,
     "moduleResolution": "node",
     "esModuleInterop": true
-  }
+  },
+  "include": ["src", "declaration.d.ts"]
 }

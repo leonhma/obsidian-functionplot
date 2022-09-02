@@ -1,6 +1,7 @@
 import { App, Notice, PluginSettingTab, Setting, ValueComponent } from "obsidian";
 import ObsidianFunctionPlot from "../main"
-import { DEFAULT_PLUGIN_SETTINGS, PluginSettings, rendererOptions, rendererType } from "../types";
+import { DEFAULT_PLUGIN_SETTINGS, rendererOptions } from "../common/defaults";
+import { PluginSettings, rendererType } from "../common/types";
 
 export default class SettingsTab extends PluginSettingTab {
     plugin: ObsidianFunctionPlot;

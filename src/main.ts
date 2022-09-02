@@ -3,9 +3,9 @@ import { FunctionPlotOptions } from 'function-plot/dist/types'
 import { MarkdownPostProcessorContext, Plugin, parseYaml, Editor } from 'obsidian'
 import CreatePlotModal from './app/CreatePlotModal'
 import SettingsTab from './app/SettingsTab'
-import { insertParagraphAtCursor, renderAsInteractive } from "./utils"
 import createStylingPlugin from './plugins/styling'
-import { PlotOptions, DEFAULT_PLOT_OPTIONS, PluginSettings, DEFAULT_PLUGIN_SETTINGS } from './types'
+import { DEFAULT_PLOT_OPTIONS, DEFAULT_PLUGIN_SETTINGS } from './common/defaults'
+import { PlotOptions, PluginSettings } from "./common/types"
 
 // The main plugin entrypoint.
 export default class ObsidianFunctionPlot extends Plugin {

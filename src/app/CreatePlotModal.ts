@@ -1,9 +1,10 @@
 import { Chart } from 'function-plot'
 import { FunctionPlotDatum } from 'function-plot/dist/types'
-import { App, Editor, Modal, Setting } from 'obsidian'
-import { DEFAULT_PLOT_OPTIONS, PlotOptions, PluginSettings, rendererOptions, rendererType } from '../types'
+import { Editor, Modal, Setting } from 'obsidian'
+import { DEFAULT_PLOT_OPTIONS, rendererOptions } from '../common/defaults'
+import { PlotOptions, rendererType } from "../common/types"
 import ObsidianFunctionPlot, { createPlot } from '../main'
-import { insertParagraphAtCursor, renderAsImage, renderAsInteractive } from '../utils'
+import { renderPlotAsImage, renderAsInteractive } from '../common/utils'
 
 
 export default class CreatePlotModal extends Modal {
@@ -153,10 +154,10 @@ export default class CreatePlotModal extends Modal {
     // render and insert chosen plot using renderer
     switch (this.renderer) {
       case 'interactive':
-        await insertParagraphAtCursor(this.editor, await renderAsInteractive(options))
+        await renderAsInteractive(this.plugin, this.editor, options)
         break
       case 'image':
-        await insertParagraphAtCursor(this.editor, await renderAsImage(options, this.plugin))
+        await renderPlotAsImage(this.plugin, this.editor, options)
         break
     }
 

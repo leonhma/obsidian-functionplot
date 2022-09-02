@@ -38,4 +38,5 @@ Contributions are always welcome! Be it submitting issues, editing the wiki or c
 
 This plugin is based on / uses:
 
-- [function-plot](https://github.com/mauriciopoppe/function-plot): MIT License, Copyright (c) 2015 Mauricio Poppe
+- [function-plot](https://github.com/mauriciopoppe/function-plot): MIT License, Copyright (c) 2015 [Mauricio Poppe](https://github.com/mauriciopoppe)
+- [html-to-canvas](https://html2canvas.hertzen.com): MIT License, Copyright (c) 2022 [Niklas von Hertzen](https://hertzen.com)

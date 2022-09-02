@@ -38,10 +38,24 @@ jobs:
         git push origin master
 
     - name: Build
-      run: yarn build
+      run: |
+        yarn build:prod
+        mkdir obsidian-functionplot
+        cp main.js manifest.json obsidian-functionplot
+        zip -r obsidian-functionplot.zip obsidian-functionplot
 
-    - name: Upload assets to a Release
+    - name: Upload assets to the Release
       uses: AButler/upload-release-assets@v2.0
       with:
         repo-token: ${{ github.token }}
         files: "main.js;manifest.json"
+    
+    - name: Upload zip
+      uses: actions/upload-release-assets@v1.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./obsidian-functionplot.zip
+        asset_name: obsidian-functionplot-${{ github.event.release.tag_name }}.zip
+        asset_content_type: application/zip
