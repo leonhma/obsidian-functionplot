@@ -4,7 +4,7 @@ import { Editor, Modal, Setting } from 'obsidian'
 import { DEFAULT_PLOT_OPTIONS, rendererOptions } from '../common/defaults'
 import { PlotOptions, rendererType } from "../common/types"
 import ObsidianFunctionPlot, { createPlot } from '../main'
-import { renderPlotAsImage, renderAsInteractive } from '../common/utils'
+import { renderPlotAsImage, renderPlotAsInteractive } from '../common/utils'
 
 
 export default class CreatePlotModal extends Modal {
@@ -154,7 +154,7 @@ export default class CreatePlotModal extends Modal {
     // render and insert chosen plot using renderer
     switch (this.renderer) {
       case 'interactive':
-        await renderAsInteractive(this.plugin, this.editor, options)
+        await renderPlotAsInteractive(this.plugin, this.editor, options)
         break
       case 'image':
         await renderPlotAsImage(this.plugin, this.editor, options)

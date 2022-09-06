@@ -1,23 +1,19 @@
-import { App, Modal } from "obsidian";
+import { Modal } from "obsidian";
 import ErrorView from "./ErrorView.svelte";
-
-
-interface ErrorViewProps {
-    heading: string;
-    message: string;
-    link: string
-}
+import { ErrorViewProps  } from "../common/types";
+import ObsidianFunctionPlot from "../main";
+import { DEFAULT_ERROR_VIEW_PROPS } from "../common/defaults";
 
 export default class ErrorViewModal extends Modal {
     component
     props: ErrorViewProps
 
     constructor(
-        app: App,
-        props: ErrorViewProps
+        plugin: ObsidianFunctionPlot,
+        props: Partial<ErrorViewProps>
     ) {
-        super(app);
-        this.props = props
+        super(plugin.app);
+        this.props = Object.assign({}, DEFAULT_ERROR_VIEW_PROPS, props)
     }
 
     async onOpen() {

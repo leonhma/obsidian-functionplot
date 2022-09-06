@@ -1,4 +1,4 @@
-import { rendererType, PlotOptions, PluginSettings } from "./types"
+import { rendererType, PlotOptions, PluginSettings, ErrorViewProps, BugFormProps } from "./types"
 
 
 /**
@@ -6,7 +6,7 @@ import { rendererType, PlotOptions, PluginSettings } from "./types"
  */
 export const rendererOptions: { [_ in rendererType]: string } = {
   'interactive': 'Interactive (zoomable)',
-  'image': 'Image (exportable)'
+  'image': 'Image (exportable)',
 }
 
 /**
@@ -45,4 +45,15 @@ export const DEFAULT_PLUGIN_SETTINGS: PluginSettings = {
 /**
  * The default issue url to use
  */
-export const DEFAULT_ISSUE_BUG_URL: string = 'https://github.com/leonhma/obsidian-functionplot/issues/new?assignees=leonhma&labels=bug&template=BUG_REPORT.yml'
+export const DEFAULT_ERROR_VIEW_PROPS: ErrorViewProps = {
+  heading: 'Unhandled Error',
+  message: '',
+  link: 'https://github.com/leonhma/obsidian-functionplot/issues/new?labels=bug&template=BUG_REPORT.yml'
+}
+
+export const DEFAULT_BUG_FORM_PROPS: BugFormProps = {
+  "what-happened": '',
+  checkboxes: [false, false],
+  ideas: '',
+  additional: ''
+}

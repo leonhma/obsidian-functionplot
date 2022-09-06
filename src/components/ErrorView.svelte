@@ -1,15 +1,14 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import {toCanvas as toCanvasQR} from "qrcode";
-  import {DEFAULT_ISSUE_BUG_URL} from '../common/defaults'
+  import { toCanvas as toCanvasQR } from "qrcode";
 
   export let heading: string, message: string, link: string;
 
   onMount(async () => {
-    const QRCanvas = document.getElementById('qr') as HTMLCanvasElement
+    const QRCanvas = document.getElementById("qr") as HTMLCanvasElement;
 
-    toCanvasQR(QRCanvas, link, {width: 128})
-  })
+    toCanvasQR(QRCanvas, link, { width: 128 });
+  });
 </script>
 
 <div class="container">
@@ -18,21 +17,21 @@
   <br />
   <p>Please file an issue regarding this bug on GitHub:</p>
   <div class="flex">
-    <canvas id="qr"/>
-    <a href={link||DEFAULT_ISSUE_BUG_URL}>or click here</a>
+    <canvas id="qr" />
+    <a href={link}>or click here</a>
   </div>
 </div>
 
 <style lang="scss">
   div {
-    .container {
-      border-radius: 0.5em;
-    }
     .flex {
       display: flex;
       flex-flow: column nowrap;
       justify-content: space-evenly;
       align-items: center;
+    }
+    .container {
+      border-radius: 0.5em;
     }
   }
   #qr {

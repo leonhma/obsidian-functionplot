@@ -1,7 +1,5 @@
 import sveltePreprocess from "svelte-preprocess";
 import { fileURLToPath, URL } from 'url'
-import pkg from 'webpack';
-const { HotModuleReplacementPlugin } = pkg;
 
 
 const mode = process.env.NODE_ENV || 'development';
@@ -12,7 +10,7 @@ export default {
     entry: './src/main.ts',
     devtool: !prod ? 'inline-source-map' : false,
     performance: {
-        hints: false  // ignore this since the bundle is downloaded once then locally
+        hints: false  // ignore size since the bundle is run locally
     },
     module: {
         rules: [
@@ -27,7 +25,8 @@ export default {
                     loader: 'ts-loader',
                     options: {
                         compilerOptions: {
-                            sourceMap: !prod
+                            sourceMap: !prod,
+                            inlineSources: !prod
                         }
                     }
                 }
@@ -41,16 +40,21 @@ export default {
                             dev: !prod,
                             enableSourcemap: !prod
                         },
+                        onwarn: (warning, handler) => {
+                            const { code, frame } = warning;
+                            if (code === "css-unused-selector")
+                                return;
+
+                            handler(warning);
+                        },
                         preprocess: sveltePreprocess({
                             sourceMap: !prod
                         }),
-                        hotReload: !prod
                     },
                 },
             },
         ],
     },
-    plugins: !prod ? [new HotModuleReplacementPlugin()] : [],
     resolve: {
         extensions: ['.ts', '.js'],
     },

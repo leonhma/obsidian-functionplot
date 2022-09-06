@@ -1,21 +1,20 @@
 import { Chart } from "function-plot";
 import { EventEmitter } from "events";
 
+
 /**
  * The possible types of renderer.
  */
-
-
 export type rendererType = 'interactive' | 'image';
+
 /**
  * A sum-type of Chart and EventEmitter because TypeScript can't figure this out on it's own.
  */
-
 export type chartType = Chart & EventEmitter;
+
 /**
  * An interface specifying the options for a plot.
  */
-
 export interface PlotOptions {
     title: string;
     xLabel: string;
@@ -25,10 +24,10 @@ export interface PlotOptions {
     grid: boolean;
     functions: string[];
 }
+
 /**
  * The plugin's settings.
  */
-
 export interface PluginSettings {
     titleFontSize: number;
     scaleFontSize: number;
@@ -44,3 +43,27 @@ export interface PluginSettings {
 
     defaultRenderer: rendererType;
 }
+
+/**
+ * The props passed to ErrorView.svelte
+ */
+export interface ErrorViewProps {
+    heading: string
+    message: string
+    link: string
+}
+
+export interface BugFormProps {
+    'what-happened': string
+    checkboxes: [boolean, boolean]
+    ideas: string
+    additional: string
+}
+
+export interface ErrorRecord {
+    time: string
+    type: string
+    msg: string
+}
+
+export type ErrorLog = Array<ErrorRecord>

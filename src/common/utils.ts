@@ -3,16 +3,16 @@ import ObsidianFunctionPlot, { createPlot } from "../main";
 import { PlotOptions } from "./types";
 import { toPng } from "html-to-image"
 
-import ErrorViewModal from "../components/ErrorViewModal";
-import { DEFAULT_ISSUE_BUG_URL } from "./defaults";
+import { renderError } from "./errors";
 
 
 /**
- * Parse the options into code-block form, to insert into the editor.
+ * Insert an interactive plot at the current cursor position.
+ * @param plugin A reference to the plugin
+ * @param editor A reference to the active editor
  * @param options The options for the plot
- * @returns The text to insert
  */
-export async function renderAsInteractive(plugin: ObsidianFunctionPlot, editor: Editor, options: PlotOptions) {
+export async function renderPlotAsInteractive(plugin: ObsidianFunctionPlot, editor: Editor, options: PlotOptions) {
     const text = `\`\`\`functionplot
 ---
 title: ${options.title}
@@ -29,26 +29,22 @@ ${(options.functions ?? []).join('\n')}
 
 /**
  * Render the plot as an image element using a data url.
+ * @param plugin A reference to the plugin
+ * @param editor A reference to the active editor
  * @param options The options for the plot
- * @param plugin A reference to the plugin (for accessing the settings)
- * @returns The text to insert
  */
 export async function renderPlotAsImage(plugin: ObsidianFunctionPlot, editor: Editor, options: PlotOptions) {
     const htmlTarget = document.createElement('div')
     await createPlot(options, htmlTarget, plugin)
     const dataURL = await toPng(htmlTarget)
     if (dataURL === 'data:,') {
-        renderError(plugin, { heading: 'Error while rendering to image', message: 'Empty data URL', link: DEFAULT_ISSUE_BUG_URL })
+        renderError(plugin)
         return
     }
     const text = `<img alt="Obsidian Functionplot Plot. Name: ${options.title}, X-Label: ${options.xLabel}, Y-Label: ${options.yLabel}, Functions: ${(options.functions ?? []).join('\n')}."src="${dataURL}">`
     htmlTarget.remove()
     insertParagraphAtCursor(plugin, editor, text)
 
-}
-
-export async function renderError(plugin: ObsidianFunctionPlot, props: { heading: string, message: string, link: string }) {
-    new ErrorViewModal(plugin.app, props).open()
 }
 
 /**
