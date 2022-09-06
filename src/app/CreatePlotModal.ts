@@ -22,7 +22,7 @@ export default class CreatePlotModal extends Modal {
     this.onSubmit = onSubmit
   }
 
-  async reloadPreview() {
+   reloadPreview() {
     if (!this.plot) return
     // update values
     this.plot.options.title = this.options.title
@@ -144,7 +144,7 @@ export default class CreatePlotModal extends Modal {
     })
   }
 
-  async onClose() {
+   onClose() {
     let { contentEl } = this
     contentEl.empty()
     this.plot = null

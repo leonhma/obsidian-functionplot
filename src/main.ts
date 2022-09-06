@@ -70,7 +70,7 @@ export default class ObsidianFunctionPlot extends Plugin {
 }
 
 
-export async function createPlot(
+export  function createPlot(
   options: PlotOptions,
   target: HTMLElement,
   plugin: ObsidianFunctionPlot
