@@ -17,6 +17,7 @@ body:
     validations:
       required: true
   - type: checkboxes
+    id: checkboxes
     attributes:
       label: Please confirm
       description: "Please confirm the following:"
