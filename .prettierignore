@@ -1,3 +1,4 @@
+# .gitignore
 node_modules/
 yarn-error.log
 main.js
@@ -6,3 +7,7 @@ package-lock.json
 main.js.LICENSE.txt
 .idea
 .vscode
+
+# other
+yarn.lock
+LICENSE

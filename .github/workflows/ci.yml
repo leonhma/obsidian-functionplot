@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        
+
       - name: install dependencies
         run: yarn install
 
@@ -34,10 +34,24 @@ jobs:
     name: Test 🧪
     steps:
       - uses: actions/checkout@v2
-        
+
       - name: test
-        run: node .github/integrity-check.mjs
-        
-      
+        run: yarn test
 
+  check-format:
+    runs-on: ubuntu-latest
+    name: Check format 🔍
+    steps:
+      - uses: actions/checkout@v2
 
+      - name: check format
+        run: yarn format:check
+
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint ✔
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: lint
+        run: yarn lint

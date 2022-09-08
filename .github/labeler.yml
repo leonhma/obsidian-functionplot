@@ -1,16 +1,16 @@
 documentation:
-  - 'README.md'
-  - 'images/**/*'
+  - "README.md"
+  - "images/**/*"
 
 plugin:
-  - 'src/**/*.ts'
+  - "src/**/*.ts"
 
 styles:
-  - 'src/styles.scss'
+  - "src/styles.scss"
 
 automation:
-  - '.github/workflows/*'
+  - ".github/workflows/*"
 
 invalid:
-  - 'LICENSE'
-  - 'versions.json'
+  - "LICENSE"
+  - "versions.json"

@@ -2,7 +2,7 @@ name: release
 
 on:
   release:
-    types: [ published ] 
+    types: [published]
 
 permissions:
   contents: write
@@ -12,49 +12,46 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Setup Node.js environment
-      uses: actions/setup-node@v3.1.1
-      with:
-        node-version: 14
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3.1.1
+        with:
+          node-version: 14
 
-    - name: Checkout
-      uses: actions/checkout@v2.4.2
-      with:
-        ref: master
+      - name: Checkout
+        uses: actions/checkout@v2.4.2
+        with:
+          ref: master
 
-    - name: Install packages
-      run: yarn install
+      - name: Install packages
+        run: yarn install
 
-    - name: Run version-bump
-      run: node .github/version-bump.mjs ${{ github.event.release.tag_name }}
+      - name: Run version-bump
+        run: node .github/version-bump.mjs ${{ github.event.release.tag_name }}
 
-    - name: Commit and push changes
-      run: |
-        git config --global user.name "leonhma"
-        git config --global user.email "leonhardmasche@gmail.com"
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "chore(versions): index `minAppVersion` for latest release"
+          branch: master
 
-        git add -A
-        git commit -m "chore(versions): index minAppVersion for latest release"
-        git push origin master
+      - name: Build
+        run: |
+          yarn build:prod
+          mkdir obsidian-functionplot
+          cp main.js manifest.json obsidian-functionplot
+          zip -r obsidian-functionplot.zip obsidian-functionplot
 
-    - name: Build
-      run: |
-        yarn build:prod
-        mkdir obsidian-functionplot
-        cp main.js manifest.json obsidian-functionplot
-        zip -r obsidian-functionplot.zip obsidian-functionplot
+      - name: Upload assets to the Release
+        uses: AButler/upload-release-assets@v2.0
+        with:
+          repo-token: ${{ github.token }}
+          files: "main.js;manifest.json"
 
-    - name: Upload assets to the Release
-      uses: AButler/upload-release-assets@v2.0
-      with:
-        repo-token: ${{ github.token }}
-        files: "main.js;manifest.json"
-    
-    - name: Upload zip
-      uses: actions/upload-release-assets@v1.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        asset_path: ./obsidian-functionplot.zip
-        asset_name: obsidian-functionplot-${{ github.event.release.tag_name }}.zip
-        asset_content_type: application/zip
+      - name: Upload zip
+        uses: actions/upload-release-assets@v1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          asset_path: ./obsidian-functionplot.zip
+          asset_name: obsidian-functionplot-${{ github.event.release.tag_name }}.zip
+          asset_content_type: application/zip

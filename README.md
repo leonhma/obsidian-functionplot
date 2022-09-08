@@ -2,9 +2,18 @@
 
 A plugin for displaying mathematical graphs in obsidian.md.
 
-> *Remember to star this plugin on [Github](https://github.com/leonhma/obsidian-functionplot) if you like it.*
+## Highlights
 
-*This file only contains basic instructions to get you to using this plugin quickly. If you want a more detailed documentation, take a look at the [wiki](https://github.com/leonhma/obsidian-functionplot/wiki).*
+-   Create plots for functions (see image below)
+-   Customize the plot appearance in settings
+-   Create plots using a modal (see image below)
+-   Render plot to image (for easy exporting of markdown)
+
+---
+
+> _Remember to star this plugin on [Github](https://github.com/leonhma/obsidian-functionplot) if you like it._
+
+_This file only contains basic instructions to get you to using this plugin quickly. If you want a more detailed documentation, take a look at the [wiki](https://github.com/leonhma/obsidian-functionplot/wiki)._
 
 ## How to use
 
@@ -38,5 +47,6 @@ Contributions are always welcome! Be it submitting issues, editing the wiki or c
 
 This plugin is based on / uses:
 
-- [function-plot](https://github.com/mauriciopoppe/function-plot): MIT License, Copyright (c) 2015 [Mauricio Poppe](https://github.com/mauriciopoppe)
-- [html-to-canvas](https://html2canvas.hertzen.com): MIT License, Copyright (c) 2022 [Niklas von Hertzen](https://hertzen.com)
+-   [function-plot](https://github.com/mauriciopoppe/function-plot): MIT License, Copyright (c) 2015 [Mauricio Poppe](https://github.com/mauriciopoppe)
+-   [html-to-image](https://github.com/bubkoo/html-to-image): MIT License, Copyright (c) 2017 [W.Y.](https://github.com/bubkoo)
+-   [qrcode](https://github.com/soldair/node-qrcode): MIT License, Copyright (c) 2012 [Ryan Day](https://github.com/soldair)

@@ -1,38 +1,49 @@
-import functionPlot, { Chart } from 'function-plot'
-import { FunctionPlotOptions } from 'function-plot/dist/types'
-import { MarkdownPostProcessorContext, Plugin, parseYaml, Editor } from 'obsidian'
-import CreatePlotModal from './app/CreatePlotModal'
-import SettingsTab from './app/SettingsTab'
-import createStylingPlugin from './plugins/styling'
-import { DEFAULT_PLOT_OPTIONS, DEFAULT_PLUGIN_SETTINGS } from './common/defaults'
-import { PlotOptions, PluginSettings } from "./common/types"
+import functionPlot, { Chart } from "function-plot";
+import { FunctionPlotOptions } from "function-plot/dist/types";
+import { Plugin, parseYaml, Editor } from "obsidian";
+import CreatePlotModal from "./app/CreatePlotModal";
+import SettingsTab from "./app/SettingsTab";
+import createStylingPlugin from "./plugins/styling";
+import {
+  DEFAULT_PLOT_OPTIONS,
+  DEFAULT_PLUGIN_SETTINGS,
+} from "./common/defaults";
+import { setupLogging } from "./common/logging";
+import { PlotOptions, PluginSettings } from "./common/types";
 
 // The main plugin entrypoint.
 export default class ObsidianFunctionPlot extends Plugin {
-  settings: PluginSettings
+  settings: PluginSettings;
 
   async onload() {
+    // logging
+    setupLogging(this);
+
     // load settings
     await this.loadSettings();
     // add settings tab
-    this.addSettingTab(new SettingsTab(this.app, this))
+    this.addSettingTab(new SettingsTab(this.app, this));
     // register command for CreatePlotModal
     this.addCommand({
-      id: 'insert-functionplot',
-      name: 'Plot a function',
+      id: "insert-functionplot",
+      name: "Plot a function",
       editorCallback: (editor: Editor) => {
-        new CreatePlotModal(this, editor).open()
+        new CreatePlotModal(this, editor).open();
       },
-    })
+    });
     // register code block renderer
     this.registerMarkdownCodeBlockProcessor(
-      'functionplot',
+      "functionplot",
       this.createFunctionPlotHandler(this)
-    )
+    );
   }
 
   async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_PLUGIN_SETTINGS, await this.loadData());
+    this.settings = Object.assign(
+      {},
+      DEFAULT_PLUGIN_SETTINGS,
+      await this.loadData()
+    );
   }
 
   async saveSettings() {
@@ -46,27 +57,22 @@ export default class ObsidianFunctionPlot extends Plugin {
    * @returns The code-block handler
    */
   createFunctionPlotHandler(plugin: ObsidianFunctionPlot) {
-    return async (
-      source: string,
-      el: HTMLElement,
-      _ctx: MarkdownPostProcessorContext
-    ) => {
+    return (source: string, el: HTMLElement) => {
       // parse functionplot options
-      const header: string = (source.match(/-{3}[^]*-{3}/) || [null])[0]
+      const header: string = (source.match(/-{3}[^]*-{3}/) || [null])[0];
       const functions = (header ? source.substring(header.length) : source)
-        .split('\n')
+        .split("\n")
         .map((line) => line.trim())
-        .filter((line) => line.length > 0)
+        .filter((line) => line.length > 0);
       const options: PlotOptions = Object.assign(
         {},
         DEFAULT_PLOT_OPTIONS,
         header ? parseYaml(header.match(/-{3,}([^]*?)-{3,}/)[1]) : {},
         { functions: functions }
-      )
-      await createPlot(options, el, plugin)
-    }
+      );
+      createPlot(options, el, plugin);
+    };
   }
-
 }
 
 /**
@@ -76,11 +82,11 @@ export default class ObsidianFunctionPlot extends Plugin {
  * @param plugin A reference to the plugin (accessed for settings)
  * @returns The chart object of the created plot
  */
-export async function createPlot(
+export function createPlot(
   options: PlotOptions,
   target: HTMLElement,
   plugin: ObsidianFunctionPlot
-): Promise<Chart> {
+): Chart {
   try {
     const fPlotOptions: FunctionPlotOptions = {
       target: target,
@@ -97,15 +103,13 @@ export async function createPlot(
         label: options.yLabel,
       },
       data: options.functions.map((line) => {
-        return { fn: line.split('=')[1], graphType: 'polyline' }
-      })
-    }
-    const plot = functionPlot(fPlotOptions)
+        return { fn: line.split("=")[1], graphType: "polyline" };
+      }),
+    };
+    const plot = functionPlot(fPlotOptions);
 
-    return plot
+    return plot;
   } catch (e) {
-    console.debug(e)
+    console.debug(e);
   }
 }
-
-

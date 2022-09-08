@@ -1,3 +1,2 @@
-declare module '*.png'
-
-declare module '*.svelte'
+declare module "*.svelte";
+declare module "*.json";

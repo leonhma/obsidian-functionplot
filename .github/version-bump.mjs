@@ -19,3 +19,7 @@ manifest.version = version;
 writeFileSync("package.json", JSON.stringify(package_, null, "\t"));
 writeFileSync("manifest.json", JSON.stringify(manifest, null, "\t"));
 writeFileSync("versions.json", JSON.stringify(versions, null, "\t"));
+writeFileSync(
+  "src/currentVersion.json",
+  JSON.stringify({ version }, null, "\t")
+);

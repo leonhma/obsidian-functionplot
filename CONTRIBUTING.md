@@ -4,7 +4,7 @@ Contibutions are always welcome! We appreciate every help with this project, be 
 
 TL;DR:
 
-- The `minAppVersion` should be kept up-to-date
+-   The `minAppVersion` should be kept up-to-date
 
 ## Rules
 
