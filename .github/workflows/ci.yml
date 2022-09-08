@@ -35,6 +35,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: install dependencies
+        run: yarn install
+
       - name: test
         run: yarn test
 
@@ -44,6 +47,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: install dependencies
+        run: yarn install
+        
       - name: check format
         run: yarn format:check
 
@@ -53,5 +59,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: install dependencies
+        run: yarn install
+        
       - name: lint
         run: yarn lint

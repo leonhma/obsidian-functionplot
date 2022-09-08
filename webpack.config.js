@@ -21,7 +21,7 @@ export default {
           options: {
             compilerOptions: {
               inlineSourceMap: !prod,
-              inlineSources: !prod
+              inlineSources: !prod,
             },
           },
         },
