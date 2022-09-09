@@ -10,7 +10,6 @@ import { BrowserTracing } from "@sentry/tracing";
 import ObsidianFunctionPlot from "../main";
 import { DEFAULT_PLUGIN_SETTINGS, rendererOptions } from "../common/defaults";
 import { PluginSettings, rendererType } from "../common/types";
-import FeedbackModal from "./FeedbackModal";
 
 export default class SettingsTab extends PluginSettingTab {
   plugin: ObsidianFunctionPlot;
@@ -152,7 +151,7 @@ export default class SettingsTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Font Color")
-      .setDesc("Color used for the title and labels")
+      .setDesc("Color used for the title and labels.")
       .addText((text) => {
         this.settingsInputs.set("fontColor", text);
         text
@@ -220,27 +219,21 @@ export default class SettingsTab extends PluginSettingTab {
       });
 
     /*
-     *  Reset Settings & Feedback Buttons
+     *  Reset Settings
      */
 
-    new Setting(containerEl)
-      .addButton((btn) => {
-        btn.setButtonText("Send Feedback").onClick(() => {
-          new FeedbackModal(this.plugin).open();
-        });
-      })
-      .addButton((btn) => {
-        btn
-          .setButtonText("Reset Settings to Default")
-          .setWarning()
-          .onClick(() => {
-            Object.assign(this.plugin.settings, DEFAULT_PLUGIN_SETTINGS);
-            this.settingsInputs.forEach((input, key) => {
-              input.setValue(this.plugin.settings[key]);
-            });
-            this.plugin.saveSettings();
-            new Notice("Settings reset to default");
+    new Setting(containerEl).addButton((btn) => {
+      btn
+        .setButtonText("Reset Settings to Default")
+        .setWarning()
+        .onClick(() => {
+          Object.assign(this.plugin.settings, DEFAULT_PLUGIN_SETTINGS);
+          this.settingsInputs.forEach((input, key) => {
+            input.setValue(this.plugin.settings[key]);
           });
-      });
+          this.plugin.saveSettings();
+          new Notice("Settings reset to default");
+        });
+    });
   }
 }

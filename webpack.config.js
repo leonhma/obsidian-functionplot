@@ -4,17 +4,12 @@ const { EnvironmentPlugin, DefinePlugin } = pkg;
 
 export default function (env) {
   const mode = env.mode || "development";
-  const prod = ["production", "release"].includes(mode);
+  const prod = mode == "production";
 
   return {
     mode: prod ? "production" : "development",
     entry: "./src/main.ts",
-    devtool:
-      mode === "development"
-        ? "inline-source-map"
-        : mode === "release"
-        ? "nosources-source-map"
-        : false,
+    devtool: mode === "development" ? "inline-source-map" : "source-map",
     performance: {
       hints: false, // ignore size since the bundle is run locally
     },

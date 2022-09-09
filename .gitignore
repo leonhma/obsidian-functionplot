@@ -5,3 +5,6 @@ package-lock.json
 main.js.LICENSE.txt
 .idea
 .vscode
+main.js
+main.js.map
+test.html

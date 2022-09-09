@@ -63,5 +63,5 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         run: |
           yarn sentry-cli releases new obsidian-functionplot@${{ github.event.release.tag_name }}
-          yarn sentry-cli releases files obsidian-functionplot@${{ github.event.release.tag_name }} upload-sourcemaps --ext ts --ext map .
+          yarn sentry-cli releases files obsidian-functionplot@${{ github.event.release.tag_name }} upload-sourcemaps .
           yarn sentry-cli releases finalize obsidian-functionplot@${{ github.event.release.tag_name }}

@@ -39,9 +39,6 @@ export default class ObsidianFunctionPlot extends Plugin {
       "functionplot",
       this.createFunctionPlotHandler(this)
     );
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    myUndefinedFunction();
   }
 
   async loadSettings() {

@@ -49,4 +49,3 @@ This plugin is based on / uses:
 
 -   [function-plot](https://github.com/mauriciopoppe/function-plot): MIT License, Copyright (c) 2015 [Mauricio Poppe](https://github.com/mauriciopoppe)
 -   [html-to-image](https://github.com/bubkoo/html-to-image): MIT License, Copyright (c) 2017 [W.Y.](https://github.com/bubkoo)
--   [qrcode](https://github.com/soldair/node-qrcode): MIT License, Copyright (c) 2012 [Ryan Day](https://github.com/soldair)
