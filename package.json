@@ -16,11 +16,6 @@
     "format:check": "yarn prettier --check .",
     "lint": "yarn eslint ."
   },
-  "precommit": [
-    "test",
-    "format",
-    "lint"
-  ],
   "devDependencies": {
     "@sentry/cli": "^2.5.2",
     "@types/qrcode": "^1.5.0",
