@@ -35,8 +35,10 @@ jobs:
           branch: master
 
       - name: Build
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         run: |
-          yarn build:prod
+          yarn build:release
           mkdir obsidian-functionplot
           cp main.js manifest.json obsidian-functionplot
           zip -r obsidian-functionplot.zip obsidian-functionplot
@@ -55,3 +57,11 @@ jobs:
           asset_path: ./obsidian-functionplot.zip
           asset_name: obsidian-functionplot-${{ github.event.release.tag_name }}.zip
           asset_content_type: application/zip
+
+      - name: Create sentry release w/ sourcemaps
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: |
+          yarn sentry-cli releases new obsidian-functionplot@${{ github.event.release.tag_name }}
+          yarn sentry-cli releases files obsidian-functionplot@${{ github.event.release.tag_name }} upload-sourcemaps --ext ts --ext map .
+          yarn sentry-cli releases finalize obsidian-functionplot@${{ github.event.release.tag_name }}

@@ -49,7 +49,7 @@ jobs:
 
       - name: install dependencies
         run: yarn install
-        
+
       - name: check format
         run: yarn format:check
 
@@ -61,6 +61,6 @@ jobs:
 
       - name: install dependencies
         run: yarn install
-        
+
       - name: lint
         run: yarn lint

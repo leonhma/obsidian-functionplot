@@ -1,62 +1,58 @@
-import sveltePreprocess from "svelte-preprocess";
 import { fileURLToPath, URL } from "url";
+import pkg from "webpack";
+const { EnvironmentPlugin, DefinePlugin } = pkg;
 
-const mode = process.env.NODE_ENV || "development";
-const prod = mode === "production";
+export default function (env) {
+  const mode = env.mode || "development";
+  const prod = ["production", "release"].includes(mode);
 
-export default {
-  mode: prod ? "production" : "development",
-  entry: "./src/main.ts",
-  devtool: !prod ? "inline-source-map" : false,
-  performance: {
-    hints: false, // ignore size since the bundle is run locally
-  },
-  module: {
-    rules: [
-      {
-        test: /\.ts$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "ts-loader",
-          options: {
-            compilerOptions: {
-              inlineSourceMap: !prod,
-              inlineSources: !prod,
+  return {
+    mode: prod ? "production" : "development",
+    entry: "./src/main.ts",
+    devtool:
+      mode === "development"
+        ? "inline-source-map"
+        : mode === "release"
+        ? "nosources-source-map"
+        : false,
+    performance: {
+      hints: false, // ignore size since the bundle is run locally
+    },
+    module: {
+      rules: [
+        {
+          test: /\.ts$/,
+          exclude: /node_modules/,
+          use: {
+            loader: "ts-loader",
+            options: {
+              compilerOptions: {
+                inlineSourceMap: !prod,
+                inlineSources: !prod,
+              },
             },
           },
         },
-      },
-      {
-        test: /\.(html|svelte)$/,
-        use: {
-          loader: "svelte-loader",
-          options: {
-            compilerOptions: {
-              enableSourcemap: !prod,
-            },
-            onwarn: (warning, handler) => {
-              const { code } = warning;
-              if (code === "css-unused-selector") return;
-
-              handler(warning);
-            },
-            preprocess: sveltePreprocess({
-              sourceMap: !prod,
-            }),
-          },
-        },
-      },
+      ],
+    },
+    plugins: [
+      new EnvironmentPlugin({
+        SENTRY_DSN: null,
+      }),
+      new DefinePlugin({
+        __SENTRY_DEBUG__: !prod,
+      }),
     ],
-  },
-  resolve: {
-    extensions: [".ts", ".js"],
-  },
-  externals: {
-    obsidian: "commonjs obsidian",
-  },
-  output: {
-    path: fileURLToPath(new URL(".", import.meta.url)),
-    filename: "main.js",
-    libraryTarget: "commonjs",
-  },
-};
+    resolve: {
+      extensions: [".ts", ".js"],
+    },
+    externals: {
+      obsidian: "commonjs obsidian",
+    },
+    output: {
+      path: fileURLToPath(new URL(".", import.meta.url)),
+      filename: "main.js",
+      libraryTarget: "commonjs",
+    },
+  };
+}

@@ -5,13 +5,16 @@ import {
   Setting,
   ValueComponent,
 } from "obsidian";
+import * as Sentry from "@sentry/browser";
+import { BrowserTracing } from "@sentry/tracing";
 import ObsidianFunctionPlot from "../main";
 import { DEFAULT_PLUGIN_SETTINGS, rendererOptions } from "../common/defaults";
 import { PluginSettings, rendererType } from "../common/types";
+import FeedbackModal from "./FeedbackModal";
 
 export default class SettingsTab extends PluginSettingTab {
   plugin: ObsidianFunctionPlot;
-  settingsInputs: Map<keyof PluginSettings, ValueComponent<string | number>>;
+  settingsInputs: Map<keyof PluginSettings, ValueComponent<unknown>>;
 
   constructor(app: App, plugin: ObsidianFunctionPlot) {
     super(app, plugin);
@@ -149,7 +152,7 @@ export default class SettingsTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Font Color")
-      .setDesc("Color used for the title and labels. ")
+      .setDesc("Color used for the title and labels")
       .addText((text) => {
         this.settingsInputs.set("fontColor", text);
         text
@@ -162,7 +165,7 @@ export default class SettingsTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Line Color")
-      .setDesc("Color used for the domain- and origin-lines. ")
+      .setDesc("Color used for the domain- and origin-lines.")
       .addText((text) => {
         this.settingsInputs.set("lineColor", text);
         text
@@ -175,7 +178,7 @@ export default class SettingsTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Grid Color")
-      .setDesc("Color used for the gridlines. ")
+      .setDesc("Color used for the gridlines.")
       .addText((text) => {
         this.settingsInputs.set("gridColor", text);
         text
@@ -186,7 +189,46 @@ export default class SettingsTab extends PluginSettingTab {
           });
       });
 
+    /*
+     * Telemetry
+     */
+
+    containerEl.createEl("h3", { text: "Telemetry" });
+
     new Setting(containerEl)
+      .setName("Send telemetry data")
+      .setDesc("Send error statistics to the developers.")
+      .addToggle((toggle) => {
+        this.settingsInputs.set("telemetry", toggle);
+        toggle
+          .setValue(this.plugin.settings.telemetry)
+          .onChange(async (value: boolean) => {
+            this.plugin.settings.telemetry = value;
+            await this.plugin.saveSettings();
+            switch (value) {
+              case true:
+                Sentry.init({
+                  dsn: process.env.SENTRY_DSN,
+                  integrations: [new BrowserTracing()],
+                });
+                break;
+              case false:
+                Sentry.close();
+                break;
+            }
+          });
+      });
+
+    /*
+     *  Reset Settings & Feedback Buttons
+     */
+
+    new Setting(containerEl)
+      .addButton((btn) => {
+        btn.setButtonText("Send Feedback").onClick(() => {
+          new FeedbackModal(this.plugin).open();
+        });
+      })
       .addButton((btn) => {
         btn
           .setButtonText("Reset Settings to Default")
@@ -197,15 +239,7 @@ export default class SettingsTab extends PluginSettingTab {
               input.setValue(this.plugin.settings[key]);
             });
             this.plugin.saveSettings();
-            new Notice("Obsidian Functionplot: Settings reset to default.");
-          });
-      })
-      .addButton((btn) => {
-        btn
-          .setButtonText("Save")
-          .setCta()
-          .onClick(() => {
-            new Notice("Obsidian Functionplot: Settings saved.");
+            new Notice("Settings reset to default");
           });
       });
   }

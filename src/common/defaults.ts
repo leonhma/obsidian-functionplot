@@ -1,10 +1,4 @@
-import {
-  rendererType,
-  PlotOptions,
-  PluginSettings,
-  ErrorViewProps,
-  BugFormProps,
-} from "./types";
+import { rendererType, PlotOptions, PluginSettings } from "./types";
 
 /**
  * The options displayed for renderers
@@ -45,23 +39,6 @@ export const DEFAULT_PLUGIN_SETTINGS: PluginSettings = {
   gridColor: "var(--interactive-hover)",
 
   defaultRenderer: "interactive",
-};
 
-/**
- * The default issue url to use
- */
-export const DEFAULT_ERROR_VIEW_PROPS: ErrorViewProps = {
-  heading: "Unhandled Error",
-  message: "",
-  link: "https://github.com/leonhma/obsidian-functionplot/issues/new?labels=bug&template=BUG_REPORT.yml",
+  telemetry: true,
 };
-
-export const DEFAULT_BUG_FORM_PROPS: BugFormProps = {
-  title: "",
-  "what-happened": "",
-  checkboxes: [false, false],
-  ideas: "",
-  additional: "",
-};
-
-export const MAX_LOG_LENGTH = 50;

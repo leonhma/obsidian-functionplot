@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "types": ["node", "svelte"],
+    "types": ["node"],
     "target": "ES6",
     "moduleResolution": "node",
     "esModuleInterop": true
   },
-  "include": ["src", "global.d.ts", "declaration.d.ts"]
+  "include": ["src", "declaration.d.ts"]
 }

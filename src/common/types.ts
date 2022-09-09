@@ -41,41 +41,6 @@ export interface PluginSettings {
   gridColor: string;
 
   defaultRenderer: rendererType;
+
+  telemetry: boolean;
 }
-
-/**
- * The props passed to ErrorView.svelte
- */
-export interface ErrorViewProps {
-  heading: string;
-  message: string;
-  link: string;
-}
-
-export interface BugFormProps {
-  title: string;
-  "what-happened": string;
-  checkboxes: [boolean, boolean];
-  ideas: string;
-  additional: string;
-}
-
-export type CheckVersionResult =
-  | {
-      type: "upgrade-plugin-version";
-      version: string;
-    }
-  | {
-      type: "is-latest-version";
-    }
-  | {
-      type: "no-internet";
-    };
-
-export interface ErrorRecord {
-  time: string;
-  type: string;
-  msg: string;
-}
-
-export type ErrorLog = Array<ErrorRecord>;

@@ -1,7 +1,9 @@
 import { Editor } from "obsidian";
 import ObsidianFunctionPlot, { createPlot } from "../main";
-import { CheckVersionResult, PlotOptions } from "./types";
+import { PlotOptions } from "./types";
 import { toPng } from "html-to-image";
+import * as Sentry from "@sentry/browser";
+import { BrowserTracing } from "@sentry/tracing";
 
 import currentVersion from "../currentVersion.json";
 
@@ -71,24 +73,17 @@ export async function insertParagraphAtCursor(
   editor.setLine(editor.getCursor().line, text);
 }
 
-export async function checkVersion(): Promise<CheckVersionResult> {
-  // eslint-disable-next-line no-async-promise-executor
-  return new Promise(async (resolve, reject) => {
-    const headers = new Headers();
-    headers.append("Accept", "application/vnd.github.v3+json");
-    const latestVersion = await fetch(
-      "https://api.github.com/repos/leonhma/obsidian-functionplot/releases/latest",
-      { headers, cache: "no-store" }
-    )
-      .then((res) => res.json())
-      .then((json) => json.tag_name)
-      .catch(() => {
-        reject("No internet when checking for latest release data.");
-      });
-    const version = currentVersion.version;
-    if (latestVersion === version) {
-      resolve({ type: "is-latest-version" });
-    }
-    resolve({ type: "upgrade-plugin-version", version: latestVersion });
+export function initializeSentry() {
+  console.log("Initializing Sentry. dsn: ", process.env.SENTRY_DSN);
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    integrations: [new BrowserTracing()],
+    release: `obsidian-functionplot@${currentVersion}`,
+    tracesSampleRate: 0.2,
   });
+}
+
+export function closeSentry() {
+  console.log("closing sentry");
+  Sentry.close();
 }

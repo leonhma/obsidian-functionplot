@@ -8,19 +8,22 @@ import {
   DEFAULT_PLOT_OPTIONS,
   DEFAULT_PLUGIN_SETTINGS,
 } from "./common/defaults";
-import { setupLogging } from "./common/logging";
 import { PlotOptions, PluginSettings } from "./common/types";
+import { initializeSentry } from "./common/utils";
 
 // The main plugin entrypoint.
 export default class ObsidianFunctionPlot extends Plugin {
   settings: PluginSettings;
 
   async onload() {
-    // logging
-    setupLogging(this);
-
     // load settings
     await this.loadSettings();
+
+    // enable sentry
+    if (this.settings.telemetry) {
+      initializeSentry();
+    }
+
     // add settings tab
     this.addSettingTab(new SettingsTab(this.app, this));
     // register command for CreatePlotModal
@@ -36,6 +39,9 @@ export default class ObsidianFunctionPlot extends Plugin {
       "functionplot",
       this.createFunctionPlotHandler(this)
     );
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    myUndefinedFunction();
   }
 
   async loadSettings() {

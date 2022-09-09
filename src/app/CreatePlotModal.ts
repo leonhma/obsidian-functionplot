@@ -98,7 +98,7 @@ export default class CreatePlotModal extends Modal {
 
     new Setting(settings)
       .setName("Bounds")
-      .setDesc("Bounds must be written in this format: minX, maxX, minY, maxY")
+      .setDesc("Bounds must be written in this format: minX, maxX, minY, maxY.")
       .addText((text) => {
         text.setPlaceholder(DEFAULT_PLOT_OPTIONS.bounds.join(", "));
         text.onChange(async () => {
@@ -136,7 +136,7 @@ export default class CreatePlotModal extends Modal {
     new Setting(settings)
       .setName("Functions")
       .setDesc(
-        "Specify functions to plot. Must be in format: <name>(x) = <expression>"
+        "Specify functions to plot. Must be in format: <name>(x) = <expression>."
       )
       .addTextArea((com) => {
         com.onChange(async (value) => {
