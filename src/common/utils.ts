@@ -4,6 +4,7 @@ import { PlotOptions } from "./types";
 import { toPng } from "html-to-image";
 import * as Sentry from "@sentry/browser";
 import { BrowserTracing } from "@sentry/tracing";
+import sha256 from "crypto-js/sha256";
 
 import currentVersion from "../currentVersion.json";
 
@@ -73,17 +74,27 @@ export async function insertParagraphAtCursor(
   editor.setLine(editor.getCursor().line, text);
 }
 
+export function anonymizeHash(data: string): string {
+  return sha256(data).toString();
+}
+
 export function initializeSentry() {
-  console.log("Initializing Sentry. dsn: ", process.env.SENTRY_DSN);
   Sentry.init({
     dsn: process.env.SENTRY_DSN,
     integrations: [new BrowserTracing()],
+    beforeSend: (event) => {
+      if (event.user && event.user.ip_address) {
+        // anonymize user ip
+        event.user.id = anonymizeHash(event.user.ip_address);
+        delete event.user.ip_address;
+      }
+      return event;
+    },
     release: `obsidian-functionplot@${currentVersion}`,
-    tracesSampleRate: 0.2,
+    tracesSampleRate: 0.2
   });
 }
 
 export function closeSentry() {
-  console.log("closing sentry");
   Sentry.close();
 }

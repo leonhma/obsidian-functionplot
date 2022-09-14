@@ -5,11 +5,10 @@ import {
   Setting,
   ValueComponent,
 } from "obsidian";
-import * as Sentry from "@sentry/browser";
-import { BrowserTracing } from "@sentry/tracing";
 import ObsidianFunctionPlot from "../main";
 import { DEFAULT_PLUGIN_SETTINGS, rendererOptions } from "../common/defaults";
 import { PluginSettings, rendererType } from "../common/types";
+import { closeSentry, initializeSentry } from "../common/utils";
 
 export default class SettingsTab extends PluginSettingTab {
   plugin: ObsidianFunctionPlot;
@@ -197,6 +196,9 @@ export default class SettingsTab extends PluginSettingTab {
     new Setting(containerEl)
       .setName("Send telemetry data")
       .setDesc("Send error statistics to the developers.")
+      .setTooltip(
+        "Send unhandled exceptions to the developers. Identifiable data (ip address) is cryptographically hashed on-device and only used to measure user impact. Other data includes host system version identifiers, the error log, and events (within the application) leading up to this error. Files are not explicitly sent, but small parts may be included in the error log."
+      )
       .addToggle((toggle) => {
         this.settingsInputs.set("telemetry", toggle);
         toggle
@@ -206,13 +208,10 @@ export default class SettingsTab extends PluginSettingTab {
             await this.plugin.saveSettings();
             switch (value) {
               case true:
-                Sentry.init({
-                  dsn: process.env.SENTRY_DSN,
-                  integrations: [new BrowserTracing()],
-                });
+                initializeSentry();
                 break;
               case false:
-                Sentry.close();
+                closeSentry();
                 break;
             }
           });
@@ -228,9 +227,10 @@ export default class SettingsTab extends PluginSettingTab {
         .setWarning()
         .onClick(() => {
           Object.assign(this.plugin.settings, DEFAULT_PLUGIN_SETTINGS);
-          this.settingsInputs.forEach((input, key) => {
+          for (const [key, input] of this.settingsInputs) {
+            if (key === "telemetry") continue; // don't reset telemetry
             input.setValue(this.plugin.settings[key]);
-          });
+          }
           this.plugin.saveSettings();
           new Notice("Settings reset to default");
         });

@@ -42,6 +42,3 @@ export const DEFAULT_PLUGIN_SETTINGS: PluginSettings = {
 
   telemetry: true,
 };
-
-export const SENTRY_API_BASE_URL =
-  "https://sentry.io/api/0/projects/leonhma/obsidian-functionplot";

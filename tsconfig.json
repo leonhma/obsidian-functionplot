@@ -3,7 +3,9 @@
     "types": ["node"],
     "target": "ES6",
     "moduleResolution": "node",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "inlineSources": true
   },
   "include": ["src", "declaration.d.ts"]
 }

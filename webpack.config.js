@@ -1,8 +1,8 @@
 import { fileURLToPath, URL } from "url";
 import pkg from "webpack";
-const { EnvironmentPlugin, DefinePlugin } = pkg;
+const { DefinePlugin, EnvironmentPlugin } = pkg;
 
-export default function (env) {
+export default async function (env) {
   const mode = env.mode || "development";
   const prod = mode == "production";
 
@@ -20,19 +20,14 @@ export default function (env) {
           exclude: /node_modules/,
           use: {
             loader: "ts-loader",
-            options: {
-              compilerOptions: {
-                inlineSourceMap: !prod,
-                inlineSources: !prod,
-              },
-            },
           },
-        },
+        }
       ],
     },
+    ignoreWarnings: [/Failed to parse source map/],
     plugins: [
       new EnvironmentPlugin({
-        SENTRY_DSN: null,
+        SENTRY_DSN: "",
       }),
       new DefinePlugin({
         __SENTRY_DEBUG__: !prod,

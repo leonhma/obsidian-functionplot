@@ -19,6 +19,8 @@ export default class ObsidianFunctionPlot extends Plugin {
     // load settings
     await this.loadSettings();
 
+    console.log("hi");
+
     // enable sentry
     if (this.settings.telemetry) {
       initializeSentry();
