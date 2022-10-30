@@ -1,8 +1,7 @@
-
 const config = {
-    verbose: true,
-    transform: {
-        "^.+\\.tsx?$": "ts-jest",
-    },
+  verbose: true,
+  transform: {
+    "^.+\\.tsx?$": "ts-jest",
+  },
 };
 export default config;

@@ -2,9 +2,9 @@
 
 A plugin for displaying mathematical graphs in obsidian.md.
 
-> *Remember to star this plugin on [Github](https://github.com/leonhma/obsidian-functionplot) if you like it.*
+> _Remember to star this plugin on [Github](https://github.com/leonhma/obsidian-functionplot) if you like it._
 
-*This file only contains basic instructions to get you to using this plugin quickly. If you want a more detailed documentation, take a look at the [wiki](https://github.com/leonhma/obsidian-functionplot/wiki).*
+_This file only contains basic instructions to get you to using this plugin quickly. If you want a more detailed documentation, take a look at the [wiki](https://github.com/leonhma/obsidian-functionplot/wiki)._
 
 ## How to use
 
@@ -38,4 +38,4 @@ Contributions are always welcome! Be it submitting issues, editing the wiki or c
 
 This plugin is based on / uses:
 
-- [function-plot](https://github.com/mauriciopoppe/function-plot): MIT License, Copyright (c) 2015 Mauricio Poppe
+-   [function-plot](https://github.com/mauriciopoppe/function-plot): MIT License, Copyright (c) 2015 Mauricio Poppe

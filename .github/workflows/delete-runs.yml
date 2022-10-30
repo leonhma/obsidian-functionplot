@@ -2,16 +2,16 @@ name: clean workflow runs
 
 on:
   schedule:
-    - cron: '0 0 * * 0'
+    - cron: "0 0 * * 0"
   workflow_dispatch:
     inputs:
       retention_days:
         required: true
-        default: '30'
+        default: "30"
         description: Retention days
       min_keep:
         required: true
-        default: '6'
+        default: "6"
         description: Minimum runs to keep
 
 jobs:

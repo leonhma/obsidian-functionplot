@@ -1,30 +1,38 @@
 {
-	"name": "obsidian-functionplot",
-	"version": "1.2.1",
-	"description": "A plugin for displaying mathematical functions in obsidian.md.",
-	"repository": "https://github.com/leonhma/obsidian-functionplot",
-	"author": "leonhma",
-	"license": "MIT",
-	"private": true,
-	"scripts": {
-		"build": "webpack",
-		"test": "jest"
-	},
-	"devDependencies": {
-		"@types/jest": "^29.2.0",
-		"jest": "^29.2.2",
-		"sass": "^1.54.4",
-		"sass-loader": "^13.0.2",
-		"ts-jest": "^29.0.3",
-		"ts-loader": "^9.3.1",
-		"ts-node": "^10.9.1",
-		"typescript": "^4.7.4",
-		"webpack": "^5.74.0",
-		"webpack-cli": "^4.10.0",
-		"yaml": "^2.1.3"
-	},
-	"dependencies": {
-		"function-plot": "^1.22.9-0",
-		"obsidian": "0.12.2"
-	}
+  "name": "obsidian-functionplot",
+  "version": "1.2.1",
+  "description": "A plugin for displaying mathematical functions in obsidian.md.",
+  "repository": "https://github.com/leonhma/obsidian-functionplot",
+  "author": "leonhma",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "webpack",
+    "test": "jest",
+    "format": "yarn prettier --write .",
+    "format:check": "yarn prettier --check .",
+    "lint": "yarn eslint ."
+  },
+  "devDependencies": {
+    "@types/jest": "^29.2.0",
+    "@typescript-eslint/eslint-plugin": "^5.41.0",
+    "@typescript-eslint/parser": "^5.41.0",
+    "eslint": "^8.26.0",
+    "eslint-config-prettier": "^8.5.0",
+    "jest": "^29.2.2",
+    "prettier": "^2.7.1",
+    "sass": "^1.54.4",
+    "sass-loader": "^13.0.2",
+    "ts-jest": "^29.0.3",
+    "ts-loader": "^9.3.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.7.4",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "yaml": "^2.1.3"
+  },
+  "dependencies": {
+    "function-plot": "^1.22.9-0",
+    "obsidian": "0.12.2"
+  }
 }

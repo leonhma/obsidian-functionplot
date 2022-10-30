@@ -1,5 +1,5 @@
-import { parse } from 'yaml';
+import { parse } from "yaml";
 
 export function parseYaml(text: string): any {
-    return parse(text);
+  return parse(text);
 }

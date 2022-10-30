@@ -37,6 +37,30 @@ jobs:
 
       - name: install dependencies
         run: yarn install
-      
+
       - name: test
         run: yarn test
+
+  check-format:
+    runs-on: ubuntu-latest
+    name: Check format 🔍
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: install dependencies
+        run: yarn install
+
+      - name: check format
+        run: yarn format:check
+
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint ✔
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: install dependencies
+        run: yarn install
+
+      - name: lint
+        run: yarn lint
