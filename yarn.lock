@@ -991,9 +991,9 @@ safe-buffer@^5.1.0:
   integrity sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==
 
 sass-loader@^13.0.2:
-  version "13.0.2"
-  resolved "https://registry.npmjs.org/sass-loader/-/sass-loader-13.0.2.tgz"
-  integrity sha512-BbiqbVmbfJaWVeOOAu2o7DhYWtcNmTfvroVgFXa6k2hHheMxNAeDHLNoDy/Q5aoaVlz0LH+MbMktKwm9vN/j8Q==
+  version "13.1.0"
+  resolved "https://registry.yarnpkg.com/sass-loader/-/sass-loader-13.1.0.tgz#e5b9acf14199a9bc6eaed7a0b8b23951c2cebf6f"
+  integrity sha512-tZS1RJQ2n2+QNyf3CCAo1H562WjL/5AM6Gi8YcPVVoNxQX8d19mx8E+8fRrMWsyc93ZL6Q8vZDSM0FHVTJaVnQ==
   dependencies:
     klona "^2.0.4"
     neo-async "^2.6.2"
