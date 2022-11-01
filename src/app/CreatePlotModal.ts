@@ -1,27 +1,29 @@
 import { Chart } from "function-plot";
 import { FunctionPlotDatum } from "function-plot/dist/types";
-import { App, Modal, Setting } from "obsidian";
-import { DEFAULT_PLOT_OPTIONS, PlotOptions } from "../types";
+import { Editor, Modal, Setting } from "obsidian";
+import { DEFAULT_PLOT_OPTIONS, rendererOptions } from "../common/defaults";
+import { PlotOptions, rendererType } from "../common/types";
 import ObsidianFunctionPlot, { createPlot } from "../main";
+import { renderPlotAsImage, renderPlotAsInteractive } from "../common/utils";
 
 export default class CreatePlotModal extends Modal {
   options: PlotOptions;
   plugin: ObsidianFunctionPlot;
+  editor: Editor;
   plot: Chart;
+  renderer: rendererType;
 
-  onSubmit: (result: PlotOptions) => void;
-
-  constructor(
-    app: App,
-    plugin: ObsidianFunctionPlot,
-    onSubmit: (result: PlotOptions) => void
-  ) {
-    super(app);
+  constructor(plugin: ObsidianFunctionPlot, editor: Editor) {
+    super(plugin.app);
     this.plugin = plugin;
-    this.onSubmit = onSubmit;
+    this.editor = editor;
+    this.renderer = this.plugin.settings.defaultRenderer;
   }
 
-  // skipcq: JS-0376
+  /**
+   * Reload the preview using internal functions. Zooming doesn't work here.
+   * @returns A Promise
+   */
   async reloadPreview() {
     if (!this.plot) return;
     // update values
@@ -96,10 +98,10 @@ export default class CreatePlotModal extends Modal {
 
     new Setting(settings)
       .setName("Bounds")
-      .setDesc("Bounds must be written in this format: minX, maxX, minY, maxY")
+      .setDesc("Bounds must be written in this format: minX, maxX, minY, maxY.")
       .addText((text) => {
         text.setPlaceholder(DEFAULT_PLOT_OPTIONS.bounds.join(", "));
-        text.onChange(async (_) => {
+        text.onChange(async () => {
           let bounds = text
             .getValue()
             .split(",")
@@ -134,7 +136,7 @@ export default class CreatePlotModal extends Modal {
     new Setting(settings)
       .setName("Functions")
       .setDesc(
-        "Specify functions to plot. Must be in format: <name>(x) = <expression>"
+        "Specify functions to plot. Must be in format: <name>(x) = <expression>."
       )
       .addTextArea((com) => {
         com.onChange(async (value) => {
@@ -147,26 +149,39 @@ export default class CreatePlotModal extends Modal {
         });
       });
 
-    new Setting(contentEl).addButton((btn) => {
-      btn
-        .setButtonText("Plot")
-        .setCta()
-        .onClick(() => {
-          this.close();
-          this.onSubmit({
-            title: this.options.title,
-            xLabel: this.options.xLabel,
-            yLabel: this.options.yLabel,
-            bounds: this.options.bounds,
-            disableZoom: this.options.disableZoom,
-            grid: this.options.grid,
-            functions: this.options.functions,
+    new Setting(contentEl)
+      .addDropdown((com) => {
+        com
+          .addOptions(rendererOptions)
+          .setValue(this.plugin.settings.defaultRenderer)
+          .onChange((value: rendererType) => {
+            this.renderer = value;
           });
-        });
-    });
+      })
+      .addButton((btn) => {
+        btn
+          .setButtonText("Plot")
+          .setCta()
+          .onClick(async () => {
+            await this.handlePlotCreate(this.options);
+          });
+      });
   }
 
-  // skipcq: JS-0376
+  async handlePlotCreate(options: PlotOptions) {
+    // render and insert chosen plot using renderer
+    switch (this.renderer) {
+      case "interactive":
+        await renderPlotAsInteractive(this.plugin, this.editor, options);
+        break;
+      case "image":
+        await renderPlotAsImage(this.plugin, this.editor, options);
+        break;
+    }
+
+    this.close();
+  }
+
   async onClose() {
     const { contentEl } = this;
     contentEl.empty();

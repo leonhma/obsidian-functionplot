@@ -1,8 +1,9 @@
 {
   "files": ["./src/main.ts"],
   "compilerOptions": {
-    "outDir": "./dist/",
     "moduleResolution": "node",
-    "esModuleInterop": true
+    "module": "es6",
+    "esModuleInterop": true,
+    "target": "ES6"
   }
 }

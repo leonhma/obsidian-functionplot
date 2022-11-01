@@ -1,22 +1,24 @@
 import functionPlot, { Chart } from "function-plot";
 import { FunctionPlotOptions } from "function-plot/dist/types";
-import {
-  MarkdownPostProcessorContext,
-  Plugin,
-  parseYaml,
-  Editor,
-} from "obsidian";
+import { MarkdownPostProcessorContext, Plugin, Editor } from "obsidian";
 import CreatePlotModal from "./app/CreatePlotModal";
 import SettingsTab from "./app/SettingsTab";
-import { parseCodeBlock, parseToPlot } from "./utils";
+import { parseCodeBlock } from "./common/utils";
 import createStylingPlugin from "./plugins/styling";
+import { PlotOptions, PluginSettings } from "./common/types";
 import {
-  PlotOptions,
   DEFAULT_PLOT_OPTIONS,
-  PluginSettings,
-  DEFAULT_PLOT_PLUGIN_SETTINGS,
-} from "./types";
+  DEFAULT_PLUGIN_SETTINGS,
+} from "./common/defaults";
 
+/**
+ * Create a plot in the specified `target` element.
+ * @param options The options for the plot
+ * @param target The html element to target
+ * @param plugin A reference to the plugin (accessed for settings)
+ * @returns The chart object of the created plot
+ */
+// skipcq: JS-0116
 export async function createPlot(
   options: PlotOptions,
   target: HTMLElement,
@@ -55,6 +57,7 @@ export default class ObsidianFunctionPlot extends Plugin {
   async onload(): Promise<void> {
     // load settings
     await this.loadSettings();
+
     // add settings tab
     this.addSettingTab(new SettingsTab(this.app, this));
     // register command for PlotModal
@@ -62,13 +65,7 @@ export default class ObsidianFunctionPlot extends Plugin {
       id: "insert-functionplot",
       name: "Plot a function",
       editorCallback: (editor: Editor) => {
-        new CreatePlotModal(this.app, this, (result) => {
-          const cursor = editor.getCursor();
-          const plot = parseToPlot(result);
-          editor.setLine(cursor.line, plot);
-          editor.setCursor(cursor.line + (plot.match(/\n/g) || []).length + 1);
-          editor.focus();
-        }).open();
+        new CreatePlotModal(this, editor).open();
       },
     });
     // register code block renderer
@@ -79,10 +76,9 @@ export default class ObsidianFunctionPlot extends Plugin {
   }
 
   async loadSettings() {
-    // TODO load default settings for font size, color and line width from themes
     this.settings = Object.assign(
       {},
-      DEFAULT_PLOT_PLUGIN_SETTINGS,
+      DEFAULT_PLUGIN_SETTINGS,
       await this.loadData()
     );
   }
@@ -91,11 +87,17 @@ export default class ObsidianFunctionPlot extends Plugin {
     await this.saveData(this.settings);
   }
 
+  /**
+   * A closure creating a code-block handler that also has access to the plugin object
+   * through the outer function's scope.
+   * @param plugin The plugin
+   * @returns The code-block handler
+   */
   createFunctionPlotHandler(plugin: ObsidianFunctionPlot) {
     return async (
       source: string,
       el: HTMLElement,
-      _ctx: MarkdownPostProcessorContext
+      _ctx: MarkdownPostProcessorContext /* eslint-disable-line no-unused-vars, @typescript-eslint/no-unused-vars */
     ) => {
       const [header, functions] = parseCodeBlock(source);
       const options: PlotOptions = Object.assign(
