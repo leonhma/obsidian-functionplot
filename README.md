@@ -49,6 +49,7 @@ disbaleZoom: 1
 grid: true
 ---
 g(x)=x^PI
+f(x)=E+log(x)*2
 ```
 ````
 
@@ -61,7 +62,7 @@ Since version `1.2.0` there's a dedicated settings page for this plugin. Here yo
 ![Settings Page](https://github.com/leonhma/obsidian-functionplot/blob/master/images/settings/dark.png)
     
 > **Note**  
-> For changes to be applied, Obsidian needs to "re-render" the chart. You can either restart Obsidian, or switch between view modes (eg. Reading Mode >  Edit mode > Reading mode).
+> For changes to be applied, Obsidian needs to "re-render" the chart. You can either restart Obsidian, or switch between view modes (eg. Reading mode >  Edit mode > Reading mode).
 
 
 
