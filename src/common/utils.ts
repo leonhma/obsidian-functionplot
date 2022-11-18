@@ -1,6 +1,6 @@
 import { Editor, parseYaml } from "obsidian";
 import type ObsidianFunctionPlot from "../main";
-import { PlotOptions } from "./types";
+import { PlotOptions, Line } from "./types";
 import { type FunctionPlotOptions } from "function-plot/dist/types";
 import createStylingPlugin from "../plugins/styling";
 import functionPlot, { Chart } from "function-plot";
@@ -73,7 +73,16 @@ export async function createPlot(
         label: options.yLabel,
       },
       data: options.functions.map((line) => {
-        return { fn: line.split("=")[1], graphType: "polyline" };
+        let lineProperties: Line = {};
+
+        line.split("@").forEach((property) => {
+          let tup = property.split(":");
+          let value = tup[1].trim()
+          // Using JSON.parse here to convert "range" value from string to real array
+          lineProperties[tup[0].trim()] = value.startsWith("[") ? JSON.parse(value) : value;
+        });
+
+        return lineProperties;
       }),
     };
     const plot = functionPlot(fPlotOptions);

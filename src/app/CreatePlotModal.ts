@@ -2,7 +2,7 @@ import { Chart } from "function-plot";
 import { FunctionPlotDatum } from "function-plot/dist/types";
 import { Editor, Modal, Setting } from "obsidian";
 import { DEFAULT_PLOT_OPTIONS, rendererOptions } from "../common/defaults";
-import { PlotOptions, rendererType } from "../common/types";
+import { PlotOptions, rendererType, Line } from "../common/types";
 import type ObsidianFunctionPlot from "../main";
 import { createPlot, renderPlotAsInteractive } from "../common/utils";
 
@@ -34,11 +34,17 @@ export default class CreatePlotModal extends Modal {
     this.plot.options.yAxis.domain = this.options.bounds.slice(2, 4);
     this.plot.options.grid = this.options.grid;
     this.plot.options.data = this.options.functions.map(
-      (f): FunctionPlotDatum => {
-        return {
-          fn: f.split("=")[1],
-          graphType: "polyline",
-        };
+      (line): FunctionPlotDatum => {
+
+        let lineProperties: Line = {};
+
+        line.split("@").forEach((property) => {
+          let tup = property.split(":");
+          let value = tup[1].trim()
+          lineProperties[tup[0].trim()] = value.startsWith("[") ? JSON.parse(value) : value;
+        });
+
+        return lineProperties;
       }
     );
     // redirect errors within function-plot to debug
