@@ -9,8 +9,11 @@ _This file only contains basic instructions to get you to using this plugin quic
 ---
 
 # 🔮 How to use
+
 ### With Command
+
 Since version `1.1.0` you can create plots via a handy GUI with live-preview functionality.
+
 1. Open the command palette and select `Obsidian Functionplot: Plot a Function`
 
 2. Adjust the plot to your liking.
@@ -22,8 +25,9 @@ Since version `1.1.0` you can create plots via a handy GUI with live-preview fun
 
 <!--     ![Graph image](./images/plot/light.png#gh-light-mode-only)
     ![Graph image](./images/plot/dark.png#gh-dark-mode-only) -->
-    
+
 ### With `functionplot` Block
+
 ````
 ```functionplot
 ---
@@ -37,7 +41,9 @@ grid: boolean
 <name>(variable)=<expression>
 ```
 ````
+
 Example:
+
 ````
 ```functionplot
 ---
@@ -54,17 +60,17 @@ f(x)=E+log(x)*2
 ````
 
 ## 🧮 Supported Math
+
 To see the complete list of supported math functions, please check the [wiki](https://github.com/leonhma/obsidian-functionplot/wiki).
-    
+
 ## ⚙ Plugin Settings
+
 Since version `1.2.0` there's a dedicated settings page for this plugin. Here you can adjust things like font sizes for the text elements of the plot, line widths and various colors. To access this page, head to the obsidian settings and scroll down the list to 'Community Plugins > Obsidian Functionplot'.
 
 ![Settings Page](https://github.com/leonhma/obsidian-functionplot/blob/master/images/settings/dark.png)
-    
+
 > **Note**  
-> For changes to be applied, Obsidian needs to "re-render" the chart. You can either restart Obsidian, or switch between view modes (eg. Reading mode >  Edit mode > Reading mode).
-
-
+> For changes to be applied, Obsidian needs to "re-render" the chart. You can either restart Obsidian, or switch between view modes (eg. Reading mode > Edit mode > Reading mode).
 
 ---
 
@@ -72,7 +78,7 @@ Since version `1.2.0` there's a dedicated settings page for this plugin. Here yo
 
 If you have any questions about the usage of the plugin, take a look at the [wiki](https://github.com/leonhma/obsidian-functionplot/wiki) or post a question in the [discussions](https://github.com/leonhma/obsidian-functionplot/discussions).
 
-## 🐞 Bugs and Errors 
+## 🐞 Bugs and Errors
 
 If you encounter any errors while using this plugin, please report them to us. To do so, click [this link](https://github.com/leonhma/obsidian-functionplot/issues/new?assignees=leonhma&labels=bug&template=BUG_REPORT.yml), fill out the form as best as you can and click `Submit new issue`. These issues are publically viewable, so please don't submit any personal information.
 

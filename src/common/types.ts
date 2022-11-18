@@ -4,7 +4,7 @@ import { EventEmitter } from "events";
 /**
  * The possible types of renderer.
  */
-export type rendererType = "interactive" | "image";
+export type rendererType = "interactive"; //| "image";
 
 /**
  * A sum-type of Chart and EventEmitter because TypeScript can't figure this out on it's own.

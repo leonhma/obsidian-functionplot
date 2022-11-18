@@ -1,10 +1,8 @@
-import type { JestConfigWithTsJest } from "ts-jest";
-
-const jestConfig: JestConfigWithTsJest = {
-  // [...]
-  // Replace `ts-jest` with the preset you want to use
-  // from the above list
-  preset: "ts-jest/presets/js-with-babel-esm",
+export default {
+  roots: ["<rootDir>/src"],
+  testMatch: ["**/__tests__/**/*.+(ts)"],
+  preset: "ts-jest/presets/js-with-ts",
+  testEnvironment: "node",
+  verbose: true,
+  transformIgnorePatterns: ["<rootDir>/node_modules/"],
 };
-
-export default jestConfig;

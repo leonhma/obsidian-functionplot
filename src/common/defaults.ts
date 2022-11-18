@@ -6,7 +6,7 @@ import { rendererType, PlotOptions, PluginSettings } from "./types";
 // eslint-disable-next-line no-unused-vars
 export const rendererOptions: { [_ in rendererType]: string } = {
   interactive: "Interactive (zoomable)",
-  image: "Image (exportable)",
+  //image: "Image (exportable)",
 };
 
 /**

@@ -3,8 +3,8 @@ import { FunctionPlotDatum } from "function-plot/dist/types";
 import { Editor, Modal, Setting } from "obsidian";
 import { DEFAULT_PLOT_OPTIONS, rendererOptions } from "../common/defaults";
 import { PlotOptions, rendererType } from "../common/types";
-import ObsidianFunctionPlot, { createPlot } from "../main";
-import { renderPlotAsImage, renderPlotAsInteractive } from "../common/utils";
+import type ObsidianFunctionPlot from "../main";
+import { createPlot, renderPlotAsInteractive } from "../common/utils";
 
 export default class CreatePlotModal extends Modal {
   options: PlotOptions;
@@ -24,7 +24,7 @@ export default class CreatePlotModal extends Modal {
    * Reload the preview using internal functions. Zooming doesn't work here.
    * @returns A Promise
    */
-  async reloadPreview() {
+  reloadPreview() {
     if (!this.plot) return;
     // update values
     this.plot.options.title = this.options.title;
@@ -79,20 +79,20 @@ export default class CreatePlotModal extends Modal {
     new Setting(settings).setName("Title").addText((text) => {
       text.onChange(async (value) => {
         this.options.title = value;
-        await this.reloadPreview();
+        this.reloadPreview();
       });
     });
 
     new Setting(settings).setName("Label X").addText((text) => {
       text.onChange(async (value) => {
         this.options.xLabel = value;
-        await this.reloadPreview();
+        this.reloadPreview();
       });
     });
     new Setting(settings).setName("Label Y").addText((text) => {
       text.onChange(async (value) => {
         this.options.yLabel = value;
-        await this.reloadPreview();
+        this.reloadPreview();
       });
     });
 
@@ -112,7 +112,7 @@ export default class CreatePlotModal extends Modal {
           }
           if (n >= 4 || n === 0) {
             this.options.bounds = bounds as PlotOptions["bounds"];
-            await this.reloadPreview();
+            this.reloadPreview();
           }
         });
       });
@@ -121,7 +121,7 @@ export default class CreatePlotModal extends Modal {
       com.setValue(this.options.disableZoom);
       com.onChange(async (value) => {
         this.options.disableZoom = value;
-        await this.reloadPreview();
+        this.reloadPreview();
       });
     });
 
@@ -129,7 +129,7 @@ export default class CreatePlotModal extends Modal {
       com.setValue(this.options.grid);
       com.onChange(async (value) => {
         this.options.grid = value;
-        await this.reloadPreview();
+        this.reloadPreview();
       });
     });
 
@@ -145,7 +145,7 @@ export default class CreatePlotModal extends Modal {
             .split("\n")
             .map((f) => f.trim() || undefined);
           // maybe check if there are valid functions
-          await this.reloadPreview();
+          this.reloadPreview();
         });
       });
 
@@ -172,17 +172,18 @@ export default class CreatePlotModal extends Modal {
     // render and insert chosen plot using renderer
     switch (this.renderer) {
       case "interactive":
-        await renderPlotAsInteractive(this.plugin, this.editor, options);
+        renderPlotAsInteractive(this.plugin, this.editor, options);
         break;
+      /*
       case "image":
         await renderPlotAsImage(this.plugin, this.editor, options);
-        break;
+        break; */
     }
 
     this.close();
   }
 
-  async onClose() {
+  onClose() {
     const { contentEl } = this;
     contentEl.empty();
     this.plot = null;

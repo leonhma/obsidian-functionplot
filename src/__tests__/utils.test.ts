@@ -1,4 +1,4 @@
-import { parseCodeBlock } from "../src/common/utils";
+import { parseCodeBlock } from "../common/utils";
 
 describe("parseCodeBlock", () => {
   test("header is parsed correctly", () => {

@@ -5,7 +5,7 @@ import {
   Setting,
   ValueComponent,
 } from "obsidian";
-import ObsidianFunctionPlot from "../main.js";
+import type ObsidianFunctionPlot from "../main.js";
 import { DEFAULT_PLUGIN_SETTINGS, rendererOptions } from "../common/defaults";
 import { PluginSettings, rendererType } from "../common/types";
 
@@ -201,6 +201,7 @@ export default class SettingsTab extends PluginSettingTab {
             input.setValue(this.plugin.settings[key]);
           }
           this.plugin.saveSettings();
+          // skipcq: JS-0078
           new Notice("Settings reset to default");
         });
     });

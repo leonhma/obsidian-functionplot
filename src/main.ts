@@ -1,55 +1,12 @@
-import functionPlot, { Chart } from "function-plot";
-import { FunctionPlotOptions } from "function-plot/dist/types";
 import { MarkdownPostProcessorContext, Plugin, Editor } from "obsidian";
 import CreatePlotModal from "./app/CreatePlotModal";
 import SettingsTab from "./app/SettingsTab";
-import { parseCodeBlock } from "./common/utils";
-import createStylingPlugin from "./plugins/styling";
+import { createPlot, parseCodeBlock } from "./common/utils";
 import { PlotOptions, PluginSettings } from "./common/types";
 import {
   DEFAULT_PLOT_OPTIONS,
   DEFAULT_PLUGIN_SETTINGS,
 } from "./common/defaults";
-
-/**
- * Create a plot in the specified `target` element.
- * @param options The options for the plot
- * @param target The html element to target
- * @param plugin A reference to the plugin (accessed for settings)
- * @returns The chart object of the created plot
- */
-// skipcq: JS-0116
-export async function createPlot(
-  options: PlotOptions,
-  target: HTMLElement,
-  plugin: ObsidianFunctionPlot
-): Promise<Chart> {
-  try {
-    const fPlotOptions: FunctionPlotOptions = {
-      target: target,
-      plugins: [createStylingPlugin(plugin)],
-      title: options.title,
-      grid: options.grid,
-      disableZoom: options.disableZoom,
-      xAxis: {
-        domain: options.bounds.slice(0, 2),
-        label: options.xLabel,
-      },
-      yAxis: {
-        domain: options.bounds.slice(2, 4),
-        label: options.yLabel,
-      },
-      data: options.functions.map((line) => {
-        return { fn: line.split("=")[1], graphType: "polyline" };
-      }),
-    };
-    const plot = functionPlot(fPlotOptions);
-
-    return plot;
-  } catch (e) {
-    console.debug(e);
-  }
-}
 
 export default class ObsidianFunctionPlot extends Plugin {
   settings: PluginSettings;
