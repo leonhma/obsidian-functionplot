@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        
+
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
 
       - name: install dependencies
         run: yarn install
@@ -39,6 +39,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
       - name: install dependencies
         run: yarn install
 
@@ -50,6 +54,10 @@ jobs:
     name: Lint ✔
     steps:
       - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
       - name: install dependencies
         run: yarn install
