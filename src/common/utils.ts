@@ -73,11 +73,11 @@ export async function createPlot(
         label: options.yLabel,
       },
       data: options.functions.map((line) => {
-        let lineProperties: Line = {};
+        const lineProperties: Line = {};
 
         line.split("@").forEach((property) => {
-          let tup = property.split(":");
-          let value = tup[1].trim()
+          const tup = property.split(":");
+          const value = tup[1].trim()
           // Using JSON.parse here to convert "range" value from string to real array
           lineProperties[tup[0].trim()] = value.startsWith("[") ? JSON.parse(value) : value;
         });

@@ -36,11 +36,11 @@ export default class CreatePlotModal extends Modal {
     this.plot.options.data = this.options.functions.map(
       (line): FunctionPlotDatum => {
 
-        let lineProperties: Line = {};
+        const lineProperties: Line = {};
 
         line.split("@").forEach((property) => {
-          let tup = property.split(":");
-          let value = tup[1].trim()
+          const tup = property.split(":");
+          const value = tup[1].trim()
           lineProperties[tup[0].trim()] = value.startsWith("[") ? JSON.parse(value) : value;
         });
 
