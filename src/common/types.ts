@@ -12,6 +12,18 @@ export type rendererType = "interactive"; //| "image";
 export type chartType = Chart & EventEmitter;
 
 /**
+ * An interface specifying the properties of a line.
+ */
+export interface Line {
+  fn?: string;
+  graphType?: "polyline" | "interval" | "scatter";
+  nSamples?: number;
+  range?: [number, number];
+  closed?: boolean
+  color?: string
+}
+
+/**
  * An interface specifying the options for a plot.
  */
 export interface PlotOptions {
