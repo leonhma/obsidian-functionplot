@@ -35,11 +35,11 @@ export default class CreatePlotModal extends Modal {
     this.plot.options.grid = this.options.grid;
     this.plot.options.data = this.options.functions.map(
       (line): FunctionPlotDatum => {
-
-        const lineProperties: Line = {};
+        // use polyline by default
+        const lineProperties: Line = {graphType: "polyline"};
 
         line.split("@").forEach((property) => {
-          const tup = property.split(":");
+          const tup = property.split("=");
           const value = tup[1].trim()
           lineProperties[tup[0].trim()] = value.startsWith("[") ? JSON.parse(value) : value;
         });
