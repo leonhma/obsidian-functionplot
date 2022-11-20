@@ -1,8 +1,8 @@
-import { MarkdownPostProcessorContext, Plugin, Editor } from "obsidian";
+import { type MarkdownPostProcessorContext, Plugin, Editor } from "obsidian";
 import CreatePlotModal from "./app/CreatePlotModal";
 import SettingsTab from "./app/SettingsTab";
 import { createPlot, parseCodeBlock } from "./common/utils";
-import { PlotOptions, PluginSettings } from "./common/types";
+import type { PlotOptions, PluginSettings } from "./common/types";
 import {
   DEFAULT_PLOT_OPTIONS,
   DEFAULT_PLUGIN_SETTINGS,

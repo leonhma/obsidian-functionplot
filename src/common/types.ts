@@ -1,5 +1,5 @@
-import { Chart } from "function-plot";
-import { EventEmitter } from "events";
+import type { Chart } from "function-plot";
+import type { EventEmitter } from "events";
 
 /**
  * The possible types of renderer.

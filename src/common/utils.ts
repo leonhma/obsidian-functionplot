@@ -1,9 +1,9 @@
 import { Editor, parseYaml } from "obsidian";
 import type ObsidianFunctionPlot from "../main";
-import { PlotOptions, Line } from "./types";
-import { type FunctionPlotOptions } from "function-plot/dist/types";
+import type { PlotOptions, Line } from "./types";
 import createStylingPlugin from "../plugins/styling";
 import functionPlot, { Chart } from "function-plot";
+import type { FunctionPlotOptions } from "function-plot/dist/types";
 
 /**
  * Insert the text as a new paragraph (newline before and after), and place the active cursor below.

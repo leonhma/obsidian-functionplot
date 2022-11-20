@@ -1,4 +1,4 @@
-import { rendererType, PlotOptions, PluginSettings } from "./types";
+import type { rendererType, PlotOptions, PluginSettings } from "./types";
 
 /**
  * The options displayed for renderers

@@ -1,10 +1,12 @@
 {
-  "files": ["./src/main.ts"],
+  "extends": "@tsconfig/svelte/tsconfig.json",
   "compilerOptions": {
+    "types": ["jest", "svelte", "node"],
     "moduleResolution": "node",
     "module": "ES6",
     "esModuleInterop": true,
     "target": "ES6",
     "allowJs": true
-  }
+  },
+  "include": ["./src/**/*.ts", "declaration.d.ts"],
 }

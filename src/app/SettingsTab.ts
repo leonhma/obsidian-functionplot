@@ -7,7 +7,7 @@ import {
 } from "obsidian";
 import type ObsidianFunctionPlot from "../main.js";
 import { DEFAULT_PLUGIN_SETTINGS } from "../common/defaults";
-import { PluginSettings } from "../common/types";
+import type { PluginSettings } from "../common/types";
 
 export default class SettingsTab extends PluginSettingTab {
   plugin: ObsidianFunctionPlot;
