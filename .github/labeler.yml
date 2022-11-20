@@ -1,11 +1,11 @@
-documentation:
+docs:
   - "README.md"
   - "images/**/*"
 
-plugin:
+code:
   - "src/**/*.ts"
 
-styles:
+style:
   - "src/styles.scss"
 
 automation:

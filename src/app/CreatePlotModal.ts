@@ -1,7 +1,7 @@
 import { Chart } from "function-plot";
 import { FunctionPlotDatum } from "function-plot/dist/types";
 import { Editor, Modal, Setting } from "obsidian";
-import { DEFAULT_PLOT_OPTIONS, rendererOptions } from "../common/defaults";
+import { DEFAULT_PLOT_OPTIONS } from "../common/defaults";
 import { PlotOptions, rendererType, Line } from "../common/types";
 import type ObsidianFunctionPlot from "../main";
 import { createPlot, renderPlotAsInteractive } from "../common/utils";
@@ -156,14 +156,14 @@ export default class CreatePlotModal extends Modal {
       });
 
     new Setting(contentEl)
-      .addDropdown((com) => {
+      /*.addDropdown((com) => {
         com
           .addOptions(rendererOptions)
           .setValue(this.plugin.settings.defaultRenderer)
           .onChange((value: rendererType) => {
             this.renderer = value;
           });
-      })
+      })*/
       .addButton((btn) => {
         btn
           .setButtonText("Plot")
