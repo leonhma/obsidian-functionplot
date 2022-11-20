@@ -19,6 +19,10 @@ module.exports = {
           "sass-loader",
         ],
       },
+      {
+        test: /\.txt$/i,
+        type: "asset/source",
+      }
     ],
   },
   resolve: {
