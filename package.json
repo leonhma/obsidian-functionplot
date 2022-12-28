@@ -11,28 +11,14 @@
     "build": "webpack",
     "test": "jest",
     "format": "yarn prettier --write .",
-    "lint": "yarn eslint .",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "lint": "yarn eslint ."
   },
   "devDependencies": {
-    "@babel/core": "^7.20.2",
-    "@mdx-js/react": "^1.6.22",
-    "@storybook/addon-actions": "^6.5.13",
-    "@storybook/addon-docs": "^6.5.13",
-    "@storybook/addon-essentials": "^6.5.13",
-    "@storybook/addon-interactions": "^6.5.13",
-    "@storybook/addon-links": "^6.5.13",
-    "@storybook/builder-webpack5": "^6.5.13",
-    "@storybook/manager-webpack5": "^6.5.13",
-    "@storybook/svelte": "^6.5.13",
-    "@storybook/testing-library": "^0.0.13",
     "@tsconfig/svelte": "^3.0.0",
     "@types/jest": "^29.2.3",
     "@types/node": "*",
     "@typescript-eslint/eslint-plugin": "^5.41.0",
     "@typescript-eslint/parser": "^5.41.0",
-    "babel-loader": "^8.3.0",
     "eslint": "^8.26.0",
     "eslint-config-prettier": "^8.5.0",
     "jest": "^29.2.2",
@@ -51,7 +37,9 @@
     "yaml": "^2.1.3"
   },
   "dependencies": {
+    "css-loader": "^6.7.3",
     "function-plot": "^1.23.1",
-    "obsidian": "0.16.3"
+    "obsidian": "0.16.3",
+    "style-loader": "^3.3.1"
   }
 }

@@ -19,8 +19,8 @@ export interface Line {
   graphType?: "polyline" | "interval" | "scatter";
   nSamples?: number;
   range?: [number, number];
-  closed?: boolean
-  color?: string
+  closed?: boolean;
+  color?: string;
 }
 
 /**
@@ -53,6 +53,19 @@ export interface PluginSettings {
   gridColor: string;
 
   defaultRenderer: rendererType;
+}
 
-  telemetry: boolean;
+export interface FunctionOptions {
+  fnType: "linear" | "polar" | "vector" | "points";
+  fn: string;
+  vector: [number, number] | null;
+  r: string;
+  points: Array<[number, number]>;
+  color: unknown;
+  offset: [number, number];
+  closed: boolean;
+  graphType: "interval" | "polyline" | "scatter";
+  range: [number, number];
+  nSamples: number;
+  skipTip: false;
 }

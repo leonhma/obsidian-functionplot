@@ -1,5 +1,23 @@
 import type { rendererType, PlotOptions, PluginSettings } from "./types";
 
+export const DEFAULT_FUNCTION_OPTIONS = {
+  fnType: 'linear',
+  fn: '',
+  vector: ['',''],
+  r: '',
+  points: '',
+  color: null,
+  offset: ['', ''],
+  closed: false,
+  graphType: 'interval',
+  range: ['', ''],
+  nSamples: '',
+  skipTip: false
+}
+
+export const FUNCTION_CASES = [
+  [options => options.fnType == 'vector', () => {/*set fn field to two values*/ }, () => {/*revert to one field*/}]
+]
 /**
  * The options displayed for renderers
  */
@@ -40,6 +58,4 @@ export const DEFAULT_PLUGIN_SETTINGS: PluginSettings = {
   gridColor: "var(--interactive-hover)",
 
   defaultRenderer: "interactive",
-
-  telemetry: true,
 };

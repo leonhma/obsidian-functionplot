@@ -7,6 +7,7 @@ import {
   DEFAULT_PLOT_OPTIONS,
   DEFAULT_PLUGIN_SETTINGS,
 } from "./common/defaults";
+import './styles.scss'
 
 export default class ObsidianFunctionPlot extends Plugin {
   settings: PluginSettings;

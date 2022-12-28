@@ -1,6 +1,10 @@
 import type { FunctionPlotDatum } from "function-plot/dist/types";
 import { Editor, Modal, Setting } from "obsidian";
-import { DEFAULT_PLOT_OPTIONS } from "../common/defaults";
+import {
+  DEFAULT_FUNCTION_OPTIONS,
+  DEFAULT_PLOT_OPTIONS,
+  FUNCTION_CASES,
+} from "../common/defaults";
 import type { PlotOptions, rendererType, Line } from "../common/types";
 import type ObsidianFunctionPlot from "../main";
 import { createPlot, renderPlotAsInteractive } from "../common/utils";
@@ -36,12 +40,14 @@ export default class CreatePlotModal extends Modal {
     this.plot.options.data = this.options.functions.map(
       (line): FunctionPlotDatum => {
         // use polyline by default
-        const lineProperties: Line = {graphType: "polyline"};
+        const lineProperties: Line = { graphType: "polyline" };
 
         line.split("@").forEach((property) => {
           const tup = property.split("=");
-          const value = tup[1].trim()
-          lineProperties[tup[0].trim()] = value.startsWith("[") ? JSON.parse(value) : value;
+          const value = tup[1].trim();
+          lineProperties[tup[0].trim()] = value.startsWith("[")
+            ? JSON.parse(value)
+            : value;
         });
 
         return lineProperties;
@@ -55,8 +61,16 @@ export default class CreatePlotModal extends Modal {
     }
   }
 
+  computeStates(cases, options) {
+    const states = [];
+    for (const [test] of cases) {
+      states.push(test(options));
+    }
+    return states;
+  }
+
   async onOpen() {
-    this.options = Object.assign({}, DEFAULT_PLOT_OPTIONS);
+    this.options = JSON.parse(JSON.stringify(DEFAULT_PLOT_OPTIONS)); // deepcopy to avoid side effects
 
     const { contentEl } = this;
     contentEl.empty();
@@ -102,26 +116,29 @@ export default class CreatePlotModal extends Modal {
       });
     });
 
-    new Setting(settings)
-      .setName("Bounds")
-      .setDesc("Bounds must be written in this format: minX, maxX, minY, maxY.")
-      .addText((text) => {
-        text.setPlaceholder(DEFAULT_PLOT_OPTIONS.bounds.join(", "));
-        text.onChange(async () => {
-          let bounds = text
-            .getValue()
-            .split(",")
-            .map((c) => parseFloat(c));
-          const n = bounds.filter((v) => !isNaN(v)).length;
-          if (n === 0) {
-            bounds = DEFAULT_PLOT_OPTIONS.bounds;
-          }
-          if (n >= 4 || n === 0) {
-            this.options.bounds = bounds as PlotOptions["bounds"];
-            this.reloadPreview();
-          }
-        });
+    const placeholders = ["X min", "X max", "Y min", "Y max"];
+
+    const bounds = new Setting(settings).setName("Bounds");
+
+    placeholders.forEach((placeholder, i) => {
+      bounds.addText((text) => {
+        text
+          .setPlaceholder(placeholder)
+          .onChange((value) => {
+            if (value && !isNaN(+value)) {
+              this.options.bounds[i] = +value;
+              this.reloadPreview();
+            } else {
+              console.log(
+                `resetting ${i} to default ${DEFAULT_PLOT_OPTIONS.bounds[i]}`
+              );
+              this.options.bounds[i] = DEFAULT_PLOT_OPTIONS.bounds[i];
+              this.reloadPreview();
+            }
+          })
+          .inputEl.classList.add("function-plot-numberinput");
       });
+    });
 
     new Setting(settings).setName("Disable Zoom").addToggle((com) => {
       com.setValue(this.options.disableZoom);
@@ -139,21 +156,48 @@ export default class CreatePlotModal extends Modal {
       });
     });
 
-    new Setting(settings)
+    const functionsSetting = new Setting(settings)
       .setName("Functions")
-      .setDesc(
-        "Specify functions to plot. Must be in format: <name>(x) = <expression>."
-      )
-      .addTextArea((com) => {
-        com.onChange(async (value) => {
-          if (!value.trim()) return;
-          this.options.functions = value
-            .split("\n")
-            .map((f) => f.trim() || undefined);
-          // maybe check if there are valid functions
-          this.reloadPreview();
+      .setDesc("Functions to plot.");
+    functionsSetting.settingEl.setAttribute("style", "display: block");
+    const functionsControlEl = functionsSetting.controlEl;
+    functionsControlEl.classList.value = "function-plot-functions-container";
+    const functionsList = functionsControlEl.createDiv({
+      attr: { class: "function-plot-functions-list" },
+    });
+
+    functionsControlEl.createDiv(
+      { attr: { class: "function-plot-functions-add" } },
+      (el) => {
+        new Setting(el).addButton((btn) => {
+          btn
+            .setButtonText("Add function")
+            .setIcon("plus")
+            .onClick(async () => {
+              const id = Math.random().toString(36).substring(2, 9);
+              const options = Object.assign(
+                JSON.parse(JSON.stringify(DEFAULT_FUNCTION_OPTIONS)),
+                { id }
+              );
+              const prevStates = this.computeStates(FUNCTION_CASES, options);
+
+              new Setting(functionsList).addDropdown((com) => {
+                com
+                  .addOptions({
+                    linear: "linear",
+                    vector: "vector",
+                    polar: "polar",
+                    points: "points",
+                  })
+                  .setValue(options.fnType)
+                  .onChange((value) => {
+                    options.fnType = value;
+                  });
+              });
+            });
         });
-      });
+      }
+    );
 
     new Setting(contentEl)
       /*.addDropdown((com) => {
@@ -169,12 +213,12 @@ export default class CreatePlotModal extends Modal {
           .setButtonText("Plot")
           .setCta()
           .onClick(async () => {
-            await this.handlePlotCreate(this.options);
+            await this.handleFinalPlotCreate(this.options);
           });
       });
   }
 
-  async handlePlotCreate(options: PlotOptions) {
+  async handleFinalPlotCreate(options: PlotOptions) {
     // render and insert chosen plot using renderer
     switch (this.renderer) {
       case "interactive":
