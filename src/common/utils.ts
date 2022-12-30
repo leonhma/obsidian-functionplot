@@ -1,23 +1,21 @@
 import { Editor, parseYaml } from "obsidian";
 import type ObsidianFunctionPlot from "../main";
-import type { PlotOptions, Line } from "./types";
+import type { PlotOptions } from "./types";
 import createStylingPlugin from "../plugins/styling";
 import functionPlot, { Chart } from "function-plot";
-import type { FunctionPlotOptions } from "function-plot/dist/types";
+import { DEFAULT_FUNCTION_OPTIONS, DEFAULT_PLOT_OPTIONS } from "./defaults";
 
 /**
  * Insert the text as a new paragraph (newline before and after), and place the active cursor below.
  * @param editor The editor element
- * @param text The text to place
+ * @param value The text to place
  */
 export function insertParagraphAtCursor(
   plugin: ObsidianFunctionPlot,
   editor: Editor,
-  text: string
+  value: string
 ) {
-  // TODO broken
-  text = "\n" + text.trim() + "\n\n";
-  editor.setLine(editor.getCursor().line, text);
+  editor.replaceRange(`\n${value}\n`, editor.getCursor());
 }
 
 /**
@@ -31,17 +29,7 @@ export function renderPlotAsInteractive(
   editor: Editor,
   options: PlotOptions
 ) {
-  const text = `\`\`\`functionplot
----
-title: ${options.title}
-xLabel: ${options.xLabel}
-yLabel: ${options.yLabel}
-bounds: [${options.bounds.join(",")}]
-disableZoom: ${options.disableZoom}
-grid: ${options.grid}
----
-${(options.functions ?? []).join("\n")}
-\`\`\``;
+  const text = `\`\`\`functionplot\n${JSON.stringify(options)}\n\`\`\``;
   insertParagraphAtCursor(plugin, editor, text);
 }
 
@@ -52,43 +40,16 @@ ${(options.functions ?? []).join("\n")}
  * @param plugin A reference to the plugin (accessed for settings)
  * @returns The chart object of the created plot
  */
-export async function createPlot(
+export function createPlot(
   options: PlotOptions,
   target: HTMLElement,
   plugin: ObsidianFunctionPlot
-): Promise<Chart> {
+): Chart {
   try {
-    const fPlotOptions: FunctionPlotOptions = {
-      target: target,
-      plugins: [createStylingPlugin(plugin)],
-      title: options.title,
-      grid: options.grid,
-      disableZoom: options.disableZoom,
-      xAxis: {
-        domain: options.bounds.slice(0, 2),
-        label: options.xLabel,
-      },
-      yAxis: {
-        domain: options.bounds.slice(2, 4),
-        label: options.yLabel,
-      },
-      data: options.functions.map((line) => {
-        // use polyline by default
-        const lineProperties: Line = {graphType: "polyline"};
-
-        line.split("@").forEach((property) => {
-          const tup = property.split("=");
-          const value = tup[1].trim()
-          // Using JSON.parse here to convert "range" value from string to real array
-          lineProperties[tup[0].trim()] = value.startsWith("[") ? JSON.parse(value) : value;
-        });
-
-        return lineProperties;
-      }),
-    };
-    const plot = functionPlot(fPlotOptions);
-
-    return plot;
+    const stylingPlugin = createStylingPlugin(plugin);
+    return functionPlot(
+      Object.assign({}, options, { target, plugins: [stylingPlugin] })
+    );
   } catch (e) {
     console.debug(e);
   }
@@ -120,7 +81,7 @@ export async function renderPlotAsImage(
 }
 */
 
-export function parseCodeBlock(content: string): [object, string[]] {
+export function parseYAMLCodeBlock(content: string): PlotOptions {
   let header = {},
     offset = 0;
   if (/-{3}[^]*-{3}/.test(content)) {
@@ -134,5 +95,38 @@ export function parseCodeBlock(content: string): [object, string[]] {
     .split("\n")
     .map((line) => line.trim())
     .filter((line) => line.length > 0);
-  return [header, functions];
+
+  return {
+    title: header["title"] ?? DEFAULT_PLOT_OPTIONS.title,
+    xAxis: {
+      label: header["xLabel"] ?? DEFAULT_PLOT_OPTIONS.xAxis.label,
+      domain:
+        header["bounds"]?.slice(0, 2) ?? DEFAULT_PLOT_OPTIONS.xAxis.domain,
+    },
+    yAxis: {
+      label: header["yLabel"] ?? DEFAULT_PLOT_OPTIONS.yAxis.label,
+      domain:
+        header["bounds"]?.slice(2, 4) ?? DEFAULT_PLOT_OPTIONS.yAxis.domain,
+    },
+    disableZoom: header["disableZoom"] ?? DEFAULT_PLOT_OPTIONS.disableZoom,
+    grid: header["grid"] ?? DEFAULT_PLOT_OPTIONS.grid,
+    data: functions.map((f) => {
+      const fn = /^[A-z]\([A-z]\) *= *(?=[0-z])([^]+?)$/.exec(f)?.[1] ?? f;
+
+      return Object.assign({}, DEFAULT_FUNCTION_OPTIONS, {
+        fnType: "linear",
+        graphType: "polyline",
+        fn,
+      });
+    }),
+  };
+}
+
+export function parseCodeBlock(content: string): PlotOptions {
+  try {
+    return Object.assign({}, DEFAULT_PLOT_OPTIONS, JSON.parse(content));
+  } catch (e) {
+    console.log(`Error while parsing code block in JSON mode: ${e}`);
+    return parseYAMLCodeBlock(content);
+  }
 }

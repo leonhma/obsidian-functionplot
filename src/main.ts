@@ -2,12 +2,11 @@ import { type MarkdownPostProcessorContext, Plugin, Editor } from "obsidian";
 import CreatePlotModal from "./app/CreatePlotModal";
 import SettingsTab from "./app/SettingsTab";
 import { createPlot, parseCodeBlock } from "./common/utils";
-import type { PlotOptions, PluginSettings } from "./common/types";
+import type { PluginSettings } from "./common/types";
 import {
-  DEFAULT_PLOT_OPTIONS,
   DEFAULT_PLUGIN_SETTINGS,
 } from "./common/defaults";
-import './styles.scss'
+import "./styles.scss";
 
 export default class ObsidianFunctionPlot extends Plugin {
   settings: PluginSettings;
@@ -20,8 +19,8 @@ export default class ObsidianFunctionPlot extends Plugin {
     this.addSettingTab(new SettingsTab(this.app, this));
     // register command for PlotModal
     this.addCommand({
-      id: "insert-functionplot",
-      name: "Plot a function",
+      id: "functionplot-insert",
+      name: "Create a plot",
       editorCallback: (editor: Editor) => {
         new CreatePlotModal(this, editor).open();
       },
@@ -52,19 +51,13 @@ export default class ObsidianFunctionPlot extends Plugin {
    * @returns The code-block handler
    */
   createFunctionPlotHandler(plugin: ObsidianFunctionPlot) {
-    return async (
+    return (
       source: string,
       el: HTMLElement,
       _ctx: MarkdownPostProcessorContext /* eslint-disable-line no-unused-vars, @typescript-eslint/no-unused-vars */
     ) => {
-      const [header, functions] = parseCodeBlock(source);
-      const options: PlotOptions = Object.assign(
-        {},
-        DEFAULT_PLOT_OPTIONS,
-        header,
-        { functions }
-      );
-      await createPlot(options, el, plugin);
+      const options = parseCodeBlock(source);
+      createPlot(options, el, plugin);
     };
   }
 }

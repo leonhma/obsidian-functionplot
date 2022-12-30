@@ -197,7 +197,6 @@ export default class SettingsTab extends PluginSettingTab {
         .onClick(() => {
           Object.assign(this.plugin.settings, DEFAULT_PLUGIN_SETTINGS);
           for (const [key, input] of this.settingsInputs) {
-            if (key === "telemetry") continue; // don't reset telemetry
             input.setValue(this.plugin.settings[key]);
           }
           this.plugin.saveSettings();
