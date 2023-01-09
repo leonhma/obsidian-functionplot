@@ -6,7 +6,8 @@
     "module": "ES6",
     "esModuleInterop": true,
     "target": "ES6",
-    "allowJs": true
+    "allowJs": true,
+    "sourceMap": true
   },
-  "include": ["./src/**/*.ts", "declaration.d.ts"],
+  "include": ["./src/**/*.ts", "declaration.d.ts", "CreatePlotModal2.ts"]
 }

@@ -1,4 +1,4 @@
-console.log('jest config loaded')
+console.log("jest config loaded");
 
 export default {
   roots: ["<rootDir>/src"],

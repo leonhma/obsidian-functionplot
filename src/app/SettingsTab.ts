@@ -6,8 +6,8 @@ import {
   ValueComponent,
 } from "obsidian";
 import type ObsidianFunctionPlot from "../main.js";
-import { DEFAULT_PLUGIN_SETTINGS } from "../common/defaults";
-import type { PluginSettings } from "../common/types";
+import { DEFAULT_PLUGIN_SETTINGS, rendererOptions } from "../common/defaults";
+import type { PluginSettings, rendererType } from "../common/types";
 
 export default class SettingsTab extends PluginSettingTab {
   plugin: ObsidianFunctionPlot;
@@ -30,7 +30,6 @@ export default class SettingsTab extends PluginSettingTab {
      */
 
     containerEl.createEl("h3", { text: "Default Plot Options" });
-    /*
     new Setting(containerEl)
       .setName("Default Render Type")
       .setDesc("The default renderer to use.")
@@ -44,7 +43,7 @@ export default class SettingsTab extends PluginSettingTab {
             await this.plugin.saveSettings();
           });
       });
-    */
+
     /*
      * Font Sizes
      */
@@ -200,7 +199,6 @@ export default class SettingsTab extends PluginSettingTab {
             input.setValue(this.plugin.settings[key]);
           }
           this.plugin.saveSettings();
-          // skipcq: JS-0078
           new Notice("Settings reset to default");
         });
     });

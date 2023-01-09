@@ -1,4 +1,6 @@
 <script lang="ts">
+  export let style: string = '';
+  
   function dispatchClick(el) {
     const event = new MouseEvent("click", {
       bubbles: true,
@@ -11,6 +13,7 @@
 
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <div
+  style={style}
   tabindex="0"
   on:keydown={(e) => {
     if (e.key === " ") dispatchClick(e.currentTarget);

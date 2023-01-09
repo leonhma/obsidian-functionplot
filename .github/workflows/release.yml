@@ -38,7 +38,7 @@ jobs:
           git push origin master
 
       - name: Build
-        run: yarn build
+        run: yarn build --env production
 
       - name: Upload assets to a Release
         uses: AButler/upload-release-assets@v2.0

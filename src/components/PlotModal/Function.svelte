@@ -11,43 +11,39 @@
   import MenuDown from "svelte-material-icons/MenuDown.svelte";
   import Delete from "svelte-material-icons/Delete.svelte";
 
-  export let options: FunctionOptions,
-    unmount: () => void,
-    reloadPreview: () => void;
+  export let datum: FunctionOptions, unmount: () => void;
 
   let showFloater = false;
 
-  $: {
-    options;
-    reloadPreview();
-    console.log("called reloadPreview from function");
+  $: if (datum.fnType === "linear") {
+    console.log('reactive functiontype = linear')
   }
 </script>
 
 <div class="functionplot-item-data">
-  <Dropdown bind:value={options.fnType}>
+  <Dropdown bind:value={datum.fnType}>
     <option value="linear">linear</option>
     <option value="polar">polar</option>
     <!--<option value="points">points</option>-->
     <option value="vector">vector</option>
   </Dropdown>
 
-  {#if options.fnType === "linear"}
-    <TextInput placeholder="f(x)=" bind:value={options.fn} />
+  {#if datum.fnType === "linear"}
+    <TextInput placeholder="f(x)=" bind:value={datum.fn} />
   {/if}
 
-  {#if options.fnType === "polar"}
-    <TextInput placeholder="θ(r)=" bind:value={options.r} />
+  {#if datum.fnType === "polar"}
+    <TextInput placeholder="θ(r)=" bind:value={datum.r} />
   {/if}
 
-  {#if options.fnType === "vector"}
+  {#if datum.fnType === "vector"}
     <div class="functionplot-nums-inputs">
-      <NumberInput placeholder="Δx" bind:value={options.vector[0]} />
-      <NumberInput placeholder="Δy" bind:value={options.vector[1]} />
+      <NumberInput placeholder="Δx" bind:value={datum.vector[0]} />
+      <NumberInput placeholder="Δy" bind:value={datum.vector[1]} />
     </div>
   {/if}
 
-  <input type="color" bind:value={options.color} />
+  <input type="color" bind:value={datum.color} />
 
   <div>
     <IconWrapper
@@ -59,46 +55,46 @@
     </IconWrapper>
     {#if showFloater}
       <OptionsFloater bind:show={showFloater}>
-        {#if options.fnType === "vector"}
+        {#if datum.fnType === "vector"}
           <label for="vector-initial">Start point</label>
           <div id="vector-initial" class="functionplot-nums-inputs">
-            <NumberInput placeholder="x" bind:value={options.offset[0]} />
-            <NumberInput placeholder="y" bind:value={options.offset[1]} />
+            <NumberInput placeholder="x" bind:value={datum.offset[0]} />
+            <NumberInput placeholder="y" bind:value={datum.offset[1]} />
           </div>
         {/if}
-        {#if options.fnType !== "vector"}
+        {#if datum.fnType !== "vector"}
           <label for="graph-type">Sampler</label>
-          <Dropdown id="graph-type" bind:value={options.graphType}>
+          <Dropdown id="graph-type" bind:value={datum.graphType}>
             <option value="polyline">polyline</option>
             <option value="scatter">scatter</option>
-            {#if options.fnType !== "points"}
+            {#if datum.fnType !== "points"}
               <option value="interval">interval</option>
             {/if}
           </Dropdown>
         {/if}
-        {#if ["polyline", "interval"].includes(options.graphType) && options.fnType !== "vector"}
+        {#if ["polyline", "interval"].includes(datum.graphType) && datum.fnType !== "vector"}
           <label for="graph-closed">Closed</label>
-          <Switch id="graph-closed" bind:checked={options.closed} />
+          <Switch id="graph-closed" bind:checked={datum.closed} />
         {/if}
-        {#if options.fnType !== "vector"}
+        {#if datum.fnType !== "vector"}
           <label for="range">Range</label>
           <div class="functionplot-nums-inputs" id="range">
             <NumberInput
-              placeholder={options.fnType === "polar" ? "r1" : "x1"}
-              bind:value={options.range[0]}
+              placeholder={datum.fnType === "polar" ? "r1" : "x1"}
+              bind:value={datum.range[0]}
             />
             <NumberInput
-              placeholder={options.fnType === "polar" ? "r2" : "x2"}
-              bind:value={options.range[1]}
+              placeholder={datum.fnType === "polar" ? "r2" : "x2"}
+              bind:value={datum.range[1]}
             />
           </div>
         {/if}
-        {#if ["scatter", "polyline"].includes(options.graphType)}
+        {#if ["scatter", "polyline"].includes(datum.graphType) && datum.fnType !== "vector"}
           <label for="n-samples">Samples</label>
-          <NumberInput id="n-samples" min={0} bind:value={options.nSamples} />
+          <NumberInput id="n-samples" min={0} bind:value={datum.nSamples} />
         {/if}
         <label for="skip-tip">Skip tip</label>
-        <Switch id="skip-tip" bind:checked={options.skipTip} />
+        <Switch id="skip-tip" bind:checked={datum.skipTip} />
       </OptionsFloater>
     {/if}
   </div>
