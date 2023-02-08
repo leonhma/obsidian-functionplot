@@ -1,64 +1,101 @@
 import { Editor, parseYaml } from "obsidian";
 import type ObsidianFunctionPlot from "../main";
-import type { PlotOptions } from "./types";
+import type { FunctionInputs, PlotInputs } from "./types";
 import createStylingPlugin from "../plugins/styling";
-import functionPlot, { Chart } from "function-plot";
-import { DEFAULT_FUNCTION_INPUTS, DEFAULT_PLOT_INPUTS, FALLBACK_FUNCTION_OPTIONS } from "./defaults";
+import functionPlot from "function-plot";
+import {
+  DEFAULT_FUNCTION_INPUTS,
+  DEFAULT_PLOT_INPUTS,
+  FALLBACK_FUNCTION_INPUTS,
+  FALLBACK_PLOT_INPUTS,
+} from "./defaults";
 import { toPng } from "html-to-image";
-import type { FunctionPlotOptions } from "function-plot/dist/types";
-import { nestedObjectAssign } from "nested-object-assign";
+import type {
+  FunctionPlotDatum,
+  FunctionPlotOptions,
+} from "function-plot/dist/types";
 
-export function sanitize(options: PlotOptions): FunctionPlotOptions {
-  const options_ = JSON.parse(JSON.stringify(options));
+export function toFunctionPlotOptions(
+  options: PlotInputs
+): FunctionPlotOptions {
+  function functionInputsToFunctionPlotDatum(
+    inputs: FunctionInputs
+  ): FunctionPlotDatum {
+    const output: FunctionPlotDatum = {
+      fnType: inputs.fnType,
+      graphType:
+        inputs.graphType ?? ["vector", "polar"].includes(inputs.fnType)
+          ? "polyline"
+          : undefined, // workaround for https://github.com/mauriciopoppe/function-plot/issues/224
+      fn: inputs.fnType === "linear" ? inputs.fn : undefined,
+      vector:
+        inputs.fnType === "vector"
+          ? [inputs.vector.x, inputs.vector.y]
+          : undefined,
+      offset:
+        inputs.fnType === "vector" &&
+        (inputs.offset?.x !== undefined ||
+        inputs.offset?.y !== undefined)      //TODO work here offset is [undef, undef]
+          ? [inputs.offset.x ?? 0, inputs.offset.y ?? 0]
+          : undefined,
+      r: inputs.fnType === "polar" ? inputs.r : undefined,
+      color: inputs.color,
+      range:
+        inputs.range.min || inputs.range.max
+          ? [
+              inputs.range.min ?? FALLBACK_FUNCTION_INPUTS.range.min,
+              inputs.range.max ?? FALLBACK_FUNCTION_INPUTS.range.max,
+            ]
+          : undefined,
+      nSamples: inputs.nSamples,
+      closed: inputs.closed,
+      skipTip: inputs.skipTip,
+    };
 
-  nestedObjectAssign(options_, FALLBACK_FUNCTION_OPTIONS);
+    Object.keys(output).forEach(
+      (key) => output[key] === undefined && delete output[key]
+    );
 
-  options_.xAxis.domain = [options_.xAxis.domain.min, options_.xAxis.domain.max];
-  options_.yAxis.domain = [options_.yAxis.domain.min, options_.yAxis.domain.max];
-  
-  for (let i = 0; i < options_.data.length; i++) {
-    const f = options_.data[i];
-    nestedObjectAssign(f, FALLBACK_FUNCTION_OPTIONS);
-
-    f.range = [f.range.min, f.range.max];
-
-    if (f.vector) {
-      f.vector = [f.vector.x, f.vector.y];
-      if (f.offset) {
-        f.offset = [f.offset.x, f.offset.y];
-      }
-    }
-
-    // remove unnecessary options
-    if (f.fnType === "linear") {
-      delete f.vector;
-      delete f.offset;
-      delete f.r;
-    }
-    if (f.fnType === "vector") {
-      delete f.fn;
-      delete f.r;
-      delete f.range;
-      delete f.graphType;
-      delete f.closed;
-    }
-    if (f.fnType === "polar") {
-      delete f.fn;
-      delete f.vector;
-      delete f.offset;
-      delete f.range;
-    }
-    if (f.graphType == "scatter") {
-      delete f.closed;
-    }
-    if (f.graphType == "interval") {
-      delete f.range;
-    }
-
-    options_.data[i] = f;
+    return output;
   }
 
-  return options_ as FunctionPlotOptions;
+  function hasFunction(inputs: FunctionInputs): boolean {
+    return Boolean(
+      (inputs.fnType === "linear" && inputs.fn) ||
+        (inputs.fnType === "vector" && inputs.vector.x && inputs.vector.y) ||
+        (inputs.fnType === "polar" && inputs.r)
+    );
+  }
+
+  const output: FunctionPlotOptions = {
+    target: options.target,
+    data: options.data
+      .filter(hasFunction)
+      .map(functionInputsToFunctionPlotDatum),
+    title: options.title || undefined,
+    xAxis: {
+      label: options.xAxis?.label || undefined,
+      domain: [
+        options.xAxis?.domain?.min ?? FALLBACK_PLOT_INPUTS.xAxis.domain.min,
+        options.xAxis?.domain?.max ?? FALLBACK_PLOT_INPUTS.xAxis.domain.max,
+      ],
+    },
+    yAxis: {
+      label: options.yAxis?.label || undefined,
+      domain: [
+        options.yAxis?.domain?.min ?? FALLBACK_PLOT_INPUTS.yAxis.domain.min,
+        options.yAxis?.domain?.max ?? FALLBACK_PLOT_INPUTS.yAxis.domain.max,
+      ],
+    },
+    grid: options.grid,
+    disableZoom: options.disableZoom,
+  };
+
+  Object.keys(output).forEach(
+    (key) => output[key] === undefined && delete output[key]
+  );
+
+  return output;
 }
 
 export function hueToHexRGB(hue: number): string {
@@ -100,23 +137,22 @@ export function insertParagraphAtCursor(
  * @param plugin A reference to the plugin (accessed for settings)
  * @returns The chart object of the created plot
  */
-export function renderPlot(
-  options: PlotOptions,
-  plugin: ObsidianFunctionPlot
-): Chart {
-  console.log("called renderPlot");
-  console.log(options);
-  if (options.target == null) return;
+export function renderPlot(options: PlotInputs, plugin: ObsidianFunctionPlot) {
+  if (options.target === null) return;
+  const stylingPlugin = createStylingPlugin(plugin);
+  console.log("reloading plot");
+  console.log(toFunctionPlotOptions(options));
   try {
-    const stylingPlugin = createStylingPlugin(plugin);
-    return functionPlot(
-      Object.assign({}, sanitize(options), { plugins: [stylingPlugin] })
+    functionPlot(
+      Object.assign({}, toFunctionPlotOptions(options), {
+        plugins: [stylingPlugin],
+      })
     );
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.debug(e);
   }
 }
-
 /**
  * Insert an interactive plot at the current cursor position.
  * @param plugin A reference to the plugin
@@ -126,9 +162,11 @@ export function renderPlot(
 export function insertPlotAsInteractive(
   plugin: ObsidianFunctionPlot,
   editor: Editor,
-  options: PlotOptions
+  options: PlotInputs
 ): void {
-  const text = `\`\`\`functionplot\n${JSON.stringify(options)}\n\`\`\``;
+  const text = `\`\`\`functionplot\n${JSON.stringify(
+    Object.assign({}, options, { target: null })
+  )}\n\`\`\``;
   insertParagraphAtCursor(plugin, editor, text);
 }
 
@@ -141,7 +179,7 @@ export function insertPlotAsInteractive(
 export async function insertPlotAsImage(
   plugin: ObsidianFunctionPlot,
   editor: Editor,
-  options: PlotOptions
+  options: PlotInputs
 ) {
   const target = document.createElement("div");
   renderPlot(Object.assign(options, { target }), plugin);
@@ -159,7 +197,7 @@ export async function insertPlotAsImage(
 export function insertPlot(
   plugin: ObsidianFunctionPlot,
   editor: Editor,
-  options: PlotOptions
+  options: PlotInputs
 ) {
   switch (options.renderer) {
     case "interactive":
@@ -171,8 +209,9 @@ export function insertPlot(
   }
 }
 
-export function parseYAMLCodeBlock(content: string): PlotOptions {
-  let header:any = {},
+export function parseYAMLCodeBlock(content: string): PlotInputs {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let header: any = {},
     offset = 0;
   if (/-{3}[^]*-{3}/.test(content)) {
     // header present
@@ -192,11 +231,15 @@ export function parseYAMLCodeBlock(content: string): PlotOptions {
     title: header.title ?? DEFAULT_PLOT_INPUTS.title,
     xAxis: {
       label: header.xLabel ?? DEFAULT_PLOT_INPUTS.xAxis.label,
-      domain: header.bounds ? { min: header.bounds[0], max: header.bounds[1] } : DEFAULT_PLOT_INPUTS.xAxis.domain,
+      domain: header.bounds
+        ? { min: header.bounds[0], max: header.bounds[1] }
+        : DEFAULT_PLOT_INPUTS.xAxis.domain,
     },
     yAxis: {
       label: header.yLabel ?? DEFAULT_PLOT_INPUTS.yAxis.label,
-      domain: header.bounds ? {min: header.bounds[2], max: header.bounds[3]} ?? DEFAULT_PLOT_INPUTS.yAxis.domain,
+      domain: header.bounds
+        ? { min: header.bounds[2], max: header.bounds[3] }
+        : DEFAULT_PLOT_INPUTS.yAxis.domain,
     },
     disableZoom: header.disableZoom ?? DEFAULT_PLOT_INPUTS.disableZoom,
     grid: header.grid ?? DEFAULT_PLOT_INPUTS.grid,
@@ -212,11 +255,12 @@ export function parseYAMLCodeBlock(content: string): PlotOptions {
   };
 }
 
-export function parseCodeBlock(content: string): PlotOptions {
+export function parseCodeBlock(content: string): PlotInputs {
   try {
     return Object.assign({}, DEFAULT_PLOT_INPUTS, JSON.parse(content));
   } catch (e) {
-    console.log(`Error while parsing code block in JSON mode: ${e}`);
+    // eslint-disable-next-line no-console
+    console.debug(`Error while parsing code block in JSON mode: ${e}`);
     return parseYAMLCodeBlock(content);
   }
 }

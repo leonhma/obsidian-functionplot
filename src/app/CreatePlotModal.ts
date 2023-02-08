@@ -1,5 +1,5 @@
 import { Editor, Modal } from "obsidian";
-import type { PlotOptions } from "../common/types";
+import type { PlotInputs } from "../common/types";
 import type ObsidianFunctionPlot from "../main";
 import PlotModal from "../components/PlotModal/PlotModal.svelte";
 import { DEFAULT_PLOT_INPUTS } from "../common/defaults";
@@ -16,15 +16,18 @@ export default class CreatePlotModal extends Modal {
   }
 
   async onOpen() {
+    this.titleEl.setText("Create a Plot");
+    this.modalEl.addClass("fplt-modal");
+    // attach svelte PlotModal component
     new PlotModal({
       target: this.contentEl,
       props: {
         options: Object.assign(
           JSON.parse(JSON.stringify(DEFAULT_PLOT_INPUTS)),
-          { renderer: this.plugin.settings.defaultRenderer }  // assign default renderer as initial dropdown state
+          { renderer: this.plugin.settings.defaultRenderer } // assign default renderer as initial dropdown state
         ),
         plugin: this.plugin,
-        submit: (options: PlotOptions) => {
+        submit: (options: PlotInputs) => {
           insertPlot(this.plugin, this.editor, options);
           this.close();
         },

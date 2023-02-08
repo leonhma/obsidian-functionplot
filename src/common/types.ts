@@ -1,5 +1,9 @@
 import type { Chart } from "function-plot";
 import type { EventEmitter } from "events";
+import type {
+  FunctionPlotDatum,
+  FunctionPlotOptions,
+} from "function-plot/dist/types";
 
 export type rendererType = "interactive" | "image";
 
@@ -8,9 +12,9 @@ export type rendererType = "interactive" | "image";
  */
 export type chartType = Chart & EventEmitter;
 
-export interface FunctionOptions {
+export interface FunctionInputs {
   id: string;
-  fnType: string;
+  fnType: (FunctionPlotDatum["fnType"] & "linear") | "vector" | "polar";
   fn?: string;
   vector?: {
     x: number;
@@ -26,7 +30,7 @@ export interface FunctionOptions {
     min: number;
     max: number;
   };
-  graphType?: string;
+  graphType?: FunctionPlotDatum["graphType"];
   nSamples?: number;
   closed?: boolean;
   skipTip?: boolean;
@@ -34,10 +38,10 @@ export interface FunctionOptions {
 /**
  * An interface specifying the options for a plot.
  */
-export interface PlotOptions {
-  data: FunctionOptions[];
+export interface PlotInputs {
+  data: FunctionInputs[];
   renderer: rendererType;
-  target: HTMLElement | Node | string;
+  target: FunctionPlotOptions["target"];
   xAxis?: {
     label?: string;
     domain?: {

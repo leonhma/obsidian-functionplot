@@ -1,5 +1,3 @@
-console.log("jest config loaded");
-
 export default {
   roots: ["<rootDir>/src"],
   testMatch: ["**/__tests__/**/*.+(ts)"],

@@ -3,7 +3,7 @@ import { fileURLToPath } from "url";
 import preprocess from "svelte-preprocess";
 
 export default (env) => {
-  const isProd = env.production == true;
+  const isProd = env.production === true;
 
   return {
     mode: isProd ? "production" : "development",

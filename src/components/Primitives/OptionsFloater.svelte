@@ -14,11 +14,7 @@
 
     return {
       destroy() {
-        try {
-          document.removeEventListener("click", handleClick);
-        } catch (e) {
-          console.debug(e);
-        }
+        document.removeEventListener("click", handleClick);
       },
     };
   }

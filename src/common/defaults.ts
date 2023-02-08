@@ -1,6 +1,6 @@
 import type {
-  FunctionOptions,
-  PlotOptions,
+  FunctionInputs,
+  PlotInputs,
   PluginSettings,
   rendererType,
 } from "./types";
@@ -25,37 +25,6 @@ export const DEFAULT_PLUGIN_SETTINGS: PluginSettings = {
   defaultRenderer: "interactive",
 };
 
-export const FALLBACK_FUNCTION_OPTIONS: Partial<FunctionOptions> = {
-  range: {
-    min: -Infinity,
-    max: Infinity,
-  },
-};
-
-export const DEFAULT_FUNCTION_INPUTS: FunctionOptions = {
-  id: null,
-  fnType: "linear", // always set by the plugin
-  fn: "", // error if missing, no fallback
-  vector: {
-    x: null,
-    y: null,
-  }, // error if missing, no fallback
-  r: "", // error if missing, no fallback
-  color: "#808080",
-  offset: {
-    x: null,
-    y: null,
-  },
-  closed: false,
-  graphType: null,
-  range: {
-    min: null,
-    max: null,
-  },
-  nSamples: null,
-  skipTip: false,
-};
-
 /**
  * The options displayed for renderers
  */
@@ -65,25 +34,41 @@ export const rendererOptions: { [_ in rendererType]: string } = {
   image: "Image (exportable)",
 };
 
-export const FALLBACK_PLOT_OPTIONS: Partial<PlotOptions> = {
-  xAxis: {
-    domain: {
-      min: -10,
-      max: 10,
-    },
+export const DEFAULT_FUNCTION_INPUTS: FunctionInputs = {
+  id: null,
+  fnType: undefined, // always set by the plugin
+  fn: undefined, // error if missing, no fallback
+  vector: {
+    x: undefined,
+    y: undefined,
+  }, // error if missing, no fallback
+  r: undefined, // error if missing, no fallback
+  color: null, // set by color generator. fallback value is gray
+  offset: {
+    x: undefined,
+    y: undefined,
   },
-  yAxis: {
-    domain: {
-      min: -10,
-      max: 10,
-    },
+  closed: false,
+  graphType: undefined,
+  range: {
+    min: undefined,
+    max: undefined,
+  },
+  nSamples: undefined,
+  skipTip: false,
+};
+
+export const FALLBACK_FUNCTION_INPUTS: Partial<FunctionInputs> = {
+  range: {
+    min: -Infinity,
+    max: Infinity,
   },
 };
 
 /**
  * The default options for a plot.
  */
-export const DEFAULT_PLOT_INPUTS: PlotOptions = {
+export const DEFAULT_PLOT_INPUTS: PlotInputs = {
   target: null, // set by rendering function
   renderer: null, // has initial state controlled by plugin.settings.defaultRenderer
   title: null,
@@ -101,4 +86,19 @@ export const DEFAULT_PLOT_INPUTS: PlotOptions = {
   grid: true,
   disableZoom: false,
   data: [],
+};
+
+export const FALLBACK_PLOT_INPUTS: Partial<PlotInputs> = {
+  xAxis: {
+    domain: {
+      min: -10,
+      max: 10,
+    },
+  },
+  yAxis: {
+    domain: {
+      min: -10,
+      max: 10,
+    },
+  },
 };

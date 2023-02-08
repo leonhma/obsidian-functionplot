@@ -4,7 +4,7 @@ import SettingsTab from "./app/SettingsTab";
 import { renderPlot, parseCodeBlock } from "./common/utils";
 import type { PluginSettings } from "./common/types";
 import { DEFAULT_PLUGIN_SETTINGS } from "./common/defaults";
-// import "./styles.scss";
+import "./styles.scss";
 
 export default class ObsidianFunctionPlot extends Plugin {
   settings: PluginSettings;
@@ -55,9 +55,7 @@ export default class ObsidianFunctionPlot extends Plugin {
       _ctx: MarkdownPostProcessorContext /* eslint-disable-line no-unused-vars, @typescript-eslint/no-unused-vars */
     ) => {
       const options = parseCodeBlock(source);
-      if (options.target == null) {
-        options.target = el;
-      }
+      options.target = el;
       renderPlot(options, plugin);
     };
   }

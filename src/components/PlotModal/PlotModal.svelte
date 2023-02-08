@@ -16,24 +16,21 @@
 
   import {
     DEFAULT_FUNCTION_INPUTS,
-    DEFAULT_PLOT_INPUTS,
     rendererOptions,
   } from "../../common/defaults";
-  import functionPlot from "function-plot";
-  import type { FunctionPlotOptions } from "function-plot/dist/types";
-  import type { PlotOptions } from "../../common/types";
-  import { hueToHexRGB, renderPlot, sanitize } from "../../common/utils";
+  import type { PlotInputs } from "../../common/types";
+  import { hueToHexRGB, renderPlot } from "../../common/utils";
   import type ObsidianFunctionPlot from "../../main";
   import IconWrapper from "../Primitives/IconWrapper.svelte";
 
-  export let options: PlotOptions,
+  export let options: PlotInputs,
     plugin: ObsidianFunctionPlot,
-    submit: (options: PlotOptions) => void;
+    submit: (options: PlotInputs) => void;
 
-  const optionsStore: Writable<PlotOptions> = writable(options);
+  const optionsStore: Writable<PlotInputs> = writable(options);
 
   function* spacedDegrees() {
-    // TODO refine this
+    // TODO rewrite this, looks too boring
     let i = 0;
 
     while (true) {
@@ -55,7 +52,6 @@
   }
 
   const unsubscribe = optionsStore.subscribe((options) => {
-    console.log(options);
     renderPlot(options, plugin);
   });
 
@@ -65,7 +61,6 @@
 <div>
   <div class="fplt-container">
     <div class="fplt-options">
-      <h1>Create a Plot</h1>
       <div class="fplt-settings">
         <SettingItem name="Title">
           <TextInput bind:value={$optionsStore.title} />
@@ -79,19 +74,19 @@
         <SettingItem name="Domain">
           <NumberInput
             placeholder="X min"
-            bind:value={$optionsStore.xAxis.domain[0]}
+            bind:value={$optionsStore.xAxis.domain.min}
           />
           <NumberInput
             placeholder="X max"
-            bind:value={$optionsStore.xAxis.domain[1]}
+            bind:value={$optionsStore.xAxis.domain.max}
           />
           <NumberInput
             placeholder="Y min"
-            bind:value={$optionsStore.yAxis.domain[0]}
+            bind:value={$optionsStore.yAxis.domain.min}
           />
           <NumberInput
             placeholder="Y max"
-            bind:value={$optionsStore.yAxis.domain[1]}
+            bind:value={$optionsStore.yAxis.domain.max}
           />
         </SettingItem>
         <SettingItem name="Disable Zoom">
@@ -100,38 +95,40 @@
         <SettingItem name="Show Grid">
           <Switch bind:checked={$optionsStore.grid} />
         </SettingItem>
-
-        <SettingItem name="Data" />
-        <div class="fplt-fns-container">
-          <div class="fplt-list">
-            {#each $optionsStore.data as datum}
-              <Function
-                bind:datum
-                unmount={() => {
-                  $optionsStore.data = $optionsStore.data.filter(
-                    (val) => val.id != datum.id
-                  );
-                }}
-              />
-            {:else}
-              <div class="fplt-empty"><i>No data</i></div>
-            {/each}
-          </div>
-          <div class="fplt-add">
-            <Button on:click={newDataItem}>
-              <IconWrapper style="margin-right: 0.5em">
-                <Plus />
-              </IconWrapper>
-              Add data
-            </Button>
-          </div>
+      </div>
+    </div>
+    <div class="fplt-data">
+      Data
+      <div class="fplt-fns-container">
+        <div class="fplt-list">
+          {#each $optionsStore.data as datum}
+            <Function
+              bind:datum
+              unmount={() => {
+                $optionsStore.data = $optionsStore.data.filter(
+                  (val) => val.id != datum.id
+                );
+              }}
+            />
+          {:else}
+            <div class="fplt-empty"><i>No data</i></div>
+          {/each}
+        </div>
+        <div class="fplt-add">
+          <Button on:click={newDataItem}>
+            <IconWrapper style="margin-right: 0.5em">
+              <Plus />
+            </IconWrapper>
+            Add data
+          </Button>
         </div>
       </div>
     </div>
     <div class="fplt-preview" bind:this={$optionsStore.target} />
+    <div class="fplt-sliders">hi</div>
   </div>
 
-  <SettingItem>
+  <SettingItem style="position:absolute;bottom:0;left:0;right:0">
     <Dropdown bind:value={$optionsStore.renderer}>
       {#each Object.entries(rendererOptions) as [value, name]}
         <option {value}>{name}</option>
@@ -143,61 +140,40 @@
         submit($optionsStore);
       }}
     >
-      Continue
+      Finish
     </Button>
   </SettingItem>
 </div>
 
 <style lang="scss">
   .fplt-container {
-    height: 100%;
-    width: 100%;
-
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    place-items: center;
+    grid-template-columns: initial 1fr;
+    grid-template-rows: min-content 1fr;
+    grid-template-areas:
+      "options preview"
+      "data sliders";
   }
 
-  .fplt-settings {
-    height: 100%;
-    width: 100%;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  .fplt-options {
+    grid-area: options;
+  }
+
+  .fplt-data {
+    grid-area: data;
+  }
+
+  .fplt-preview {
+    grid-area: preview;
+  }
+
+  .fplt-sliders {
+    grid-area: sliders;
   }
 
   .fplt-fns-container {
-    width: 100%;
-    height: min-content;
-    overflow-y: scroll;
-    overflow-x: hidden;
     display: flex;
     flex-direction: column;
-    align-items: center;
-  }
-
-  .fplt-list {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    margin-top: 1em;
-  }
-
-  .fplt-add {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    margin: 1em 0;
-  }
-
-  .fplt-empty {
-    width: 100%;
-    height: 2em;
-    text-align: center;
-    line-height: 2em;
-    color: var(--text-faint);
+    gap: 1em;
   }
 </style>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { FunctionOptions } from "../../common/types";
+  import type { FunctionInputs } from "../../common/types";
 
   import Dropdown from "../Primitives/Dropdown.svelte";
   import TextInput from "../Primitives/TextInput.svelte";
@@ -11,13 +11,9 @@
   import MenuDown from "svelte-material-icons/MenuDown.svelte";
   import Delete from "svelte-material-icons/Delete.svelte";
 
-  export let datum: FunctionOptions, unmount: () => void;
+  export let datum: FunctionInputs, unmount: () => void;
 
   let showFloater = false;
-
-  $: if (datum.fnType === "linear") {
-    console.log('reactive functiontype = linear')
-  }
 </script>
 
 <div class="functionplot-item-data">
@@ -38,8 +34,8 @@
 
   {#if datum.fnType === "vector"}
     <div class="functionplot-nums-inputs">
-      <NumberInput placeholder="Δx" bind:value={datum.vector[0]} />
-      <NumberInput placeholder="Δy" bind:value={datum.vector[1]} />
+      <NumberInput placeholder="Δx" bind:value={datum.vector.x} />
+      <NumberInput placeholder="Δy" bind:value={datum.vector.y} />
     </div>
   {/if}
 
@@ -58,8 +54,8 @@
         {#if datum.fnType === "vector"}
           <label for="vector-initial">Start point</label>
           <div id="vector-initial" class="functionplot-nums-inputs">
-            <NumberInput placeholder="x" bind:value={datum.offset[0]} />
-            <NumberInput placeholder="y" bind:value={datum.offset[1]} />
+            <NumberInput placeholder="x" bind:value={datum.offset.x} />
+            <NumberInput placeholder="y" bind:value={datum.offset.y} />
           </div>
         {/if}
         {#if datum.fnType !== "vector"}
@@ -67,7 +63,7 @@
           <Dropdown id="graph-type" bind:value={datum.graphType}>
             <option value="polyline">polyline</option>
             <option value="scatter">scatter</option>
-            {#if datum.fnType !== "points"}
+            {#if !["polar", "vector"].includes(datum.fnType)}
               <option value="interval">interval</option>
             {/if}
           </Dropdown>
@@ -81,11 +77,11 @@
           <div class="functionplot-nums-inputs" id="range">
             <NumberInput
               placeholder={datum.fnType === "polar" ? "r1" : "x1"}
-              bind:value={datum.range[0]}
+              bind:value={datum.range.min}
             />
             <NumberInput
               placeholder={datum.fnType === "polar" ? "r2" : "x2"}
-              bind:value={datum.range[1]}
+              bind:value={datum.range.max}
             />
           </div>
         {/if}
@@ -93,8 +89,10 @@
           <label for="n-samples">Samples</label>
           <NumberInput id="n-samples" min={0} bind:value={datum.nSamples} />
         {/if}
-        <label for="skip-tip">Skip tip</label>
-        <Switch id="skip-tip" bind:checked={datum.skipTip} />
+        {#if datum.fnType !== "vector"}
+          <label for="skip-tip">Skip tip</label>
+          <Switch id="skip-tip" bind:checked={datum.skipTip} />
+        {/if}
       </OptionsFloater>
     {/if}
   </div>
@@ -107,7 +105,7 @@
 <style lang="scss">
   .functionplot-item-data {
     display: inline-grid;
-    grid-template-columns: min-content auto repeat(3, min-content);
+    grid-template-columns: min-content max-content repeat(3, min-content);
     column-gap: 1em;
     place-items: center start;
     width: 100%;
