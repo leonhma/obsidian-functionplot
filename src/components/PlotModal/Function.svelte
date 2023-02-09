@@ -105,7 +105,7 @@
 <style lang="scss">
   .functionplot-item-data {
     display: inline-grid;
-    grid-template-columns: min-content max-content repeat(3, min-content);
+    grid-template-columns: min-content auto repeat(3, min-content);
     column-gap: 1em;
     place-items: center start;
     width: 100%;
