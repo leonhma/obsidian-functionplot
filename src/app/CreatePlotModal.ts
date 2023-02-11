@@ -18,6 +18,7 @@ export default class CreatePlotModal extends Modal {
   async onOpen() {
     this.titleEl.setText("Create a Plot");
     this.modalEl.addClass("fplt-modal");
+    this.contentEl.addClass("fplt-modal-content")
     // attach svelte PlotModal component
     new PlotModal({
       target: this.contentEl,

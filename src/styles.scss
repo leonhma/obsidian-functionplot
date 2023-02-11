@@ -4,3 +4,12 @@
   height: min(50em, 100%);
   overflow: hidden;
 }
+
+.fplt-modal-content {
+  max-height: inherit;
+  min-height: 0;
+}
+
+.fplt-actionbar .setting-item {
+  padding: 0;
+}

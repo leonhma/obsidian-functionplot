@@ -1,9 +1,16 @@
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import preprocess from "svelte-preprocess";
+import pkg from "webpack";
+const { DefinePlugin } = pkg;
+import { execSync } from "child_process";
+import { readFileSync } from "fs";
 
 export default (env) => {
   const isProd = env.production === true;
+  const commitSHA = execSync("git rev-parse --short HEAD").toString().trim();
+  const isCI = process.env.CI === "true";
+  const manifest = JSON.parse(readFileSync("manifest.json", "utf8"));
 
   return {
     mode: isProd ? "production" : "development",
@@ -48,6 +55,14 @@ export default (env) => {
         },
       ],
     },
+    plugins: [
+      new DefinePlugin({
+        'process.env.BUILD_DATE': new Date(),
+        'process.env.BUILD_VERSION': JSON.stringify(
+          isCI ? manifest.version : `${commitSHA}+`
+        ),
+      }),
+    ],
     resolve: {
       extensions: [".ts", ".js", ".svelte"],
     },

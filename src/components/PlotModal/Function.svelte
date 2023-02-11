@@ -29,7 +29,7 @@
   {/if}
 
   {#if datum.fnType === "polar"}
-    <TextInput placeholder="θ(r)=" bind:value={datum.r} />
+    <TextInput placeholder="r(theta)=" bind:value={datum.r} />
   {/if}
 
   {#if datum.fnType === "vector"}

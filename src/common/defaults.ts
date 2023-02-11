@@ -65,12 +65,19 @@ export const FALLBACK_FUNCTION_INPUTS: Partial<FunctionInputs> = {
   },
 };
 
+export const DEFAULT_CONSTANT_INPUTS = {
+  min: -10,
+  max: 10,
+  step: 1,
+  value: 1,
+}
+
 /**
  * The default options for a plot.
  */
 export const DEFAULT_PLOT_INPUTS: PlotInputs = {
-  target: null, // set by rendering function
   renderer: null, // has initial state controlled by plugin.settings.defaultRenderer
+  constants: {},
   title: null,
   xAxis: {
     label: null,

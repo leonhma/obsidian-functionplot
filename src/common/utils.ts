@@ -15,8 +15,10 @@ import type {
   FunctionPlotOptions,
 } from "function-plot/dist/types";
 
+// TODO make change to returned object reflect in input
 export function toFunctionPlotOptions(
-  options: PlotInputs
+  options: PlotInputs,
+  target: HTMLElement
 ): FunctionPlotOptions {
   function functionInputsToFunctionPlotDatum(
     inputs: FunctionInputs
@@ -34,8 +36,7 @@ export function toFunctionPlotOptions(
           : undefined,
       offset:
         inputs.fnType === "vector" &&
-        (inputs.offset?.x !== undefined ||
-        inputs.offset?.y !== undefined)      //TODO work here offset is [undef, undef]
+        (inputs.offset?.x !== undefined || inputs.offset?.y !== undefined) //TODO work here offset is [undef, undef]
           ? [inputs.offset.x ?? 0, inputs.offset.y ?? 0]
           : undefined,
       r: inputs.fnType === "polar" ? inputs.r : undefined,
@@ -47,7 +48,7 @@ export function toFunctionPlotOptions(
               inputs.range.max ?? FALLBACK_FUNCTION_INPUTS.range.max,
             ]
           : undefined,
-      nSamples: inputs.nSamples,
+      nSamples: Math.min(inputs.nSamples, 999),
       closed: inputs.closed,
       skipTip: inputs.skipTip,
     };
@@ -68,7 +69,8 @@ export function toFunctionPlotOptions(
   }
 
   const output: FunctionPlotOptions = {
-    target: options.target,
+    //id: options.id, //used by funcitonplot to identify the plot for updating
+    target: target,
     data: options.data
       .filter(hasFunction)
       .map(functionInputsToFunctionPlotDatum),
@@ -137,14 +139,16 @@ export function insertParagraphAtCursor(
  * @param plugin A reference to the plugin (accessed for settings)
  * @returns The chart object of the created plot
  */
-export function renderPlot(options: PlotInputs, plugin: ObsidianFunctionPlot) {
-  if (options.target === null) return;
+export function renderPlot(
+  options: PlotInputs,
+  target: HTMLElement,
+  plugin: ObsidianFunctionPlot
+) {
+  if (target === null) return;
   const stylingPlugin = createStylingPlugin(plugin);
-  console.log("reloading plot");
-  console.log(toFunctionPlotOptions(options));
   try {
     functionPlot(
-      Object.assign({}, toFunctionPlotOptions(options), {
+      Object.assign({}, toFunctionPlotOptions(options, target), {
         plugins: [stylingPlugin],
       })
     );
@@ -182,7 +186,7 @@ export async function insertPlotAsImage(
   options: PlotInputs
 ) {
   const target = document.createElement("div");
-  renderPlot(Object.assign(options, { target }), plugin);
+  renderPlot(options, target, plugin);
   const dataURL = await toPng(target);
   if (dataURL === "data:,") {
     new Error("Data URL is empty");
@@ -226,8 +230,8 @@ export function parseYAMLCodeBlock(content: string): PlotInputs {
     .filter((line) => line.length > 0);
 
   return {
-    target: null,
     renderer: null,
+    constants: {},
     title: header.title ?? DEFAULT_PLOT_INPUTS.title,
     xAxis: {
       label: header.xLabel ?? DEFAULT_PLOT_INPUTS.xAxis.label,

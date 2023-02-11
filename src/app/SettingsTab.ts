@@ -5,7 +5,7 @@ import {
   Setting,
   ValueComponent,
 } from "obsidian";
-import type ObsidianFunctionPlot from "../main.js";
+import type ObsidianFunctionPlot from "../main";
 import { DEFAULT_PLUGIN_SETTINGS, rendererOptions } from "../common/defaults";
 import type { PluginSettings, rendererType } from "../common/types";
 

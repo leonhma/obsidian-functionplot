@@ -15,6 +15,7 @@
   import { onDestroy } from "svelte";
 
   import {
+    DEFAULT_CONSTANT_INPUTS,
     DEFAULT_FUNCTION_INPUTS,
     rendererOptions,
   } from "../../common/defaults";
@@ -22,6 +23,8 @@
   import { hueToHexRGB, renderPlot } from "../../common/utils";
   import type ObsidianFunctionPlot from "../../main";
   import IconWrapper from "../Primitives/IconWrapper.svelte";
+  import Slider from "../Primitives/Slider.svelte";
+  import Plot from "../Plot/Plot.svelte";
 
   export let options: PlotInputs,
     plugin: ObsidianFunctionPlot,
@@ -29,31 +32,25 @@
 
   const optionsStore: Writable<PlotInputs> = writable(options);
 
-  function* range(start, end) {
-    yield start;
-    if (start === end) return;
-    yield* range(start + 1, end);
-  }
-
-  function* spacedDegrees() {
-    let current = 0,
+  // color generator
+  function* spacedHues() {
+    let current = 60,
       round = 0;
 
     while (true) {
-      for (const i of range(0, 3 * (2 ^ round))) {
-        current += 120 / (2 ^ round);
-        if (i % 2 === 0) {
-          yield current % 360;
-          console.log(current);
+      for (let i = 0; i < 3 * Math.pow(2, round); i++) {
+        current = (current + 120 / Math.pow(2, round)) % 360;
+        if (round == 0 || i % 2 == 0) {
+          yield current;
         }
       }
-      console.log("finished round");
       round++;
     }
   }
 
-  const hues = spacedDegrees();
+  const hues = spacedHues();
 
+  // create a new function item
   function newDataItem() {
     $optionsStore.data = [
       ...$optionsStore.data,
@@ -64,8 +61,44 @@
     ];
   }
 
+  function updateConstants(options: PlotInputs) {
+    const constants = options.data.reduce((acc, datum) => {
+      const toParse = [],
+        ignored = [];
+
+      if (datum.fnType === "linear") {
+        toParse.push(datum.fn);
+        ignored.push("x");
+      } else if (datum.fnType === "polar") {
+        toParse.push(datum.r);
+        ignored.push("theta");
+      } else if (datum.fnType === "vector") {
+        toParse.push(datum.vector.x);
+        toParse.push(datum.vector.y);
+      }
+
+      toParse.forEach((fn: any) => {
+        if (!fn) return;
+        const matches = fn.match(
+          /(?<= |^|[0-9*+\-/()])([A-z]+)(?= |$|[0-9*+\-/)])/gm
+        );
+        if (matches) {
+          matches.forEach((match) => {
+            if (!ignored.includes(match)) {
+              acc[match] = DEFAULT_CONSTANT_INPUTS;
+            }
+          });
+        }
+      });
+      return acc;
+    }, {});
+
+    options.constants = constants;
+  }
+
+  // reactive updates to the preview
   const unsubscribe = optionsStore.subscribe((options) => {
-    renderPlot(options, plugin);
+    updateConstants(options);
   });
 
   onDestroy(unsubscribe);
@@ -73,7 +106,7 @@
 
 <div class="fplt-create-modal">
   <div class="fplt-container">
-    <div class="fplt-left">
+    <div>
       <div class="fplt-options">
         <div class="fplt-settings">
           <SettingItem name="Title">
@@ -112,7 +145,7 @@
         </div>
       </div>
       <div class="fplt-data">
-        Data
+        <p>Data</p>
         <div class="fplt-fns-container">
           <div class="fplt-list">
             {#each $optionsStore.data as datum}
@@ -125,10 +158,10 @@
                 }}
               />
             {:else}
-              <div class="fplt-empty"><i>No data</i></div>
+              <div class="fplt-fns-empty"><i>No data</i></div>
             {/each}
           </div>
-          <div class="fplt-add">
+          <div class="fplt-fns-add">
             <Button on:click={newDataItem}>
               <IconWrapper style="margin-right: 0.5em">
                 <Plus />
@@ -139,10 +172,7 @@
         </div>
       </div>
     </div>
-    <div class="fplt-right">
-      <div class="fplt-preview" bind:this={$optionsStore.target} />
-      <div class="fplt-sliders">hi</div>
-    </div>
+    <Plot {optionsStore} {plugin} />
   </div>
 
   <div class="fplt-actionbar">
@@ -175,22 +205,19 @@
   .fplt-container {
     min-height: 0;
     display: grid;
-    grid-template-columns: 26em 1fr;
-    gap: 1em;
+    grid-template-columns: 28em 1fr;
     height: 100%;
     width: 100%;
     overflow: hidden;
   }
 
-  .fplt-left,
-  .fplt-right {
+  .fplt-container > * {
+    padding: 0.5em;
     display: flex;
     flex-direction: column;
     place-items: stretch start;
     gap: 1em;
     min-height: 0;
-    max-height: 100%;
-    overflow-y: auto;
   }
 
   .fplt-actionbar {
@@ -199,15 +226,33 @@
     height: min-content;
   }
 
+  .fplt-data {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
   .fplt-fns-container {
     display: flex;
     flex-direction: column;
+    align-content: space-around;
     gap: 1em;
+    max-height: 100%;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    padding-bottom: 0.5em;
   }
 
-  .fplt-add {
+  .fplt-fns-empty {
     display: flex;
     flex-direction: row;
-    place-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+
+  .fplt-fns-add {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
   }
 </style>

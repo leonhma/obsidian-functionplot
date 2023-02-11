@@ -1,9 +1,6 @@
 import type { Chart } from "function-plot";
 import type { EventEmitter } from "events";
-import type {
-  FunctionPlotDatum,
-  FunctionPlotOptions,
-} from "function-plot/dist/types";
+import type { FunctionPlotDatum } from "function-plot/dist/types";
 
 export type rendererType = "interactive" | "image";
 
@@ -35,13 +32,19 @@ export interface FunctionInputs {
   closed?: boolean;
   skipTip?: boolean;
 }
+export interface ConstantInputs {
+  min: number;
+  max: number;
+  step: number;
+  value: number;
+}
 /**
  * An interface specifying the options for a plot.
  */
 export interface PlotInputs {
   data: FunctionInputs[];
   renderer: rendererType;
-  target: FunctionPlotOptions["target"];
+  constants: { [_: string]: ConstantInputs };
   xAxis?: {
     label?: string;
     domain?: {
