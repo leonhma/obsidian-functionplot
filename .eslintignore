@@ -5,6 +5,8 @@ data.json
 package-lock.json
 .nyc_output
 coverage
+jest.config.js
+webpack.config.js
 
 LICENSE
 .deepsource.toml

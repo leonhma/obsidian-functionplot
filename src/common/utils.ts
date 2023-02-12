@@ -1,6 +1,11 @@
 import { Editor, parseYaml } from "obsidian";
 import type ObsidianFunctionPlot from "../main";
-import type { FunctionInputs, PlotInputs } from "./types";
+import type {
+  FunctionInputs,
+  PlotInputs,
+  rendererType,
+  V1YAMLPlotInputs,
+} from "./types";
 import createStylingPlugin from "../plugins/styling";
 import functionPlot from "function-plot";
 import {
@@ -29,18 +34,22 @@ export function toFunctionPlotOptions(
         inputs.graphType ?? ["vector", "polar"].includes(inputs.fnType)
           ? "polyline"
           : undefined, // workaround for https://github.com/mauriciopoppe/function-plot/issues/224
-      fn: inputs.fnType === "linear" ? inputs.fn : undefined,
+      fn: inputs.fnType === "linear" ? inputs.fn ?? undefined : undefined,
+      scope: inputs.scope,
       vector:
-        inputs.fnType === "vector"
+        inputs.fnType === "vector" && inputs.vector.x && inputs.vector.y
           ? [inputs.vector.x, inputs.vector.y]
           : undefined,
       offset:
         inputs.fnType === "vector" &&
-        (inputs.offset?.x !== undefined || inputs.offset?.y !== undefined) //TODO work here offset is [undef, undef]
-          ? [inputs.offset.x ?? 0, inputs.offset.y ?? 0]
+        (inputs.offset.x !== null || inputs.offset.y !== null)
+          ? [
+              inputs.offset.x ?? FALLBACK_FUNCTION_INPUTS.offset.x,
+              inputs.offset.y ?? FALLBACK_FUNCTION_INPUTS.offset.y,
+            ]
           : undefined,
-      r: inputs.fnType === "polar" ? inputs.r : undefined,
-      color: inputs.color,
+      r: inputs.fnType === "polar" ? inputs.r ?? undefined : undefined,
+      color: inputs.color ?? undefined,
       range:
         inputs.range.min || inputs.range.max
           ? [
@@ -48,9 +57,9 @@ export function toFunctionPlotOptions(
               inputs.range.max ?? FALLBACK_FUNCTION_INPUTS.range.max,
             ]
           : undefined,
-      nSamples: Math.min(inputs.nSamples, 999),
-      closed: inputs.closed,
-      skipTip: inputs.skipTip,
+      nSamples: inputs.nSamples ? Math.min(inputs.nSamples, 999) : undefined,
+      closed: inputs.closed ?? undefined,
+      skipTip: inputs.skipTip ?? undefined,
     };
 
     Object.keys(output).forEach(
@@ -74,23 +83,23 @@ export function toFunctionPlotOptions(
     data: options.data
       .filter(hasFunction)
       .map(functionInputsToFunctionPlotDatum),
-    title: options.title || undefined,
+    title: options.title ?? undefined,
     xAxis: {
-      label: options.xAxis?.label || undefined,
+      label: options.xAxis.label ?? FALLBACK_PLOT_INPUTS.xAxis.label,
       domain: [
-        options.xAxis?.domain?.min ?? FALLBACK_PLOT_INPUTS.xAxis.domain.min,
-        options.xAxis?.domain?.max ?? FALLBACK_PLOT_INPUTS.xAxis.domain.max,
+        options.xAxis.domain.min ?? FALLBACK_PLOT_INPUTS.xAxis.domain.min,
+        options.xAxis.domain.max ?? FALLBACK_PLOT_INPUTS.xAxis.domain.max,
       ],
     },
     yAxis: {
-      label: options.yAxis?.label || undefined,
+      label: options.yAxis.label ?? FALLBACK_PLOT_INPUTS.yAxis.label,
       domain: [
-        options.yAxis?.domain?.min ?? FALLBACK_PLOT_INPUTS.yAxis.domain.min,
-        options.yAxis?.domain?.max ?? FALLBACK_PLOT_INPUTS.yAxis.domain.max,
+        options.yAxis.domain.min ?? FALLBACK_PLOT_INPUTS.yAxis.domain.min,
+        options.yAxis.domain.max ?? FALLBACK_PLOT_INPUTS.yAxis.domain.max,
       ],
     },
-    grid: options.grid,
-    disableZoom: options.disableZoom,
+    grid: options.grid ?? undefined,
+    disableZoom: options.disableZoom ?? undefined,
   };
 
   Object.keys(output).forEach(
@@ -101,7 +110,7 @@ export function toFunctionPlotOptions(
 }
 
 export function hueToHexRGB(hue: number): string {
-  const f = (n, k = (n + hue / 60) % 6) =>
+  const f = (n: number, k = (n + hue / 60) % 6) =>
     1 - Math.max(Math.min(k, 4 - k, 1), 0);
   return (
     "#" +
@@ -144,7 +153,6 @@ export function renderPlot(
   target: HTMLElement,
   plugin: ObsidianFunctionPlot
 ) {
-  if (target === null) return;
   const stylingPlugin = createStylingPlugin(plugin);
   try {
     functionPlot(
@@ -152,9 +160,8 @@ export function renderPlot(
         plugins: [stylingPlugin],
       })
     );
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.debug(e);
+  } catch (err) {
+    console.error(`Error rendering plot: ${err}`);
   }
 }
 /**
@@ -180,30 +187,36 @@ export function insertPlotAsInteractive(
  * @param editor A reference to the active editor
  * @param options The options for the plot
  */
-export async function insertPlotAsImage(
+export function insertPlotAsImage(
   plugin: ObsidianFunctionPlot,
   editor: Editor,
   options: PlotInputs
 ) {
   const target = document.createElement("div");
   renderPlot(options, target, plugin);
-  const dataURL = await toPng(target);
-  if (dataURL === "data:,") {
-    new Error("Data URL is empty");
-  }
-  const text = `<img data-functionplot="${JSON.stringify(
-    options
-  )}" src="${dataURL}">`;
-  target.remove();
-  insertParagraphAtCursor(plugin, editor, text);
+  toPng(target)
+    .then((dataURL) => {
+      if (dataURL === "data:,") {
+        new Error("Data URL is empty");
+      }
+      const text = `<img data-functionplot="${JSON.stringify(
+        options
+      )}" src="${dataURL}">`;
+      target.remove();
+      insertParagraphAtCursor(plugin, editor, text);
+    })
+    .catch((err) => {
+      console.error(`Error converting to PNG: ${err}`);
+    });
 }
 
 export function insertPlot(
   plugin: ObsidianFunctionPlot,
   editor: Editor,
-  options: PlotInputs
+  options: PlotInputs,
+  renderer: rendererType
 ) {
-  switch (options.renderer) {
+  switch (renderer) {
     case "interactive":
       insertPlotAsInteractive(plugin, editor, options);
       break;
@@ -215,12 +228,12 @@ export function insertPlot(
 
 export function parseYAMLCodeBlock(content: string): PlotInputs {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let header: any = {},
+  let header: V1YAMLPlotInputs = {},
     offset = 0;
-  if (/-{3}[^]*-{3}/.test(content)) {
-    // header present
-    const headerMatch = content.match(/-{3}([^]*?)-{3}/)[1];
+  const headerMatch = content.match(/-{3}([^]*?)-{3}/)?.[1];
+  if (headerMatch) {
     offset = headerMatch.length + 6;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     header = parseYaml(headerMatch);
   }
   const functions = content
@@ -230,20 +243,19 @@ export function parseYAMLCodeBlock(content: string): PlotInputs {
     .filter((line) => line.length > 0);
 
   return {
-    renderer: null,
     constants: {},
     title: header.title ?? DEFAULT_PLOT_INPUTS.title,
     xAxis: {
-      label: header.xLabel ?? DEFAULT_PLOT_INPUTS.xAxis.label,
+      label: header.xLabel ?? FALLBACK_PLOT_INPUTS.xAxis.label,
       domain: header.bounds
         ? { min: header.bounds[0], max: header.bounds[1] }
-        : DEFAULT_PLOT_INPUTS.xAxis.domain,
+        : FALLBACK_PLOT_INPUTS.xAxis.domain,
     },
     yAxis: {
-      label: header.yLabel ?? DEFAULT_PLOT_INPUTS.yAxis.label,
+      label: header.yLabel ?? FALLBACK_PLOT_INPUTS.yAxis.label,
       domain: header.bounds
         ? { min: header.bounds[2], max: header.bounds[3] }
-        : DEFAULT_PLOT_INPUTS.yAxis.domain,
+        : FALLBACK_PLOT_INPUTS.yAxis.domain,
     },
     disableZoom: header.disableZoom ?? DEFAULT_PLOT_INPUTS.disableZoom,
     grid: header.grid ?? DEFAULT_PLOT_INPUTS.grid,
@@ -253,18 +265,21 @@ export function parseYAMLCodeBlock(content: string): PlotInputs {
       return Object.assign({}, DEFAULT_FUNCTION_INPUTS, {
         fnType: "linear",
         graphType: "polyline",
-        fn,
-      });
+        fn, // return as FunctionInputs since fn is specified here
+      }) as FunctionInputs;
     }),
   };
 }
 
 export function parseCodeBlock(content: string): PlotInputs {
   try {
-    return Object.assign({}, DEFAULT_PLOT_INPUTS, JSON.parse(content));
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.debug(`Error while parsing code block in JSON mode: ${e}`);
+    return Object.assign(
+      {},
+      DEFAULT_PLOT_INPUTS,
+      JSON.parse(content)
+    ) as PlotInputs;
+  } catch (err) {
+    console.error(`Error while parsing code block in JSON mode: ${err}`);
     return parseYAMLCodeBlock(content);
   }
 }

@@ -68,7 +68,7 @@
             {/if}
           </Dropdown>
         {/if}
-        {#if ["polyline", "interval"].includes(datum.graphType) && datum.fnType !== "vector"}
+        {#if datum.graphType && ["polyline", "interval"].includes(datum.graphType) && datum.fnType !== "vector"}
           <label for="graph-closed">Closed</label>
           <Switch id="graph-closed" bind:checked={datum.closed} />
         {/if}
@@ -85,7 +85,7 @@
             />
           </div>
         {/if}
-        {#if ["scatter", "polyline"].includes(datum.graphType) && datum.fnType !== "vector"}
+        {#if datum.graphType && ["scatter", "polyline"].includes(datum.graphType) && datum.fnType !== "vector"}
           <label for="n-samples">Samples</label>
           <NumberInput id="n-samples" min={0} bind:value={datum.nSamples} />
         {/if}

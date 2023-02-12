@@ -2,23 +2,36 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier"
+    "plugin:@typescript-eslint/recommended-requiring-type-checking"
   ],
   "env": {
     "browser": true,
-    "node": true,
     "es6": true
   },
+  "parserOptions": {
+    "sourceType": "module",
+    "project": "./tsconfig.json",
+    "extraFileExtensions": [".svelte"]
+  },
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
-
-  "root": true,
-
+  "plugins": ["svelte3", "@typescript-eslint"],
+  "overrides": [
+    {
+      "files": ["*.svelte"],
+      "processor": "svelte3/svelte3"
+    }
+  ],
+  "settings": {
+    "svelte3/typescript": true
+  },
+  "ignorePatterns": ["node_modules/*", "public/*", "build/*"],
   "rules": {
     "no-unused-vars": "error",
     "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/restrict-template-expressions": "off",
+    "@typescript-eslint/prefer-nullish-coalescing": "warn",
     "no-use-before-define": "warn",
     "eqeqeq": "error",
-    "no-console": "warn"
+    "no-console": ["warn", { "allow": ["warn", "error"] }]
   }
 }

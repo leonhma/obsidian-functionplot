@@ -1,4 +1,0 @@
-{
-  "name": "obsidian-functionplot",
-  "onCreateCommand": "yarn install --non-interactive"
-}

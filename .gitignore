@@ -6,7 +6,6 @@ data.json
 package-lock.json
 .nyc_output
 coverage
-.vscode
 .yarn
 
 # Created by https://www.toptal.com/developers/gitignore/api/node,obsidian,windows,macos,linux,yarn

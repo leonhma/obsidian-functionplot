@@ -1,6 +1,6 @@
 <script lang="ts">
-  export let name: string = "",
-    description: string = "";
+  export let name = "",
+    description = "";
 </script>
 
 <div class="setting-item">

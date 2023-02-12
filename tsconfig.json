@@ -7,7 +7,8 @@
     "esModuleInterop": true,
     "target": "ES6",
     "allowJs": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "strictNullChecks": true
   },
-  "include": ["./src/**/*.ts", "declaration.d.ts", "CreatePlotModal2.ts"]
+  "include": ["./src/**/*.ts", "./src/**/*.svelte", "declaration.d.ts"]
 }

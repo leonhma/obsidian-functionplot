@@ -3,7 +3,6 @@
   "version": "1.2.1",
   "description": "A plugin for displaying mathematical functions in obsidian.md.",
   "repository": "https://github.com/leonhma/obsidian-functionplot",
-  "type": "module",
   "author": "leonhma",
   "license": "MIT",
   "private": true,
@@ -12,9 +11,8 @@
     "build": "yarn lint && webpack",
     "test": "jest",
     "format": "yarn prettier --write .",
-    "lint": "yarn eslint .",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "lint": "yarn eslint -c .eslintrc.json .",
+    "postinstall": "husky install"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",
@@ -25,12 +23,14 @@
     "@typescript-eslint/parser": "^5.41.0",
     "babel-loader": "^8.3.0",
     "css-loader": "^6.7.3",
-    "eslint": "^8.26.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-storybook": "^0.6.10",
+    "eslint": "^8.34.0",
+    "eslint-plugin-svelte3": "^4.0.0",
+    "husky": "^8.0.3",
     "jest": "^29.2.2",
-    "nested-object-assign": "^1.0.4",
+    "jest-environment-jsdom": "^29.4.2",
+    "lint-staged": "^13.1.1",
     "prettier": "^2.7.1",
+    "prettier-plugin-svelte": "^2.9.0",
     "sass": "^1.58.0",
     "sass-loader": "^13.0.2",
     "style-loader": "^3.3.1",
@@ -50,5 +50,9 @@
     "function-plot": "^1.23.1",
     "html-to-image": "^1.11.3",
     "obsidian": "0.16.3"
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix",
+    "*.{js,css,md,svelte}": "prettier --write"
   }
 }

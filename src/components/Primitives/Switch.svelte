@@ -1,15 +1,17 @@
 <script lang="ts">
-  export let checked: boolean, id: string = '';
+  export let checked: boolean | null,
+    id = "";
 </script>
 
 <div
-  id={id}
+  {id}
   class="checkbox-container"
   class:is-enabled={checked}
   on:click={() => {
     checked = !checked;
   }}
   on:keydown={(e) => {
+    /* eslint-disable-next-line @typescript-eslint/no-unsafe-member-access */
     if (e.key === " ") checked = !checked;
   }}
 >

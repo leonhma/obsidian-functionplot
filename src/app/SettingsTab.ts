@@ -6,7 +6,7 @@ import {
   ValueComponent,
 } from "obsidian";
 import type ObsidianFunctionPlot from "../main";
-import { DEFAULT_PLUGIN_SETTINGS, rendererOptions } from "../common/defaults";
+import { DEFAULT_PLUGIN_SETTINGS, RENDERER_OPTIONS } from "../common/defaults";
 import type { PluginSettings, rendererType } from "../common/types";
 
 export default class SettingsTab extends PluginSettingTab {
@@ -36,7 +36,7 @@ export default class SettingsTab extends PluginSettingTab {
       .addDropdown((com) => {
         this.settingsInputs.set("defaultRenderer", com);
         com
-          .addOptions(rendererOptions)
+          .addOptions(RENDERER_OPTIONS)
           .setValue(this.plugin.settings.defaultRenderer)
           .onChange(async (value: rendererType) => {
             this.plugin.settings.defaultRenderer = value;
@@ -198,8 +198,14 @@ export default class SettingsTab extends PluginSettingTab {
           for (const [key, input] of this.settingsInputs) {
             input.setValue(this.plugin.settings[key]);
           }
-          this.plugin.saveSettings();
-          new Notice("Settings reset to default");
+          this.plugin
+            .saveSettings()
+            .then(() => {
+              new Notice("Settings reset to default");
+            })
+            .catch((err) => {
+              console.error(`Error saving settings: ${err}`);
+            });
         });
     });
   }

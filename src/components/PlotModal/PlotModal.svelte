@@ -12,25 +12,29 @@
   import SettingItem from "../Primitives/SettingItem.svelte";
 
   import { writable, type Writable } from "svelte/store";
-  import { onDestroy } from "svelte";
 
   import {
     DEFAULT_CONSTANT_INPUTS,
     DEFAULT_FUNCTION_INPUTS,
-    rendererOptions,
+    RENDERER_OPTIONS,
   } from "../../common/defaults";
-  import type { PlotInputs } from "../../common/types";
-  import { hueToHexRGB, renderPlot } from "../../common/utils";
+  import type {
+    FunctionInputs,
+    PlotInputs,
+    rendererType,
+  } from "../../common/types";
+  import { hueToHexRGB } from "../../common/utils";
   import type ObsidianFunctionPlot from "../../main";
   import IconWrapper from "../Primitives/IconWrapper.svelte";
-  import Slider from "../Primitives/Slider.svelte";
   import Plot from "../Plot/Plot.svelte";
 
   export let options: PlotInputs,
     plugin: ObsidianFunctionPlot,
-    submit: (options: PlotInputs) => void;
+    /* eslint-disable-next-line no-unused-vars */
+    submit: (inputs: PlotInputs, renderer: rendererType) => void;
 
   const optionsStore: Writable<PlotInputs> = writable(options);
+  let renderer: rendererType = plugin.settings.defaultRenderer;
 
   // color generator
   function* spacedHues() {
@@ -40,7 +44,7 @@
     while (true) {
       for (let i = 0; i < 3 * Math.pow(2, round); i++) {
         current = (current + 120 / Math.pow(2, round)) % 360;
-        if (round == 0 || i % 2 == 0) {
+        if (round === 0 || i % 2 === 0) {
           yield current;
         }
       }
@@ -57,27 +61,24 @@
       Object.assign(JSON.parse(JSON.stringify(DEFAULT_FUNCTION_INPUTS)), {
         id: Math.random().toString(36).substring(2, 9),
         color: hueToHexRGB(hues.next().value as number),
-      }),
+      }) as FunctionInputs,
     ];
   }
 
-  function updateConstants(options: PlotInputs) {
-    const constants = options.data.reduce((acc, datum) => {
-      const toParse = [],
-        ignored = [];
+  $: {
+    const constants = $optionsStore.data.reduce((acc: string[], datum) => {
+      const toParse: string[] = [],
+        ignored: string[] = [];
 
       if (datum.fnType === "linear") {
-        toParse.push(datum.fn);
+        toParse.push(datum.fn ?? "");
         ignored.push("x");
       } else if (datum.fnType === "polar") {
-        toParse.push(datum.r);
+        toParse.push(datum.r ?? "");
         ignored.push("theta");
-      } else if (datum.fnType === "vector") {
-        toParse.push(datum.vector.x);
-        toParse.push(datum.vector.y);
-      }
+      } // vector doesnt support constants currently
 
-      toParse.forEach((fn: any) => {
+      toParse.forEach((fn: string) => {
         if (!fn) return;
         const matches = fn.match(
           /(?<= |^|[0-9*+\-/()])([A-z]+)(?= |$|[0-9*+\-/)])/gm
@@ -85,23 +86,26 @@
         if (matches) {
           matches.forEach((match) => {
             if (!ignored.includes(match)) {
-              acc[match] = DEFAULT_CONSTANT_INPUTS;
+              acc.push(match);
             }
           });
         }
       });
       return acc;
-    }, {});
+    }, []);
 
-    options.constants = constants;
+    for (const constant in $optionsStore.constants) {
+      if (!constants.includes(constant)) {
+        delete $optionsStore.constants[constant];
+      }
+    }
+
+    for (const constant of constants) {
+      if (!$optionsStore.constants[constant]) {
+        $optionsStore.constants[constant] = DEFAULT_CONSTANT_INPUTS;
+      }
+    }
   }
-
-  // reactive updates to the preview
-  const unsubscribe = optionsStore.subscribe((options) => {
-    updateConstants(options);
-  });
-
-  onDestroy(unsubscribe);
 </script>
 
 <div class="fplt-create-modal">
@@ -153,7 +157,7 @@
                 bind:datum
                 unmount={() => {
                   $optionsStore.data = $optionsStore.data.filter(
-                    (val) => val.id != datum.id
+                    (val) => val.id !== datum.id
                   );
                 }}
               />
@@ -177,15 +181,15 @@
 
   <div class="fplt-actionbar">
     <SettingItem>
-      <Dropdown bind:value={$optionsStore.renderer}>
-        {#each Object.entries(rendererOptions) as [value, name]}
+      <Dropdown bind:value={renderer}>
+        {#each Object.entries(RENDERER_OPTIONS) as [value, name]}
           <option {value}>{name}</option>
         {/each}
       </Dropdown>
       <Button
         cta={true}
         on:click={() => {
-          submit($optionsStore);
+          submit($optionsStore, renderer);
         }}
       >
         Done

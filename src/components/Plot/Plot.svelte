@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onDestroy } from "svelte";
   import type { Writable } from "svelte/store";
   import type { PlotInputs } from "../../common/types";
   import { renderPlot } from "../../common/utils";
@@ -11,13 +10,24 @@
 
   let target: HTMLElement;
 
-  const unsubscribe = optionsStore.subscribe((options) => {
-    renderPlot(options, target, plugin);
-  });
-
-  onDestroy(() => {
-    unsubscribe();
-  });
+  $: {
+    console.log(`in reactive block: writing updated scope to all data items`);
+    const scope = Object.entries($optionsStore.constants).reduce(
+      (acc, [key, val]) => {
+        acc[key] = val.value;
+        return acc;
+      },
+      {}
+    );
+    $optionsStore.data.forEach((datum) => {
+      datum.scope = scope;
+    });
+  }
+  $: {
+    console.log(`in reactive block: rendering plot`);
+    console.log(JSON.parse(JSON.stringify($optionsStore)));
+    renderPlot($optionsStore, target, plugin);
+  }
 </script>
 
 <div>

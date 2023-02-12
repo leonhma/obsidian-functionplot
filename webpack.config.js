@@ -1,12 +1,9 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import preprocess from "svelte-preprocess";
-import pkg from "webpack";
-const { DefinePlugin } = pkg;
-import { execSync } from "child_process";
-import { readFileSync } from "fs";
+const preprocess = require("svelte-preprocess");
+const webpack = require("webpack");
+const { execSync } = require("child_process");
+const { readFileSync } = require("fs");
 
-export default (env) => {
+module.exports = (env) => {
   const isProd = env.production === true;
   const commitSHA = execSync("git rev-parse --short HEAD").toString().trim();
   const isCI = process.env.CI === "true";
@@ -56,9 +53,9 @@ export default (env) => {
       ],
     },
     plugins: [
-      new DefinePlugin({
-        'process.env.BUILD_DATE': new Date(),
-        'process.env.BUILD_VERSION': JSON.stringify(
+      new webpack.DefinePlugin({
+        "process.env.BUILD_DATE": new Date(),
+        "process.env.BUILD_VERSION": JSON.stringify(
           isCI ? manifest.version : `${commitSHA}+`
         ),
       }),
@@ -70,7 +67,7 @@ export default (env) => {
       obsidian: "commonjs obsidian",
     },
     output: {
-      path: dirname(fileURLToPath(import.meta.url)),
+      path: __dirname,
       filename: "main.js",
       libraryTarget: "commonjs",
     },

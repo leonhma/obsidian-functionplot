@@ -1,36 +1,42 @@
 import type { Chart } from "function-plot";
 import type { EventEmitter } from "events";
-import type { FunctionPlotDatum } from "function-plot/dist/types";
-
 export type rendererType = "interactive" | "image";
+
+/**
+ * Input types: values that should be set to a default by the plugin are required, values that should be set to a default by functionplot are marked optional. Values that are not set by either are marked optional but default values Omit<> them.
+ */
 
 /**
  * A sum-type of Chart and EventEmitter because TypeScript can't figure this out on it's own.
  */
 export type chartType = Chart & EventEmitter;
 
+//Custom utility type:
+export type DeepNonNullable<T> = { [K in keyof T]: DeepNonNullable<NonNullable<T[K]>> };
+
 export interface FunctionInputs {
-  id: string;
-  fnType: (FunctionPlotDatum["fnType"] & "linear") | "vector" | "polar";
-  fn?: string;
-  vector?: {
-    x: number;
-    y: number;
+  id: string | null;
+  scope: { [_: string]: number };
+  fnType: "linear" | "vector" | "polar";
+  fn: string | null;
+  vector: {
+    x: number | null;
+    y: number | null;
   };
-  r?: string;
-  offset?: {
-    x: number;
-    y: number;
+  r: string | null;
+  offset: {
+    x: number | null;
+    y: number | null;
   };
-  color?: string;
-  range?: {
-    min: number;
-    max: number;
+  color: string | null;
+  range: {
+    min: number | null;
+    max: number | null;
   };
-  graphType?: FunctionPlotDatum["graphType"];
-  nSamples?: number;
-  closed?: boolean;
-  skipTip?: boolean;
+  graphType: "polyline" | "interval" | "scatter" | null;
+  nSamples: number | null;
+  closed: boolean | null;
+  skipTip: boolean | null;
 }
 export interface ConstantInputs {
   min: number;
@@ -43,25 +49,33 @@ export interface ConstantInputs {
  */
 export interface PlotInputs {
   data: FunctionInputs[];
-  renderer: rendererType;
   constants: { [_: string]: ConstantInputs };
-  xAxis?: {
-    label?: string;
-    domain?: {
-      min?: number;
-      max?: number;
+  xAxis: {
+    label: string | null;
+    domain: {
+      min: number | null;
+      max: number | null;
     };
   };
-  yAxis?: {
-    label?: string;
-    domain?: {
-      min?: number;
-      max?: number;
+  yAxis: {
+    label: string | null;
+    domain: {
+      min: number | null;
+      max: number | null;
     };
   };
-  grid?: boolean;
-  disableZoom?: boolean;
+  grid: boolean | null;
+  disableZoom: boolean | null;
+  title: string | null;
+}
+
+export interface V1YAMLPlotInputs {
   title?: string;
+  disableZoom?: boolean;
+  grid?: boolean;
+  yLabel?: string;
+  xLabel?: string;
+  bounds?: [number, number, number, number];
 }
 
 /**

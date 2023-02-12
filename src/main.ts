@@ -37,7 +37,7 @@ export default class ObsidianFunctionPlot extends Plugin {
       {},
       DEFAULT_PLUGIN_SETTINGS,
       await this.loadData()
-    );
+    ) as PluginSettings;
   }
 
   async saveSettings() {
@@ -57,6 +57,7 @@ export default class ObsidianFunctionPlot extends Plugin {
       _ctx: MarkdownPostProcessorContext /* eslint-disable-line no-unused-vars, @typescript-eslint/no-unused-vars */
     ) => {
       const options = parseCodeBlock(source);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       new Plot({
         target: el,
         props: {

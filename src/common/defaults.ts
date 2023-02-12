@@ -1,4 +1,6 @@
 import type {
+  ConstantInputs,
+  DeepNonNullable,
   FunctionInputs,
   PlotInputs,
   PluginSettings,
@@ -8,7 +10,7 @@ import type {
 /**
  * The default plugin settings.
  */
-export const DEFAULT_PLUGIN_SETTINGS: PluginSettings = {
+export const DEFAULT_PLUGIN_SETTINGS: Required<PluginSettings> = {
   titleFontSize: 24,
   scaleFontSize: 12,
   labelFontSize: 12,
@@ -29,56 +31,58 @@ export const DEFAULT_PLUGIN_SETTINGS: PluginSettings = {
  * The options displayed for renderers
  */
 // eslint-disable-next-line no-unused-vars
-export const rendererOptions: { [_ in rendererType]: string } = {
+export const RENDERER_OPTIONS: { [_ in rendererType]: string } = {
   interactive: "Interactive (zoomable)",
   image: "Image (exportable)",
 };
 
-export const DEFAULT_FUNCTION_INPUTS: FunctionInputs = {
-  id: null,
-  fnType: undefined, // always set by the plugin
-  fn: undefined, // error if missing, no fallback
-  vector: {
-    x: undefined,
-    y: undefined,
-  }, // error if missing, no fallback
-  r: undefined, // error if missing, no fallback
-  color: null, // set by color generator. fallback value is gray
-  offset: {
-    x: undefined,
-    y: undefined,
-  },
+export const DEFAULT_FUNCTION_INPUTS: Omit<
+  FunctionInputs,
+  "fn" | "vector" | "r"
+> = {
+  id: "",
+  scope: {},
+  fnType: "linear",
   closed: false,
-  graphType: undefined,
-  range: {
-    min: undefined,
-    max: undefined,
+  offset: {
+    x: null,
+    y: null,
   },
-  nSamples: undefined,
+  range: {
+    min: null,
+    max: null,
+  },
   skipTip: false,
+  color: null,
+  graphType: null,
+  nSamples: null,
 };
 
-export const FALLBACK_FUNCTION_INPUTS: Partial<FunctionInputs> = {
+export const FALLBACK_FUNCTION_INPUTS: DeepNonNullable<
+  Pick<FunctionInputs, "range" | "offset">
+> = {
+  offset: {
+    x: 0,
+    y: 0,
+  },
   range: {
     min: -Infinity,
     max: Infinity,
   },
 };
 
-export const DEFAULT_CONSTANT_INPUTS = {
+export const DEFAULT_CONSTANT_INPUTS: ConstantInputs = {
   min: -10,
   max: 10,
   step: 1,
   value: 1,
-}
+};
 
 /**
  * The default options for a plot.
  */
 export const DEFAULT_PLOT_INPUTS: PlotInputs = {
-  renderer: null, // has initial state controlled by plugin.settings.defaultRenderer
   constants: {},
-  title: null,
   xAxis: {
     label: null,
     domain: {
@@ -88,21 +92,29 @@ export const DEFAULT_PLOT_INPUTS: PlotInputs = {
   },
   yAxis: {
     label: null,
-    domain: { min: null, max: null },
+    domain: {
+      min: null,
+      max: null,
+    },
   },
   grid: true,
-  disableZoom: false,
   data: [],
+  disableZoom: null,
+  title: null,
 };
 
-export const FALLBACK_PLOT_INPUTS: Partial<PlotInputs> = {
+export const FALLBACK_PLOT_INPUTS: DeepNonNullable<
+  Pick<PlotInputs, "xAxis" | "yAxis">
+> = {
   xAxis: {
+    label: "", // not needed
     domain: {
       min: -10,
       max: 10,
     },
   },
   yAxis: {
+    label: "", // not needed
     domain: {
       min: -10,
       max: 10,

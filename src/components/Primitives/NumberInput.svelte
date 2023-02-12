@@ -1,8 +1,12 @@
 <script lang="ts">
-  export let value: number, placeholder: string = '', id: string = '', min: number = null, max: number = null;
+  export let value: number | null,
+    placeholder = "",
+    id = "",
+    min: number | null = null,
+    max: number | null = null;
 </script>
 
-<input id={id} min={min} max={max} type="number" {placeholder} bind:value />
+<input {id} {min} {max} type="number" {placeholder} bind:value />
 
 <style>
   input {
