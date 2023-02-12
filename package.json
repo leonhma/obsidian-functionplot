@@ -7,8 +7,10 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build:prod": "yarn lint -c .eslintrc.prod.json && webpack --env=production",
-    "build": "yarn lint && webpack",
+    "build:prod": "webpack --env=production",
+    "build:dev": "webpack",
+    "build": "yarn build:dev",
+    "lint:prod": "yarn eslint -c .eslintrc.prod.json .",
     "test": "jest",
     "format": "yarn prettier --write .",
     "lint": "yarn eslint -c .eslintrc.json .",

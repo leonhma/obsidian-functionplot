@@ -19,14 +19,28 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v2.4.2
-        with:
-          ref: master
 
-      - name: Install packages
-        run: yarn install
+      - name: Install
+        run: |
+          sudo apt-get -y install moreutils
+          yarn install
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Test
+        run: yarn test
 
       - name: Run version-bump
-        run: node .github/version-bump.mjs ${{ github.event.release.tag_name }}
+        run: node .github/version-bump.js ${{ github.event.release.tag_name }}
+
+      # build release notes
+      - name: Update release notes
+        run: node .github/release-notes.js ${{ github.event.release.tag_name }} ${{ github.event.release.body }}
+
+      # build now, so that no side-effects when build fails and release get deleted
+      - name: Build
+        run: yarn build:prod
 
       - name: Commit and push changes
         run: |
@@ -37,11 +51,16 @@ jobs:
           git commit -m "chore(versions): index minAppVersion for latest release"
           git push origin master
 
-      - name: Build
-        run: yarn build:prod
-
       - name: Upload assets to a Release
         uses: AButler/upload-release-assets@v2.0
         with:
           repo-token: ${{ github.token }}
           files: "main.js;manifest.json"
+
+      - uses: actions/github-script@v4
+        if: failure()
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const { owner, repo } = context.repo
+            await github.repos.deleteRelease({ owner, repo, release_id: context.payload.release.id })

@@ -12,7 +12,9 @@ export type rendererType = "interactive" | "image";
 export type chartType = Chart & EventEmitter;
 
 //Custom utility type:
-export type DeepNonNullable<T> = { [K in keyof T]: DeepNonNullable<NonNullable<T[K]>> };
+export type DeepNonNullable<T> = {
+  [K in keyof T]: DeepNonNullable<NonNullable<T[K]>>;
+};
 
 export interface FunctionInputs {
   id: string | null;
