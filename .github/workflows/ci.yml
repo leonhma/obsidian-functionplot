@@ -21,7 +21,7 @@ jobs:
         run: yarn install
 
       - name: set development version
-        run: node .github/version-bump.mjs "$(git rev-parse --short HEAD)"
+        run: node .github/version-bump.js "$(git rev-parse --short HEAD)"
 
       - name: build
         run: yarn build
