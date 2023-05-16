@@ -25,11 +25,11 @@
   </Dropdown>
 
   {#if datum.fnType === "linear"}
-    <TextInput placeholder="f(x)=" bind:value={datum.fn} />
+    <TextInput placeholder="f(x)=" width="20ch" bind:value={datum.fn} />
   {/if}
 
   {#if datum.fnType === "polar"}
-    <TextInput placeholder="r(theta)=" bind:value={datum.r} />
+    <TextInput placeholder="r(theta)=" width="20ch" bind:value={datum.r} />
   {/if}
 
   {#if datum.fnType === "vector"}

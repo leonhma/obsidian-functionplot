@@ -1,4 +1,4 @@
 {
-  "svelteSortOrder": "scripts-markup-styles",
+  "svelteSortOrder": "options-scripts-markup-styles",
   "plugins": ["prettier-plugin-svelte"]
 }

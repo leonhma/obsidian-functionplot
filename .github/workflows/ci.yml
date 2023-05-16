@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: Build ⚙️
+    name: build
     runs-on: ubuntu-latest
 
     steps:
@@ -36,7 +36,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    name: Test 🧪
+    name: test
     steps:
       - uses: actions/checkout@v2
 
@@ -52,7 +52,7 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
-    name: Lint ✔
+    name: lint:prod
     steps:
       - uses: actions/checkout@v2
 

@@ -20,6 +20,10 @@ import type {
   FunctionPlotOptions,
 } from "function-plot/dist/types";
 
+export function gcd(a: number, b: number): number {
+  return !b ? a : gcd(b, a % b);
+}
+
 // TODO make change to returned object reflect in input
 export function toFunctionPlotOptions(
   options: PlotInputs,
@@ -30,10 +34,7 @@ export function toFunctionPlotOptions(
   ): FunctionPlotDatum {
     const output: FunctionPlotDatum = {
       fnType: inputs.fnType,
-      graphType:
-        inputs.graphType ?? ["vector", "polar"].includes(inputs.fnType)
-          ? "polyline"
-          : undefined, // workaround for https://github.com/mauriciopoppe/function-plot/issues/224
+      graphType: inputs.graphType ?? undefined,
       fn: inputs.fnType === "linear" ? inputs.fn ?? undefined : undefined,
       scope: inputs.scope,
       vector:
@@ -155,11 +156,17 @@ export function renderPlot(
 ) {
   const stylingPlugin = createStylingPlugin(plugin);
   try {
-    functionPlot(
-      Object.assign({}, toFunctionPlotOptions(options, target), {
+    const functionPlotOptions = Object.assign(
+      {},
+      toFunctionPlotOptions(options, target),
+      {
         plugins: [stylingPlugin],
-      })
-    );
+        width: 55,
+        height: 35,
+      }
+    ) as FunctionPlotOptions;
+    functionPlot(functionPlotOptions);
+    console.log(JSON.parse(JSON.stringify(functionPlotOptions)));
   } catch (err) {
     console.error(`Error rendering plot: ${err}`);
   }

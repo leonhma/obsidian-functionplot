@@ -1,4 +1,3 @@
-node_modules/
 yarn-error.log
 main.js
 !*/**/main.js

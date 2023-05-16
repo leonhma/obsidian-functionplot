@@ -1,7 +1,15 @@
 <script lang="ts">
   export let value: string | null,
     placeholder = "",
-    id = "";
+    id = "",
+    width = "initial";
 </script>
 
-<input type="text" {id} spellcheck="false" {placeholder} bind:value />
+<input
+  type="text"
+  {id}
+  style="width: {width} "
+  spellcheck="false"
+  {placeholder}
+  bind:value
+/>

@@ -36,15 +36,16 @@ export const RENDERER_OPTIONS: { [_ in rendererType]: string } = {
   image: "Image (exportable)",
 };
 
-export const DEFAULT_FUNCTION_INPUTS: Omit<
-  FunctionInputs,
-  "fn" | "vector" | "r"
-> = {
+export const DEFAULT_FUNCTION_INPUTS: Omit<FunctionInputs, "fn" | "r"> = {
   id: "",
   scope: {},
   fnType: "linear",
   closed: false,
   offset: {
+    x: null,
+    y: null,
+  },
+  vector: {
     x: null,
     y: null,
   },
@@ -54,7 +55,7 @@ export const DEFAULT_FUNCTION_INPUTS: Omit<
   },
   skipTip: false,
   color: null,
-  graphType: null,
+  graphType: "polyline",
   nSamples: null,
 };
 

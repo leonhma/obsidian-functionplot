@@ -11,14 +11,13 @@
 
   import SettingItem from "../Primitives/SettingItem.svelte";
 
-  import { writable, type Writable } from "svelte/store";
-
   import {
     DEFAULT_CONSTANT_INPUTS,
     DEFAULT_FUNCTION_INPUTS,
     RENDERER_OPTIONS,
   } from "../../common/defaults";
   import type {
+    ConstantInputs,
     FunctionInputs,
     PlotInputs,
     rendererType,
@@ -33,7 +32,6 @@
     /* eslint-disable-next-line no-unused-vars */
     submit: (inputs: PlotInputs, renderer: rendererType) => void;
 
-  const optionsStore: Writable<PlotInputs> = writable(options);
   let renderer: rendererType = plugin.settings.defaultRenderer;
 
   // color generator
@@ -56,8 +54,8 @@
 
   // create a new function item
   function newDataItem() {
-    $optionsStore.data = [
-      ...$optionsStore.data,
+    options.data = [
+      ...options.data,
       Object.assign(JSON.parse(JSON.stringify(DEFAULT_FUNCTION_INPUTS)), {
         id: Math.random().toString(36).substring(2, 9),
         color: hueToHexRGB(hues.next().value as number),
@@ -66,7 +64,7 @@
   }
 
   $: {
-    const constants = $optionsStore.data.reduce((acc: string[], datum) => {
+    const constants = options.data.reduce((acc: string[], datum) => {
       const toParse: string[] = [],
         ignored: string[] = [];
 
@@ -94,15 +92,19 @@
       return acc;
     }, []);
 
-    for (const constant in $optionsStore.constants) {
-      if (!constants.includes(constant)) {
-        delete $optionsStore.constants[constant];
+    if (Object.keys(options.constants) !== constants) {
+      for (const constant in options.constants) {
+        if (!constants.includes(constant)) {
+          delete options.constants[constant];
+        }
       }
-    }
 
-    for (const constant of constants) {
-      if (!$optionsStore.constants[constant]) {
-        $optionsStore.constants[constant] = DEFAULT_CONSTANT_INPUTS;
+      for (const constant of constants) {
+        if (!options.constants[constant]) {
+          options.constants[constant] = JSON.parse(
+            JSON.stringify(DEFAULT_CONSTANT_INPUTS)
+          ) as ConstantInputs; //  deepcopy
+        }
       }
     }
   }
@@ -114,37 +116,37 @@
       <div class="fplt-options">
         <div class="fplt-settings">
           <SettingItem name="Title">
-            <TextInput bind:value={$optionsStore.title} />
+            <TextInput bind:value={options.title} />
           </SettingItem>
           <SettingItem name="Label X">
-            <TextInput bind:value={$optionsStore.xAxis.label} />
+            <TextInput bind:value={options.xAxis.label} />
           </SettingItem>
           <SettingItem name="Label Y">
-            <TextInput bind:value={$optionsStore.yAxis.label} />
+            <TextInput bind:value={options.yAxis.label} />
           </SettingItem>
           <SettingItem name="Domain">
             <NumberInput
               placeholder="Xmin"
-              bind:value={$optionsStore.xAxis.domain.min}
+              bind:value={options.xAxis.domain.min}
             />
             <NumberInput
               placeholder="Xmax"
-              bind:value={$optionsStore.xAxis.domain.max}
+              bind:value={options.xAxis.domain.max}
             />
             <NumberInput
               placeholder="Ymin"
-              bind:value={$optionsStore.yAxis.domain.min}
+              bind:value={options.yAxis.domain.min}
             />
             <NumberInput
               placeholder="Ymax"
-              bind:value={$optionsStore.yAxis.domain.max}
+              bind:value={options.yAxis.domain.max}
             />
           </SettingItem>
           <SettingItem name="Disable Zoom">
-            <Switch bind:checked={$optionsStore.disableZoom} />
+            <Switch bind:checked={options.disableZoom} />
           </SettingItem>
           <SettingItem name="Show Grid">
-            <Switch bind:checked={$optionsStore.grid} />
+            <Switch bind:checked={options.grid} />
           </SettingItem>
         </div>
       </div>
@@ -152,11 +154,11 @@
         <p>Data</p>
         <div class="fplt-fns-container">
           <div class="fplt-list">
-            {#each $optionsStore.data as datum}
+            {#each options.data as datum}
               <Function
                 bind:datum
                 unmount={() => {
-                  $optionsStore.data = $optionsStore.data.filter(
+                  options.data = options.data.filter(
                     (val) => val.id !== datum.id
                   );
                 }}
@@ -176,7 +178,7 @@
         </div>
       </div>
     </div>
-    <Plot {optionsStore} {plugin} />
+    <Plot {options} {plugin} />
   </div>
 
   <div class="fplt-actionbar">
@@ -189,7 +191,7 @@
       <Button
         cta={true}
         on:click={() => {
-          submit($optionsStore, renderer);
+          submit(options, renderer);
         }}
       >
         Done

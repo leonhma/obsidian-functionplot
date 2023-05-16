@@ -5,7 +5,6 @@ import { parseCodeBlock } from "./common/utils";
 import type { PluginSettings } from "./common/types";
 import { DEFAULT_PLUGIN_SETTINGS } from "./common/defaults";
 import Plot from "./components/Plot/Plot.svelte";
-import { writable } from "svelte/store";
 import "./styles.scss";
 
 export default class ObsidianFunctionPlot extends Plugin {
@@ -61,7 +60,7 @@ export default class ObsidianFunctionPlot extends Plugin {
       new Plot({
         target: el,
         props: {
-          optionsStore: writable(options),
+          options,
           plugin,
         },
       });
