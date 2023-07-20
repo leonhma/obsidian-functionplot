@@ -9,11 +9,11 @@
   "scripts": {
     "build:prod": "webpack --env=production",
     "build:dev": "webpack",
-    "build": "yarn build:dev",
-    "lint:prod": "yarn eslint -c .eslintrc.prod.json .",
+    "build": "npm run build:dev",
+    "lint:prod": "npm run eslint -c .eslintrc.prod.json .",
     "test": "jest",
-    "format": "yarn prettier --write .",
-    "lint": "yarn eslint -c .eslintrc.json .",
+    "format": "npm run prettier --write .",
+    "lint": "npm run eslint -c .eslintrc.json .",
     "postinstall": "husky install"
   },
   "devDependencies": {

@@ -19,6 +19,7 @@ import type {
   FunctionPlotDatum,
   FunctionPlotOptions,
 } from "function-plot/dist/types";
+import { FunctionPlot } from "../fnplot";
 
 export function gcd(a: number, b: number): number {
   return !b ? a : gcd(b, a % b);
@@ -142,35 +143,7 @@ export function insertParagraphAtCursor(
   editor.replaceRange(`\n${value}\n`, editor.getCursor());
 }
 
-/**
- * Create a plot in the specified `target` element.
- * @param options The options for the plot
- * @param target The html element to target
- * @param plugin A reference to the plugin (accessed for settings)
- * @returns The chart object of the created plot
- */
-export function renderPlot(
-  options: PlotInputs,
-  target: HTMLElement,
-  plugin: ObsidianFunctionPlot
-) {
-  const stylingPlugin = createStylingPlugin(plugin);
-  try {
-    const functionPlotOptions = Object.assign(
-      {},
-      toFunctionPlotOptions(options, target),
-      {
-        plugins: [stylingPlugin],
-        width: 55,
-        height: 35,
-      }
-    ) as FunctionPlotOptions;
-    functionPlot(functionPlotOptions);
-    console.log(JSON.parse(JSON.stringify(functionPlotOptions)));
-  } catch (err) {
-    console.error(`Error rendering plot: ${err}`);
-  }
-}
+
 /**
  * Insert an interactive plot at the current cursor position.
  * @param plugin A reference to the plugin
@@ -200,7 +173,9 @@ export function insertPlotAsImage(
   options: PlotInputs
 ) {
   const target = document.createElement("div");
-  renderPlot(options, target, plugin);
+  const plot = new FunctionPlot(plugin);
+  plot.target = target;
+  plot.options = options;
   toPng(target)
     .then((dataURL) => {
       if (dataURL === "data:,") {

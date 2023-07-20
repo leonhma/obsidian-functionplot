@@ -1,42 +1,57 @@
 <script lang="ts">
-  import type { PlotInputs } from "../../common/types";
-  import { renderPlot } from "../../common/utils";
+  import type { ConstantInputs, PlotInputs } from "../../common/types";
   import type ObsidianFunctionPlot from "../../main";
   import Constant from "./Constant.svelte";
 
   import Replay from "svelte-material-icons/Replay.svelte";
   import Button from "../Primitives/Button.svelte";
+  import { FunctionPlot } from "../../fnplot";
 
-  export let options: PlotInputs, plugin: ObsidianFunctionPlot;
+  export let options: PlotInputs,
+    plugin: ObsidianFunctionPlot,
+    showSettings = false;
 
-  let target: HTMLElement;
+  let plot = new FunctionPlot(plugin);
 
-  $: {
-    const scope = Object.entries(options.constants).reduce(
-      (acc, [key, val]) => {
-        acc[key] = val.value;
-        return acc;
-      },
-      {}
-    );
-    options.data.forEach((datum) => {
-      datum.scope = scope;
-    });
-  }
-  $: renderPlot(options, target, plugin);
+  // $: {
+  //   const scope = (
+  //     Object.entries(options.constants) as [string, ConstantInputs][]
+  //   ).reduce((scope_, [key, val]) => {
+  //     scope_[key] = val.value;
+  //     return scope_;
+  //   }, {});
+  //   options.data.forEach((datum) => {
+  //     datum.scope = scope;
+  //   });
+  // }
+  $: ((options: PlotInputs) => {
+    plot.options = options;
+  })(options);
+
+  let target: HTMLDivElement;
+  $: ((target: HTMLElement) => {
+    plot.target = target;
+    console.log("updated target");
+  })(target);
 </script>
 
 <div>
-  <div class="fplot-plot" bind:this={target} />
+  <div class="fplt-plot" bind:this={target} />
   <div class="fplt-plot-options">
     <div class="fplt-constants">
       {#each Object.keys(options.constants) as name}
-        <Constant {name} bind:constant={options.constants[name]} showSettings />
+        <Constant
+          {name}
+          bind:constant={options.constants[name]}
+          {showSettings}
+        />
       {/each}
     </div>
-    <Button>
-      <Replay size="1.4em" />
-    </Button>
+    {#if showSettings}
+      <Button on:click={() => plot.resetView()}>
+        <Replay size="1.4em" />
+      </Button>
+    {/if}
   </div>
 </div>
 

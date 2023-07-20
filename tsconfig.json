@@ -6,6 +6,7 @@
     "module": "ES6",
     "esModuleInterop": true,
     "target": "ES6",
+    "lib": ["ESNext", "DOM"],
     "allowJs": true,
     "sourceMap": true,
     "strictNullChecks": true

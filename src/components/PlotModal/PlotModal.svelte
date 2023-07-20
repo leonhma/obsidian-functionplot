@@ -178,7 +178,7 @@
         </div>
       </div>
     </div>
-    <Plot {options} {plugin} />
+    <Plot {options} {plugin} showSettings />
   </div>
 
   <div class="fplt-actionbar">
@@ -213,7 +213,8 @@
     display: grid;
     grid-template-columns: 28em 1fr;
     height: 100%;
-    width: 100%;
+    left: 0;
+    right: 0;
     overflow: hidden;
   }
 

@@ -62,6 +62,7 @@ module.exports = (env) => {
     ],
     resolve: {
       extensions: [".ts", ".js", ".svelte"],
+      // conditionNames: ["svelte"], // TODO: Gives errors but is more efficient
     },
     externals: {
       obsidian: "commonjs obsidian",
