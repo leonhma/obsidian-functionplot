@@ -37,7 +37,10 @@ export function toFunctionPlotOptions(
       fnType: inputs.fnType,
       graphType: inputs.graphType ?? undefined,
       fn: inputs.fnType === "linear" ? inputs.fn ?? undefined : undefined,
-      scope: inputs.scope,
+      scope: Object.keys(options.constants).length > 0 ? Object.keys(options.constants).reduce((acc, key) => {
+        acc[key] = options.constants[key].value;
+        return acc
+      }, {}) as unknown as {[_: string]: number} : undefined,
       vector:
         inputs.fnType === "vector" && inputs.vector.x && inputs.vector.y
           ? [inputs.vector.x, inputs.vector.y]

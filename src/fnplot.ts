@@ -3,13 +3,14 @@ import type { PlotInputs } from "./common/types";
 import createStylingPlugin from "./plugins/styling";
 import { toFunctionPlotOptions } from "./common/utils";
 import type ObsidianFunctionPlot from "./main";
-import functionPlot from "function-plot";
+import functionPlot, { Chart } from "function-plot";
 
 export class FunctionPlot {
-  id?: string;
   plugin: ObsidianFunctionPlot;
   target_: HTMLElement;
   options_: PlotInputs;
+  fnPlotOptions?: FunctionPlotOptions;
+  chart?: Chart;
 
   constructor(plugin: ObsidianFunctionPlot) {
     this.plugin = plugin;
@@ -30,28 +31,40 @@ export class FunctionPlot {
       console.log("No target or options set");
       return;
     }
-    const stylingPlugin = createStylingPlugin(this.plugin);
     try {
-      const functionPlotOptions = Object.assign(
-        {},
-        toFunctionPlotOptions(this.options_, this.target_),
-        {
-          plugins: [stylingPlugin],
-          id: this.id,
-          // width: 55,
-          // height: 35,
-        }
-      ) as FunctionPlotOptions;
-      console.log(functionPlotOptions);
-      functionPlot(functionPlotOptions);
-      this.id = functionPlotOptions.id;  // save id to preserve viewport state
+      if (this.fnPlotOptions !== undefined) {
+        Object.assign(
+          this.fnPlotOptions,
+          toFunctionPlotOptions(this.options_, this.target_)
+        );
+        console.log('updated fnPlotOptions: ', JSON.parse(JSON.stringify(this.fnPlotOptions)))
+      } else {
+        this.fnPlotOptions = Object.assign(
+          {},
+          toFunctionPlotOptions(this.options_, this.target_),
+          { plugins: [createStylingPlugin(this.plugin)] }
+        );
+        console.log(
+          "new fnPlotOptions: ",
+          JSON.parse(JSON.stringify(this.fnPlotOptions))
+        );
+
+      }
+      if (this.chart !== undefined) {
+        this.chart.build();
+        console.log('redrew chart')
+      } else { 
+        this.chart = functionPlot(this.fnPlotOptions);
+        console.log('new chart')
+      }
     } catch (err) {
       console.error(`Error rendering plot: ${err}`);
     }
   }
 
   resetView(): void {
-    this.id = undefined;
+    this.fnPlotOptions = undefined;
+    this.chart = undefined;
     this.render();
   }
 }

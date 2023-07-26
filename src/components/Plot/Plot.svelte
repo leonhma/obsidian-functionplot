@@ -24,19 +24,11 @@
   //     datum.scope = scope;
   //   });
   // }
-  $: ((options: PlotInputs) => {
-    plot.options = options;
-  })(options);
-
-  let target: HTMLDivElement;
-  $: ((target: HTMLElement) => {
-    plot.target = target;
-    console.log("updated target");
-  })(target);
+  $: plot.options = options;
 </script>
 
 <div>
-  <div class="fplt-plot" bind:this={target} />
+  <div class="fplt-plot" bind:this={plot.target} />
   <div class="fplt-plot-options">
     <div class="fplt-constants">
       {#each Object.keys(options.constants) as name}

@@ -10,6 +10,7 @@
     "build:prod": "webpack --env=production",
     "build:dev": "webpack",
     "build": "npm run build:dev",
+    "watch": "webpack --watch",
     "lint:prod": "npm run eslint -c .eslintrc.prod.json .",
     "test": "jest",
     "format": "npm run prettier --write .",
