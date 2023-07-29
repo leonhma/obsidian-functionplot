@@ -42,21 +42,21 @@ export const DEFAULT_FUNCTION_INPUTS: Omit<FunctionInputs, "fn" | "r"> = {
   fnType: "linear",
   closed: false,
   offset: {
-    x: null,
-    y: null,
+    x: undefined,
+    y: undefined,
   },
   vector: {
-    x: null,
-    y: null,
+    x: undefined,
+    y: undefined,
   },
   range: {
-    min: null,
-    max: null,
+    min: undefined,
+    max: undefined,
   },
   skipTip: false,
-  color: null,
+  color: undefined,
   graphType: "polyline",
-  nSamples: null,
+  nSamples: undefined,
 };
 
 export const FALLBACK_FUNCTION_INPUTS: DeepNonNullable<
@@ -85,23 +85,23 @@ export const DEFAULT_CONSTANT_INPUTS: ConstantInputs = {
 export const DEFAULT_PLOT_INPUTS: PlotInputs = {
   constants: {},
   xAxis: {
-    label: null,
+    label: undefined,
     domain: {
-      min: null,
-      max: null,
+      min: undefined,
+      max: undefined,
     },
   },
   yAxis: {
-    label: null,
+    label: undefined,
     domain: {
-      min: null,
-      max: null,
+      min: undefined,
+      max: undefined,
     },
   },
   grid: true,
   data: [],
-  disableZoom: null,
-  title: null,
+  disableZoom: undefined,
+  title: undefined,
 };
 
 export const FALLBACK_PLOT_INPUTS: DeepNonNullable<

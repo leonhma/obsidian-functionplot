@@ -62,16 +62,18 @@
           <label for="graph-type">Sampler</label>
           <Dropdown id="graph-type" bind:value={datum.graphType}>
             <option value="polyline">polyline</option>
-            <option value="scatter">scatter</option>
-            {#if !["polar", "vector"].includes(datum.fnType)}
+            <!-- commenting out these two options as they cause issues with functionplot -->
+            <!-- <option value="scatter">scatter</option> -->
+            <!-- {#if !["polar", "vector"].includes(datum.fnType)}
               <option value="interval">interval</option>
-            {/if}
+            {/if} -->
           </Dropdown>
         {/if}
-        {#if datum.graphType && ["polyline", "interval"].includes(datum.graphType) && datum.fnType !== "vector"}
+        <!-- commenting out closed graphs for similar reasons -->
+        <!-- {#if datum.graphType && ["polyline", "interval"].includes(datum.graphType) && datum.fnType !== "vector"}
           <label for="graph-closed">Closed</label>
           <Switch id="graph-closed" bind:checked={datum.closed} />
-        {/if}
+        {/if} -->
         {#if datum.fnType !== "vector"}
           <label for="range">Range</label>
           <div class="functionplot-nums-inputs" id="range">

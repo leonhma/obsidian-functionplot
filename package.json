@@ -50,6 +50,7 @@
     "yaml": "^2.1.3"
   },
   "dependencies": {
+    "@smui/icon-button": "7.0.0-beta.14",
     "function-plot": "^1.23.1",
     "html-to-image": "^1.11.3",
     "obsidian": "0.16.3"

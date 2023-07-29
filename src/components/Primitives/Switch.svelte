@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let checked: boolean | null,
+  export let checked: boolean | undefined,
     id = "";
 </script>
 

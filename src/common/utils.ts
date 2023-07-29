@@ -6,8 +6,6 @@ import type {
   rendererType,
   V1YAMLPlotInputs,
 } from "./types";
-import createStylingPlugin from "../plugins/styling";
-import functionPlot from "function-plot";
 import {
   DEFAULT_FUNCTION_INPUTS,
   DEFAULT_PLOT_INPUTS,

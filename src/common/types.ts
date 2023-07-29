@@ -13,32 +13,32 @@ export type chartType = Chart & EventEmitter;
 
 //Custom utility type:
 export type DeepNonNullable<T> = {
-  [K in keyof T]: DeepNonNullable<NonNullable<T[K]>>;
+  [K in keyof T]: DeepNonNullable<Required<T[K]>>;
 };
 
 export interface FunctionInputs {
-  id: string | null;
+  id?: string;
   scope: { [_: string]: number };
   fnType: "linear" | "vector" | "polar";
-  fn: string | null;
+  fn?: string;
   vector: {
-    x: number | null;
-    y: number | null;
+    x?: number;
+    y?: number;
   };
-  r: string | null;
+  r?: string;
   offset: {
-    x: number | null;
-    y: number | null;
+    x?: number;
+    y?: number;
   };
-  color: string | null;
+  color?: string;
   range: {
-    min: number | null;
-    max: number | null;
+    min?: number;
+    max?: number;
   };
-  graphType: "polyline" | "interval" | "scatter" | null;
-  nSamples: number | null;
-  closed: boolean | null;
-  skipTip: boolean | null;
+  graphType: "polyline" | "interval" | "scatter";
+  nSamples?: number;
+  closed?: boolean;
+  skipTip?: boolean;
 }
 export interface ConstantInputs {
   min: number;
@@ -53,22 +53,22 @@ export interface PlotInputs {
   data: FunctionInputs[];
   constants: { [_: string]: ConstantInputs };
   xAxis: {
-    label: string | null;
+    label?: string;
     domain: {
-      min: number | null;
-      max: number | null;
+      min?: number;
+      max?: number;
     };
   };
   yAxis: {
-    label: string | null;
+    label?: string;
     domain: {
-      min: number | null;
-      max: number | null;
+      min?: number;
+      max?: number;
     };
   };
-  grid: boolean | null;
-  disableZoom: boolean | null;
-  title: string | null;
+  grid?: boolean;
+  disableZoom?: boolean;
+  title?: string;
 }
 
 export interface V1YAMLPlotInputs {

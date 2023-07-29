@@ -178,7 +178,12 @@
         </div>
       </div>
     </div>
-    <Plot {options} {plugin} showSettings />
+    <Plot
+      {options}
+      {plugin}
+      showConstantsSettings
+      disableResetViewButton={options.disableZoom}
+    />
   </div>
 
   <div class="fplt-actionbar">

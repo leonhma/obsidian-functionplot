@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let value: string | null,
+  export let value: string | undefined,
     placeholder = "",
     id = "",
     width = "initial";

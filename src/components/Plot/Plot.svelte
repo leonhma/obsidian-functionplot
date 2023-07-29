@@ -6,10 +6,12 @@
   import Replay from "svelte-material-icons/Replay.svelte";
   import Button from "../Primitives/Button.svelte";
   import { FunctionPlot } from "../../fnplot";
+  import IconButton from "@smui/icon-button";
 
   export let options: PlotInputs,
     plugin: ObsidianFunctionPlot,
-    showSettings = false;
+    showConstantsSettings = false,
+    disableResetViewButton = false;
 
   let plot = new FunctionPlot(plugin);
 
@@ -35,14 +37,17 @@
         <Constant
           {name}
           bind:constant={options.constants[name]}
-          {showSettings}
+          showSettings={showConstantsSettings}
         />
       {/each}
     </div>
-    {#if showSettings}
-      <Button on:click={() => plot.resetView()}>
+    {#if showConstantsSettings}
+      <IconButton
+        on:click={() => plot.resetView()}
+        disabled={disableResetViewButton}
+      >
         <Replay size="1.4em" />
-      </Button>
+      </IconButton>
     {/if}
   </div>
 </div>

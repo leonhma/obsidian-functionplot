@@ -9,6 +9,14 @@
 
   export let constant: ConstantInputs, name: string, showSettings: boolean;
   let showFloater = false;
+
+  // function to update the slider's value to within the set bounds
+  function minmax() {
+    constant.value = Math.min(
+      Math.max(constant.value, constant.min),
+      constant.max
+    );
+  }
 </script>
 
 <div>
@@ -30,9 +38,17 @@
     {#if showFloater}
       <OptionsFloater bind:show={showFloater}>
         <label for="constant-min">Min</label>
-        <NumberInput placeholder="min" bind:value={constant.min} />
+        <NumberInput
+          placeholder="min"
+          bind:value={constant.min}
+          on:change={minmax}
+        />
         <label for="constant-max">Max</label>
-        <NumberInput placeholder="max" bind:value={constant.max} />
+        <NumberInput
+          placeholder="max"
+          bind:value={constant.max}
+          on:change={minmax}
+        />
         <label for="constant-step">Step</label>
         <NumberInput placeholder="step" bind:value={constant.step} />
       </OptionsFloater>
