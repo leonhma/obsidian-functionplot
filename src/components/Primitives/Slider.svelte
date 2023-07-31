@@ -5,4 +5,12 @@
     value: number;
 </script>
 
-<input class="slider" type="range" {min} {max} {step} bind:value />
+<input
+  class="slider"
+  style="touch-action: none"
+  type="range"
+  {min}
+  {max}
+  {step}
+  bind:value
+/>

@@ -23,13 +23,13 @@ jobs:
       - name: Install
         run: |
           sudo apt-get -y install moreutils
-          yarn install
+          pnpm install
 
       - name: Lint
-        run: yarn lint
+        run: pnpm run lint:prod
 
       - name: Test
-        run: yarn test
+        run: pnpm run test
 
       - name: Run version-bump
         run: node .github/version-bump.js ${{ github.event.release.tag_name }}
@@ -40,7 +40,12 @@ jobs:
 
       # build now, so that no side-effects when build fails and release get deleted
       - name: Build
-        run: yarn build:prod
+        run: |
+          pnpm run build:release
+          mkdir obsidian-functionplot
+          cp main.js manifest.json styles.css obsidian-functionplot
+          zip -r obsidian-functionplot.zip obsidian-functionplot
+          ls
 
       - name: Commit and push changes
         run: |
@@ -55,7 +60,7 @@ jobs:
         uses: AButler/upload-release-assets@v2.0
         with:
           repo-token: ${{ github.token }}
-          files: "main.js;manifest.json"
+          files: "main.js;manifest.json;obsidian-functionplot.zip"
 
       - uses: actions/github-script@v4
         if: failure()

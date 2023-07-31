@@ -1,6 +1,6 @@
 # Contributing
 
-Contibutions are always welcome! We appreciate every help with this project, be it just submitting issues or feature requests, picking one up and working on it, making edits to the wiki or opening a pull request with a new feature or a bugfix, as it helps grow the project.
+Contributions are always welcome! We appreciate every help with this project, be it just submitting issues or feature requests, picking one up and working on it, making edits to the wiki or opening a pull request with a new feature or a bugfix, as it helps grow the project.
 
 TL;DR:
 

@@ -74,7 +74,7 @@
       } else if (datum.fnType === "polar") {
         toParse.push(datum.r ?? "");
         ignored.push("theta");
-      } // vector doesnt support constants currently
+      } // vector doesn't support constants currently
 
       toParse.forEach((fn: string) => {
         if (!fn) return;
@@ -112,7 +112,7 @@
 
 <div class="fplt-create-modal">
   <div class="fplt-container">
-    <div>
+    <div class="fplt-options-wrapper">
       <div class="fplt-options">
         <div class="fplt-settings">
           <SettingItem name="Title">
@@ -178,12 +178,9 @@
         </div>
       </div>
     </div>
-    <Plot
-      {options}
-      {plugin}
-      showConstantsSettings
-      disableResetViewButton={options.disableZoom}
-    />
+    <div class="fplt-plot-wrapper">
+      <Plot {options} {plugin} showConstantsSettings />
+    </div>
   </div>
 
   <div class="fplt-actionbar">
@@ -206,6 +203,17 @@
 </div>
 
 <style lang="scss">
+  .fplt-plot-wrapper {
+    min-width: 25em;
+    height: min-content;
+    flex: 1;
+  }
+
+  .fplt-options-wrapper {
+    max-width: 25em;
+    min-width: 25em;
+    padding: 3px;
+  }
   .fplt-create-modal {
     display: grid;
     grid-template-rows: 1fr min-content;
@@ -215,21 +223,11 @@
 
   .fplt-container {
     min-height: 0;
-    display: grid;
-    grid-template-columns: 28em 1fr;
-    height: 100%;
-    left: 0;
-    right: 0;
-    overflow: hidden;
-  }
-
-  .fplt-container > * {
-    padding: 0.5em;
+    position: relative;
     display: flex;
-    flex-direction: column;
-    place-items: stretch start;
+    flex-direction: row;
     gap: 1em;
-    min-height: 0;
+    overflow: auto;
   }
 
   .fplt-actionbar {
@@ -250,8 +248,6 @@
     align-content: space-around;
     gap: 1em;
     max-height: 100%;
-    overflow-y: auto;
-    scrollbar-gutter: stable;
     padding-bottom: 0.5em;
   }
 
@@ -266,5 +262,14 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+  }
+
+  @media (max-width: 1100px) {
+    .fplt-container {
+      flex-direction: column-reverse;
+    }
+    .fplt-options-wrapper {
+      max-width: none;
+    }
   }
 </style>

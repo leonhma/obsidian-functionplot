@@ -14,6 +14,15 @@
   export let datum: FunctionInputs, unmount: () => void;
 
   let showFloater = false;
+  let mousePos = { x: 0, y: 0 };
+
+  function handleClick(e: MouseEvent) {
+    showFloater = true;
+    const target = (e.target as HTMLElement).closest("div");
+    if (!target) return;
+    const rect = target.getBoundingClientRect();
+    mousePos = { x: rect.right, y: rect.bottom };
+  }
 </script>
 
 <div class="functionplot-item-data">
@@ -42,15 +51,11 @@
   <input type="color" bind:value={datum.color} />
 
   <div>
-    <IconWrapper
-      on:click={() => {
-        showFloater = true;
-      }}
-    >
+    <IconWrapper on:click={handleClick}>
       <MenuDown size="1.4em" />
     </IconWrapper>
     {#if showFloater}
-      <OptionsFloater bind:show={showFloater}>
+      <OptionsFloater bind:show={showFloater} {mousePos} color={datum.color}>
         {#if datum.fnType === "vector"}
           <label for="vector-initial">Start point</label>
           <div id="vector-initial" class="functionplot-nums-inputs">

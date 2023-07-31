@@ -1,13 +1,14 @@
 const preprocess = require("svelte-preprocess");
 const webpack = require("webpack");
-const { execSync } = require("child_process");
 const { readFileSync } = require("fs");
+const { execSync } = require("child_process");
 
 module.exports = (env) => {
   const isProd = env.production === true;
-  const commitSHA = execSync("git rev-parse --short HEAD").toString().trim();
-  const isCI = process.env.CI === "true";
+  console.log("isProd", isProd);
   const manifest = JSON.parse(readFileSync("manifest.json", "utf8"));
+  const isCI = process.env.CI === "true";
+  console.log("isCI", isCI);
 
   return {
     mode: isProd ? "production" : "development",
@@ -24,7 +25,7 @@ module.exports = (env) => {
           exclude: /node_modules/,
         },
         {
-          test: /\.s[ac]ss$/i,
+          test: /\.s?[ac]ss$/i,
           use: [
             // Creates `style` nodes from JS strings
             "style-loader",
@@ -50,19 +51,33 @@ module.exports = (env) => {
             fullySpecified: false,
           },
         },
+        {
+          test: /\.svg$/,
+          type: "asset/source",
+        },
+        {
+          test: /\.md$/,
+          type: "asset/source",
+        },
       ],
     },
     plugins: [
       new webpack.DefinePlugin({
-        "process.env.BUILD_DATE": new Date(),
-        "process.env.BUILD_VERSION": JSON.stringify(
-          isCI ? manifest.version : `${commitSHA}+`
+        BUILD_DATE: new Date(),
+        BUILD_VERSION: JSON.stringify(
+          isCI
+            ? manifest.version
+            : `${execSync("git rev-parse --short HEAD").toString().trim()}+`
+        ),
+        BUILD_LINK: JSON.stringify(
+          env.includeReleaseLink === true
+            ? `https://github.com/leonhma/obsidian-functionplot/releases/tag/${manifest.version}`
+            : ""
         ),
       }),
     ],
     resolve: {
       extensions: [".ts", ".js", ".svelte"],
-      // conditionNames: ["svelte"], // TODO: Gives errors but is more efficient
     },
     externals: {
       obsidian: "commonjs obsidian",

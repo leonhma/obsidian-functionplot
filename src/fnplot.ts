@@ -37,25 +37,31 @@ export class FunctionPlot {
           this.fnPlotOptions,
           toFunctionPlotOptions(this.options_, this.target_)
         );
-        console.log('updated fnPlotOptions: ', JSON.parse(JSON.stringify(this.fnPlotOptions)))
+        console.log(
+          "updated fnPlotOptions: ",
+          JSON.parse(JSON.stringify(this.fnPlotOptions))
+        );
       } else {
         this.fnPlotOptions = Object.assign(
           {},
           toFunctionPlotOptions(this.options_, this.target_),
-          { plugins: [createStylingPlugin(this.plugin)] }
+          {
+            plugins: [createStylingPlugin(this.plugin)],
+            width: 550,
+            height: 350,
+          }
         );
         console.log(
           "new fnPlotOptions: ",
           JSON.parse(JSON.stringify(this.fnPlotOptions))
         );
-
       }
       if (this.chart !== undefined) {
         this.chart.build();
-        console.log('redrew chart')
-      } else { 
+        console.log("redrew chart");
+      } else {
         this.chart = functionPlot(this.fnPlotOptions);
-        console.log('new chart')
+        console.log("new chart");
       }
     } catch (err) {
       console.error(`Error rendering plot: ${err}`);

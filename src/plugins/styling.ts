@@ -3,13 +3,24 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import type { chartType } from "../common/types";
 import type ObsidianFunctionPlot from "../main";
+import type { Selection as d3Selection } from "d3";
 
 export default function createStylingPlugin(plugin: ObsidianFunctionPlot) {
   return function stylingPlugin(instance: chartType) {
     if (!instance.listenerCount("after:draw")) {
       instance.on("after:draw", () => {
-        const selection = instance.root.merge(instance.root.enter);
+        const selection = instance.root.merge(
+          instance.root.enter
+        ) as d3Selection<SVGElement, unknown, HTMLElement, unknown>;
 
+        // set viewBox to allow responsive svg
+        selection
+          .attr("viewBox", "0 0 550 350")
+          .attr("width", null)
+          .attr("height", null)
+          .attr("preserveAspectRatio", "xMinYMin meet");
+
+        // adjust title and axis labels according to settings
         selection
           .select(".title")
           .style("font-size", `${plugin.settings.titleFontSize}px`)

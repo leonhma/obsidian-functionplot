@@ -1,17 +1,14 @@
 <script lang="ts">
-  import type { ConstantInputs, PlotInputs } from "../../common/types";
+  import type { PlotInputs } from "../../common/types";
   import type ObsidianFunctionPlot from "../../main";
   import Constant from "./Constant.svelte";
+  import { Menu } from "obsidian";
 
-  import Replay from "svelte-material-icons/Replay.svelte";
-  import Button from "../Primitives/Button.svelte";
   import { FunctionPlot } from "../../fnplot";
-  import IconButton from "@smui/icon-button";
 
   export let options: PlotInputs,
     plugin: ObsidianFunctionPlot,
-    showConstantsSettings = false,
-    disableResetViewButton = false;
+    showConstantsSettings = false;
 
   let plot = new FunctionPlot(plugin);
 
@@ -27,9 +24,36 @@
   //   });
   // }
   $: plot.options = options;
+
+  function handleContextMenu(e: MouseEvent) {
+    e.preventDefault();
+    const menu = new Menu();
+    if (!options.disableZoom) {
+      menu.addItem((item) => {
+        item.setTitle("Reset View");
+        item.setIcon("box");
+        item.onClick(() => {
+          plot.resetView();
+        });
+      });
+    }
+    if (!options.disableZoom && !showConstantsSettings) menu.addSeparator();
+
+    if (!showConstantsSettings) {
+      menu.addItem((item) => {
+        item.setTitle("Edit");
+        item.setIcon("pencil");
+        item.onClick(() => {
+          console.log("to be implemented");
+        });
+      });
+    }
+
+    menu.showAtMouseEvent(e);
+  }
 </script>
 
-<div>
+<div on:contextmenu={handleContextMenu}>
   <div class="fplt-plot" bind:this={plot.target} />
   <div class="fplt-plot-options">
     <div class="fplt-constants">
@@ -41,14 +65,6 @@
         />
       {/each}
     </div>
-    {#if showConstantsSettings}
-      <IconButton
-        on:click={() => plot.resetView()}
-        disabled={disableResetViewButton}
-      >
-        <Replay size="1.4em" />
-      </IconButton>
-    {/if}
   </div>
 </div>
 
@@ -60,7 +76,9 @@
   }
   .fplt-constants {
     display: flex;
+    margin-left: 2em;
     flex-direction: row;
     gap: 0.5rem;
+    flex-wrap: wrap;
   }
 </style>

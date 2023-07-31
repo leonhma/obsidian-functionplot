@@ -208,5 +208,23 @@ export default class SettingsTab extends PluginSettingTab {
             });
         });
     });
+
+    const footer = containerEl.createEl("div", {
+      attr: {
+        style:
+          "margin-top:32px;display:flex;flex-direction:row-reverse;justify-content:space-between;align-items:center;color:var(--text-muted)",
+      },
+    });
+    if (BUILD_LINK)
+      footer.createEl("a", {
+        attr: {
+          href: BUILD_LINK,
+        },
+        text: `Obsidian Functionplot ${BUILD_VERSION}`,
+      });
+    else
+      footer.createEl("span", {
+        text: `Obsidian Functionplot ${BUILD_VERSION}`,
+      });
   }
 }

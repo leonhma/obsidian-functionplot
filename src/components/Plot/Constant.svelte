@@ -17,6 +17,15 @@
       constant.max
     );
   }
+  let mousePos = { x: 0, y: 0 };
+
+  function handleClick(e: MouseEvent) {
+    showFloater = true;
+    const target = (e.target as HTMLElement).closest("div");
+    if (!target) return;
+    const rect = target.getBoundingClientRect();
+    mousePos = { x: rect.right, y: rect.bottom };
+  }
 </script>
 
 <div>
@@ -28,15 +37,11 @@
     bind:step={constant.step}
   />
   {#if showSettings}
-    <IconWrapper
-      on:click={() => {
-        showFloater = true;
-      }}
-    >
+    <IconWrapper on:click={handleClick}>
       <Settings size="1.4em" />
     </IconWrapper>
     {#if showFloater}
-      <OptionsFloater bind:show={showFloater}>
+      <OptionsFloater bind:show={showFloater} {mousePos}>
         <label for="constant-min">Min</label>
         <NumberInput
           placeholder="min"
@@ -58,6 +63,9 @@
 
 <style lang="scss">
   div {
+    background: var(--color-base-30);
+    border-radius: 0.5em;
+    padding: 0 0.5rem;
     display: flex;
     flex-direction: row;
     gap: 0.5rem;
