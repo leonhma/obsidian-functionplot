@@ -7,7 +7,6 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build:release": "pnpm exec webpack --env production --env includeReleaseLink",
     "build:prod": "pnpm exec webpack --env production",
     "build": "pnpm exec webpack",
     "watch": "pnpm exec webpack --watch",

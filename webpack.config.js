@@ -5,10 +5,7 @@ const { execSync } = require("child_process");
 
 module.exports = (env) => {
   const isProd = env.production === true;
-  console.log("isProd", isProd);
   const manifest = JSON.parse(readFileSync("manifest.json", "utf8"));
-  const isCI = process.env.CI === "true";
-  console.log("isCI", isCI);
 
   return {
     mode: isProd ? "production" : "development",
@@ -69,11 +66,7 @@ module.exports = (env) => {
             ? manifest.version
             : `${execSync("git rev-parse --short HEAD").toString().trim()}+`
         ),
-        BUILD_LINK: JSON.stringify(
-          env.includeReleaseLink === true
-            ? `https://github.com/leonhma/obsidian-functionplot/releases/tag/${manifest.version}`
-            : ""
-        ),
+        BUILD_LINK: JSON.stringify(process.env.BUILD_LINK || ""),
       }),
     ],
     resolve: {

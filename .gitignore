@@ -3,6 +3,7 @@ main.js
 !*/**/main.js
 data.json
 package-lock.json
+yarn.lock
 .nyc_output
 coverage
 .yarn

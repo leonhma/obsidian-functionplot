@@ -7,11 +7,12 @@ on:
 
 jobs:
   build:
-    name: build
     runs-on: ubuntu-latest
+    env:
+      BUILD_LINK: https://github.com/leonhma/obsidian-functionplot/actions/runs/${{ github.run_id }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: actions/setup-node@v3
         with:
@@ -31,7 +32,7 @@ jobs:
       - name: upload dist
         uses: actions/upload-artifact@v3.1.0
         with:
-          name: dist
+          name: obsidian-functionplot
           path: |
             manifest.json
             main.js
@@ -40,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     name: test
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: actions/setup-node@v3
         with:
@@ -56,9 +57,9 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
-    name: lint:prod
+    name: lint
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: actions/setup-node@v3
         with:
