@@ -6,6 +6,10 @@ const { execSync } = require("child_process");
 module.exports = (env) => {
   const isProd = env.production === true;
   const manifest = JSON.parse(readFileSync("manifest.json", "utf8"));
+  const isCI = process.env.CI === "true";
+
+  console.log("isCI: ", isCI);
+  console.log("BUILD_LINK: ", process.env.BUILD_LINK);
 
   return {
     mode: isProd ? "production" : "development",
