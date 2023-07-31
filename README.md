@@ -8,7 +8,7 @@ _This file only contains basic instructions to get you to using this plugin quic
 
 ---
 
-# 🔮 How to use
+## 🔮 How to use
 
 ### With Command
 
@@ -21,7 +21,7 @@ Since version `1.1.0` you can create plots via a handy GUI with live-preview fun
     ![Create plot modal](./images/create-modal/light.png#gh-light-mode-only)
     ![Create plot modal](./images/create-modal//dark.png#gh-dark-mode-only)
 
-3. This will create a coordinate system with bounds `-10 < x < 10, -10 < y < 10` and plot the functions f and g. If you havent disabled it, you can even drag and zoom the graph.
+3. This will create a coordinate system with bounds `-10 < x < 10, -10 < y < 10` and plot the functions f and g. If you haven't disabled it, you can even drag and zoom the graph.
 
 <!--     ![Graph image](./images/plot/light.png#gh-light-mode-only)
     ![Graph image](./images/plot/dark.png#gh-dark-mode-only) -->
@@ -51,7 +51,7 @@ title: The random graph
 xLabel: Time
 yLabel: Cost
 bounds: [0, 10, 0, 50]
-disbaleZoom: 1
+disableZoom: 1
 grid: true
 ---
 g(x)=x^PI
@@ -86,6 +86,7 @@ If you encounter any errors while using this plugin, please report them to us. T
 
 Contributions are always welcome! Be it submitting issues, editing the wiki or creating a pull request, contributions by people like you help keep the project evolving. Please adhere to the [contributing guidelines](CONTRIBUTING.md).
 
+> **Note**  
 > Just a heads-up: This project uses `pnpm` as it's package manager, which you might have to download in order to make use of existing lockfiles. See: [Installation | pnpm](https://pnpm.io/installation)
 
 ## ©️ Attribution
