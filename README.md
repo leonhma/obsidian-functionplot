@@ -80,11 +80,13 @@ If you have any questions about the usage of the plugin, take a look at the [wik
 
 ## 🐞 Bugs and Errors
 
-If you encounter any errors while using this plugin, please report them to us. To do so, click [this link](https://github.com/leonhma/obsidian-functionplot/issues/new?assignees=leonhma&labels=bug&template=BUG_REPORT.yml), fill out the form as best as you can and click `Submit new issue`. These issues are publically viewable, so please don't submit any personal information.
+If you encounter any errors while using this plugin, please report them to us. To do so, click [this link](https://github.com/leonhma/obsidian-functionplot/issues/new?assignees=leonhma&labels=bug&template=BUG_REPORT.yml), fill out the form as best as you can and click `Submit new issue`. These issues are publicly viewable, so please don't submit any personal information.
 
 ## 🤝 Contributing
 
 Contributions are always welcome! Be it submitting issues, editing the wiki or creating a pull request, contributions by people like you help keep the project evolving. Please adhere to the [contributing guidelines](CONTRIBUTING.md).
+
+> Just a heads-up: This project uses `pnpm` as it's package manager, which you might have to download in order to make use of existing lockfiles. See: [Installation | pnpm](https://pnpm.io/installation)
 
 ## ©️ Attribution
 

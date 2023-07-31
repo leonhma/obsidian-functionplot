@@ -23,6 +23,7 @@ jobs:
       - name: Install
         run: |
           sudo apt-get -y install moreutils
+          npm install -g pnpm
           pnpm install
 
       - name: Lint

@@ -18,7 +18,9 @@ jobs:
           node-version: 18
 
       - name: install dependencies
-        run: pnpm install
+        run: |
+          npm install -g pnpm
+          pnpm install
 
       - name: set development version
         run: node .github/version-bump.js "$(git rev-parse --short HEAD)"
@@ -45,7 +47,9 @@ jobs:
           node-version: 18
 
       - name: install dependencies
-        run: pnpm install
+        run: |
+          npm install -g pnpm
+          pnpm install
 
       - name: test
         run: pnpm run test
@@ -61,7 +65,9 @@ jobs:
           node-version: 18
 
       - name: install dependencies
-        run: pnpm install
+        run: |
+          npm install -g pnpm
+          pnpm install
 
       - name: lint
         run: pnpm run lint
