@@ -33,6 +33,8 @@
     <option value="vector">vector</option>
   </Dropdown>
 
+  <TextInput placeholder="Name" width="10ch" bind:value={datum.name} />
+
   {#if datum.fnType === "linear"}
     <TextInput placeholder="f(x)=" width="20ch" bind:value={datum.fn} />
   {/if}
@@ -112,8 +114,8 @@
 <style lang="scss">
   .functionplot-item-data {
     display: inline-grid;
-    grid-template-columns: min-content auto repeat(3, min-content);
-    column-gap: 1em;
+    grid-template-columns: repeat(6, min-content);
+    column-gap: 0.5em;
     place-items: center start;
     width: 100%;
     padding: 0.5em;
@@ -125,7 +127,7 @@
   .functionplot-nums-inputs {
     display: flex;
     flex-direction: row;
-    column-gap: 0.6em;
+    column-gap: 0.5em;
     width: min-content;
   }
 </style>

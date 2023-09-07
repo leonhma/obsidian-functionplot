@@ -18,6 +18,7 @@ export type DeepNonNullable<T> = {
 
 export interface FunctionInputs {
   id?: string;
+  name?: string;
   scope: { [_: string]: number };
   fnType: "linear" | "vector" | "polar";
   fn?: string;
@@ -52,6 +53,7 @@ export interface ConstantInputs {
 export interface PlotInputs {
   data: FunctionInputs[];
   constants: { [_: string]: ConstantInputs };
+  legends: boolean;
   xAxis: {
     label?: string;
     domain: {
