@@ -145,6 +145,9 @@
           <SettingItem name="Disable Zoom">
             <Switch bind:checked={options.disableZoom} />
           </SettingItem>
+          <SettingItem name="Show Legends">
+            <Switch bind:checked={options.legends} />
+          </SettingItem>
           <SettingItem name="Show Grid">
             <Switch bind:checked={options.grid} />
           </SettingItem>

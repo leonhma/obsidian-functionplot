@@ -1,5 +1,6 @@
 import { Editor, parseYaml } from "obsidian";
 import type ObsidianFunctionPlot from "../main";
+import type { Selection } from "d3";
 import type {
   FunctionInputs,
   PlotInputs,
@@ -18,6 +19,7 @@ import type {
   FunctionPlotOptions,
 } from "function-plot/dist/types";
 import { FunctionPlot } from "../fnplot";
+import type { Chart } from "function-plot";
 
 export function gcd(a: number, b: number): number {
   return !b ? a : gcd(b, a % b);
@@ -104,6 +106,23 @@ export function toFunctionPlotOptions(
         options.yAxis.domain.max ?? FALLBACK_PLOT_INPUTS.yAxis.domain.max,
       ],
     },
+    plugins: [(chart: Chart) => {
+      if(!options.legends) return;
+      chart.root.append("text").attr("class", "top-left-legend");
+      let text_color = "#00ff00";
+      let legends: {name: string, color: string}[] = [];
+      chart.options.data?.forEach((datum, index, arr) => {
+        legends.push({name: (options.data[index].name) || "", color: datum.color || ""});
+      })
+      const tll: any = chart.root.select(".top-left-legend");
+      console.log(legends);
+      tll.selectAll("tspan").remove();
+      legends.forEach((legend, index, arr) => {
+        tll.attr("y", (chart.meta.margin?.top || 20) / 2)
+           .attr("x", chart.meta.margin?.left || 10)
+        tll.append("tspan").attr('fill', legend.color).text("█ " + legend.name + "\n");;
+      }) 
+    }],
     grid: options.grid ?? undefined,
     disableZoom: options.disableZoom ?? undefined,
   };
@@ -230,6 +249,7 @@ export function parseYAMLCodeBlock(content: string): PlotInputs {
   return {
     constants: {},
     title: header.title ?? DEFAULT_PLOT_INPUTS.title,
+    legends: false,
     xAxis: {
       label: header.xLabel ?? FALLBACK_PLOT_INPUTS.xAxis.label,
       domain: header.bounds

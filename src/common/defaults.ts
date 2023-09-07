@@ -84,6 +84,7 @@ export const DEFAULT_CONSTANT_INPUTS: ConstantInputs = {
  */
 export const DEFAULT_PLOT_INPUTS: PlotInputs = {
   constants: {},
+  legends: false,
   xAxis: {
     label: undefined,
     domain: {
