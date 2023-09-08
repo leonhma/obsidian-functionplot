@@ -37,9 +37,9 @@ jobs:
       - name: Run version-bump
         run: node .github/version-bump.js ${{ github.event.release.tag_name }}
 
-      # build release notes
-      - name: Update release notes
-        run: node .github/release-notes.js ${{ github.event.release.tag_name }} ${{ github.event.release.body }}
+      # build changelog
+      - name: Update changelog
+        run: node .github/changelog.js ${{ github.event.release.tag_name }} ${{ github.event.release.body }}
 
       # build now, so that no side-effects when build fails and release get deleted
       - name: Build

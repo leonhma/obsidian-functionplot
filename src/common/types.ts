@@ -1,6 +1,7 @@
 import type { Chart } from "function-plot";
 import type { EventEmitter } from "events";
 export type rendererType = "interactive" | "image";
+import type { Selection as d3Selection } from "d3";
 
 /**
  * Input types: values that should be set to a default by the plugin are required, values that should be set to a default by functionplot are marked optional. Values that are not set by either are marked optional but default values Omit<> them.
@@ -9,7 +10,10 @@ export type rendererType = "interactive" | "image";
 /**
  * A sum-type of Chart and EventEmitter because TypeScript can't figure this out on it's own.
  */
-export type chartType = Chart & EventEmitter;
+export type chartType = {
+  root: d3Selection<SVGElement, unknown, HTMLElement, unknown>;
+} & Omit<Chart, "root"> &
+  EventEmitter;
 
 //Custom utility type:
 export type DeepNonNullable<T> = {

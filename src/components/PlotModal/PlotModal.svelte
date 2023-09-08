@@ -159,6 +159,7 @@
           <div class="fplt-list">
             {#each options.data as datum}
               <Function
+                legends={options.legends}
                 bind:datum
                 unmount={() => {
                   options.data = options.data.filter(
@@ -213,7 +214,7 @@
   }
 
   .fplt-options-wrapper {
-    max-width: 25em;
+    max-width: 30em;
     min-width: 25em;
     padding: 3px;
   }

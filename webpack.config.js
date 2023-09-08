@@ -17,6 +17,10 @@ module.exports = (env) => {
     performance: {
       hints: false,
     },
+    watchOptions: {
+      ignored: /node_modules/,
+      poll: 1000,
+    },
     devtool: isProd ? false : "inline-source-map",
     module: {
       rules: [
@@ -68,7 +72,7 @@ module.exports = (env) => {
         BUILD_VERSION: JSON.stringify(
           isCI
             ? manifest.version
-            : `${execSync("git rev-parse --short HEAD").toString().trim()}+`
+            : `${execSync("git rev-parse --short HEAD").toString().trim()}*`
         ),
         BUILD_LINK: JSON.stringify(process.env.BUILD_LINK || ""),
       }),

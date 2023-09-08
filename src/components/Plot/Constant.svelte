@@ -25,6 +25,7 @@
     if (!target) return;
     const rect = target.getBoundingClientRect();
     mousePos = { x: rect.right, y: rect.bottom };
+    console.log(mousePos);
   }
 </script>
 
@@ -65,10 +66,14 @@
   div {
     background: var(--color-base-30);
     border-radius: 0.5em;
-    padding: 0 0.5rem;
+    padding: 0.5rem;
     display: flex;
     flex-direction: row;
     gap: 0.5rem;
     align-items: center;
+    p {
+      margin: 0;
+    }
+    // flex: 1;
   }
 </style>

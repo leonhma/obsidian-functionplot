@@ -1,11 +1,7 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-
   export let show = false,
     mousePos: { x: number; y: number },
-    color: string | undefined;
-
-  let abs: { x: number; y: number } = { x: 0, y: 0 };
+    color: string | undefined = undefined;
 
   function clickOutside(node: Node) {
     function handleClick(event: MouseEvent) {
@@ -24,32 +20,10 @@
       },
     };
   }
-
-  onMount(() => {
-    const floater = document.querySelector(
-      "#fplt-floater-modal"
-    ) as HTMLElement;
-    const boundingRect = document
-      .querySelector(".fplt-container")
-      ?.getBoundingClientRect();
-    const floaterRect = floater?.getBoundingClientRect();
-
-    if (!floater || !floaterRect || !boundingRect) {
-      show = false;
-      return;
-    }
-
-    const x = Math.min(mousePos.x, boundingRect.right - floaterRect.width);
-    const y = Math.min(mousePos.y, boundingRect.bottom - floaterRect.height);
-
-    abs = { x: x - boundingRect.left, y: y - boundingRect.top };
-  });
-
-  $: abs = abs;
 </script>
 
 <div
-  style="transform: translateX({abs.x}px) translateY({abs.y}px)"
+  style="transform: translateX({mousePos.x}px) translateY({mousePos.y}px)"
   id="fplt-floater-modal"
   class="modal"
   use:clickOutside
@@ -78,10 +52,11 @@
     overflow-y: auto;
     overflow-x: hidden;
 
-    position: absolute;
+    position: fixed;
     margin: 0;
     left: 0;
     top: 0;
+    z-index: 9999;
   }
 
   .fplt-fn-indicator {

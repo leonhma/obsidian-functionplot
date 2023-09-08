@@ -1,15 +1,14 @@
 <script lang="ts">
   export let value: string | undefined,
     placeholder = "",
-    id = "",
-    width = "initial";
+    id = "";
 </script>
 
-<input
-  type="text"
-  {id}
-  style="width: {width} "
-  spellcheck="false"
-  {placeholder}
-  bind:value
-/>
+<input type="text" {id} spellcheck="false" {placeholder} bind:value />
+
+<style>
+  input {
+    width: inherit;
+    max-width: 40ch;
+  }
+</style>

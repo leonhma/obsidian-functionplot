@@ -1,6 +1,7 @@
 import type { FunctionPlotOptions } from "function-plot/dist/types";
 import type { PlotInputs } from "./common/types";
 import createStylingPlugin from "./plugins/styling";
+import createLegendsPlugin from "./plugins/legends";
 import { toFunctionPlotOptions } from "./common/utils";
 import type ObsidianFunctionPlot from "./main";
 import functionPlot, { Chart } from "function-plot";
@@ -46,7 +47,10 @@ export class FunctionPlot {
           {},
           toFunctionPlotOptions(this.options_, this.target_),
           {
-            plugins: [createStylingPlugin(this.plugin)],
+            plugins: [
+              createStylingPlugin(this.plugin),
+              createLegendsPlugin(this.options_),
+            ],
             width: 550,
             height: 350,
           }
@@ -57,6 +61,7 @@ export class FunctionPlot {
         );
       }
       if (this.chart !== undefined) {
+        this.chart.removeAllListeners("after:draw");
         this.chart.build();
         console.log("redrew chart");
       } else {

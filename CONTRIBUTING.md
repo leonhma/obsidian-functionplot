@@ -10,4 +10,4 @@ TL;DR:
 
 Because obsidian keeps an index of versions of the plugin and their respective minimum version requirements for obsidian itself, the `minAppVersion` field in `manifest.json` and the version of the dependency `obsidian` in `package.json` should be kept equal. The version should also reflect the lowest version of api under which the plugin will work. The dependency version in `package.json` is pinned to a single version.
 
-Oh, and also: This project uses yarn, although it doesn't matter if you use another package manager so long as you don't commit the log and lock files to VCS. Just be sure to let us know of your choice of package manager if you encounter a problem.
+This project recently switched to using pnpm as a package manager, although it doesn't matter if you use another package manager so long as you don't commit the log and lock files to VCS. Just be sure to let us know of your choice of package manager if you encounter a problem.

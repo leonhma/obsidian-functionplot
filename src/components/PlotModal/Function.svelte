@@ -11,7 +11,7 @@
   import MenuDown from "svelte-material-icons/MenuDown.svelte";
   import Delete from "svelte-material-icons/Delete.svelte";
 
-  export let datum: FunctionInputs, unmount: () => void;
+  export let datum: FunctionInputs, unmount: () => void, legends: boolean;
 
   let showFloater = false;
   let mousePos = { x: 0, y: 0 };
@@ -33,14 +33,16 @@
     <option value="vector">vector</option>
   </Dropdown>
 
-  <TextInput placeholder="Name" width="10ch" bind:value={datum.name} />
+  {#if legends}
+    <TextInput placeholder="Name" bind:value={datum.name} />
+  {/if}
 
   {#if datum.fnType === "linear"}
-    <TextInput placeholder="f(x)=" width="20ch" bind:value={datum.fn} />
+    <TextInput placeholder="f(x)=" bind:value={datum.fn} />
   {/if}
 
   {#if datum.fnType === "polar"}
-    <TextInput placeholder="r(theta)=" width="20ch" bind:value={datum.r} />
+    <TextInput placeholder="r(theta)=" bind:value={datum.r} />
   {/if}
 
   {#if datum.fnType === "vector"}
@@ -114,7 +116,7 @@
 <style lang="scss">
   .functionplot-item-data {
     display: inline-grid;
-    grid-template-columns: repeat(6, min-content);
+    grid-template-columns: min-content 1fr repeat(3, min-content);
     column-gap: 0.5em;
     place-items: center start;
     width: 100%;
@@ -122,6 +124,18 @@
     &:not(:first-child) {
       border-top: 1px solid var(--background-modifier-border);
     }
+  }
+
+  .functionplot-item-data:has(input[placeholder="Name"]) {
+    grid-template-columns: min-content 1fr 2fr repeat(4, min-content);
+  }
+
+  .functionplot-item-data:has(input[placeholder="Δx"]) {
+    grid-template-columns: min-content auto repeat(3, min-content);
+  }
+
+  .functionplot-item-data:has(input[placeholder="Name"]):has(input[placeholder="Δx"]) {
+    grid-template-columns: min-content max-content auto repeat(4, min-content);
   }
 
   .functionplot-nums-inputs {
